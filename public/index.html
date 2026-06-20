@@ -7,6 +7,8 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
 @page { size: A4; margin: 10mm 12mm; }
 body { background:#f1f5f9; color:#111827; }
@@ -206,6 +208,36 @@ Pelunasan dilakukan sesuai termin pekerjaan atau sebelum barang dikirim/dipasang
       </div>
       <div id="importStatus" class="mt-2 text-xs text-slate-700">Belum ada file rincian harga di-import.</div>
       <div id="importPreview" class="mt-2"></div>
+    </div>
+
+    
+
+    <div class="md:col-span-4 border rounded-lg p-4 bg-purple-50 border-purple-200">
+      <label class="label text-purple-800">Upload File Lama / Import Arsip Penawaran & Invoice</label>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div class="md:col-span-2">
+          <input id="arsipFiles" type="file" multiple accept=".pdf,.docx,.xlsx,.xls,.jpg,.jpeg,.png,.webp,.json" class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-purple-700 file:text-white hover:file:bg-purple-800 cursor-pointer">
+          <p class="text-[11px] text-purple-700 mt-2">Upload PDF/Word/Excel/JPG dari penawaran & invoice lama. Sistem membaca nomor, customer, total, DP, status, item lalu menyimpan ke Data Penawaran / Data Invoice.</p>
+        </div>
+        <div>
+          <button onclick="importArsipLama()" class="bg-purple-700 hover:bg-purple-800 text-white text-sm px-4 py-2 rounded w-full">📥 Import Arsip</button>
+        </div>
+        <div>
+          <button onclick="backupDatabaseMulia()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm px-4 py-2 rounded w-full">💾 Backup JSON</button>
+        </div>
+      </div>
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+        <div class="md:col-span-2">
+          <label class="label text-purple-800">Restore Database JSON</label>
+          <input id="restoreDatabaseFile" type="file" accept=".json" class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-bold file:bg-slate-700 file:text-white hover:file:bg-slate-800 cursor-pointer">
+        </div>
+        <div>
+          <button onclick="restoreDatabaseMulia()" class="bg-slate-700 hover:bg-slate-800 text-white text-sm px-4 py-2 rounded w-full">📂 Restore JSON</button>
+        </div>
+        <div class="text-[11px] text-purple-800 leading-relaxed">Fitur ini hanya tambahan. Form penawaran/invoice yang sudah ada tidak diubah.</div>
+      </div>
+      <div id="arsipImportStatus" class="mt-3 text-xs text-slate-700">Belum ada arsip lama yang di-import.</div>
+      <div id="arsipImportLog" class="mt-2 bg-white border rounded p-2 max-h-40 overflow-auto text-[11px] font-mono text-slate-700"></div>
     </div>
 
     <div class="md:col-span-4 border rounded-lg p-4 bg-slate-50">
@@ -1640,6 +1672,232 @@ resetInvoiceForm = function(konfirmasi=false){
 };
 
 setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
+</script>
+
+
+<script>
+// ================= IMPORT ARSIP LAMA PENAWARAN / INVOICE =================
+(function initPdfWorkerArsip(){
+  try{
+    if(window.pdfjsLib){
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  }catch(e){}
+})();
+
+function arsipLog(msg, type='info'){
+  const box=document.getElementById('arsipImportLog');
+  const status=document.getElementById('arsipImportStatus');
+  const icon=type==='success'?'✅':(type==='error'?'❌':(type==='warn'?'⚠️':'ℹ️'));
+  if(status) status.innerText=msg;
+  if(box){
+    const div=document.createElement('div');
+    div.textContent='['+new Date().toLocaleTimeString('id-ID')+'] '+icon+' '+msg;
+    div.className=type==='error'?'text-rose-700':(type==='success'?'text-emerald-700':(type==='warn'?'text-amber-700':'text-slate-700'));
+    box.prepend(div);
+  }
+}
+function arsipCleanText(t){ return String(t||'').replace(/\r/g,'\n').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim(); }
+function arsipNumber(v){
+  if(typeof v==='number') return Math.round(v);
+  const s=String(v||'').replace(/[^\d,-]/g,'').replace(/\./g,'').replace(',','.');
+  const n=parseFloat(s); return isNaN(n)?0:Math.round(n);
+}
+function arsipGetMatch(text, patterns, def=''){
+  for(const p of patterns){ const m=text.match(p); if(m&&m[1]) return String(m[1]).trim(); }
+  return def;
+}
+function arsipDetectType(text){
+  const t=String(text||'').toUpperCase();
+  if(t.includes('INVOICE') || t.includes('NOTA PEMBAYARAN') || t.includes('NOTA PEMESANAN') || t.includes('NO. NOTA') || t.includes('NO. INVOICE')) return 'invoice';
+  if(t.includes('SURAT PENAWARAN') || t.includes('/SPH/') || t.includes('TOTAL PENAWARAN') || t.includes('PENAWARAN HARGA')) return 'penawaran';
+  return 'unknown';
+}
+function arsipCustomerBlock(text){
+  let m=text.match(/KEPADA YTH[:\s]*\n?([\s\S]{0,550}?)(?:STATUS PEMBAYARAN|CATATAN|Deskripsi Pekerjaan|Jenis Cetakan|METODE PEMBAYARAN|Rincian|TOTAL|Dengan hormat)/i);
+  if(m) return m[1].split('\n').map(x=>x.trim()).filter(Boolean).join('\n');
+  m=text.match(/Kepada Yth\.?\s*\n?([\s\S]{0,450}?)(?:Di Tempat|Dengan hormat|Perihal)/i);
+  if(m) return m[1].split('\n').map(x=>x.trim()).filter(Boolean).join('\n');
+  return arsipGetMatch(text, [/(PT\.?\s+[A-Z0-9 .,&\-]+)/i], '');
+}
+function arsipCustomerName(block){ return (String(block||'').split('\n').map(x=>x.trim()).filter(Boolean)[0] || 'Customer belum terbaca'); }
+function arsipExtractItems(text){
+  const lines=String(text||'').split(/\n/).map(x=>x.trim()).filter(Boolean);
+  const items=[];
+  for(const line of lines){
+    const rps=line.match(/Rp\s*[\d\.]+/ig);
+    if(!rps || rps.length<1) continue;
+    if(/Total Invoice|Total Keseluruhan|Subtotal|DPP|DP\s*\/|Uang Muka|Sisa Tagihan|PPN|METODE PEMBAYARAN|Bank BCA/i.test(line) && rps.length<2) continue;
+    let total=arsipNumber(rps[rps.length-1]);
+    let harga=arsipNumber(rps[0]);
+    let before=line.split(/Rp\s*[\d\.]+/i)[0].trim();
+    let desc=before, qty=1, sat='';
+    let q=before.match(/(.+?)\s+(\d+(?:[,.]\d+)?)\s+(Pcs|PCS|pcs|Unit|UNIT|unit|Lot|LOT|lot|Set|SET|set|Lembar|Meter|m)$/i);
+    if(q){ desc=q[1].trim(); qty=parseFloat(q[2].replace(',','.')); sat=q[3]; }
+    else{
+      q=before.match(/(.+?)\s+(\d+(?:[,.]\d+)?)$/);
+      if(q){ desc=q[1].trim(); qty=parseFloat(q[2].replace(',','.')); sat='Pcs'; }
+    }
+    if(desc.length>3 && !/Tanggal|Nomor|No\.|Bank|Status|Kepada|Mulia/i.test(desc)){
+      items.push({desc, qty, sat, harga, total});
+    }
+  }
+  return items.slice(0,80);
+}
+function arsipParseDoc(text, filename){
+  text=arsipCleanText(text);
+  const type=arsipDetectType(text);
+  const nomor=arsipGetMatch(text,[
+    /No\.\s*Invoice\s*:?\s*([A-Z0-9\-\/\.]+)/i,
+    /No\.\s*Nota\s*:?\s*([A-Z0-9\-\/\.]+)/i,
+    /Nomor\s*:?\s*([0-9]{1,4}\/SPH\/[A-Z]+\/[IVX]+\/\d{4})/i,
+    /([0-9]{1,4}\/SPH\/[A-Z]+\/[IVX]+\/\d{4})/i,
+    /(INV-\d+)/i
+  ], type==='invoice' ? (document.getElementById('invNomor')?.value || 'INV-ARSIP') : (document.getElementById('nomor')?.value || 'SPH-ARSIP'));
+  const tanggal=arsipGetMatch(text,[/Tanggal Invoice\s*:?\s*([^\n]+)/i,/Tanggal Nota\s*:?\s*([^\n]+)/i,/Tanggal Surat\s*:?\s*([^\n]+)/i,/Tanggal\s*:?\s*([^\n]+)/i], (typeof todayID==='function'?todayID():new Date().toLocaleDateString('id-ID')));
+  const block=arsipCustomerBlock(text);
+  const customer=arsipCustomerName(block);
+  const items=arsipExtractItems(text);
+  const subtotalItems=items.reduce((s,it)=>s+((Number(it.qty)||0)*(Number(it.harga)||0)),0);
+  const total=arsipNumber(arsipGetMatch(text,[/Total Invoice\s*:?\s*(Rp\s*[\d\.]+)/i,/Total Keseluruhan\s*:?\s*(Rp\s*[\d\.]+)/i,/Grand Total\s*:?\s*(Rp\s*[\d\.]+)/i,/TOTAL PENAWARAN\s*:?\s*(Rp\s*[\d\.]+)/i], subtotalItems));
+  const dp=arsipNumber(arsipGetMatch(text,[/DP\s*\/\s*Terbayar\s*:?\s*(Rp\s*[\d\.]+)/i,/Uang Muka\s*\(DP\)\s*:?\s*(Rp\s*[\d\.]+)/i,/DP\s*:?\s*(Rp\s*[\d\.]+)/i],0));
+  const sisa=arsipNumber(arsipGetMatch(text,[/Sisa Tagihan\s*:?\s*(Rp\s*[\d\.]+)/i,/Sisa Pelunasan\s*:?\s*(Rp\s*[\d\.]+)/i], Math.max(total-dp,0)));
+  let status=arsipGetMatch(text,[/STATUS PEMBAYARAN\s*:?\s*([^\n]+)/i],'');
+  if(!status){ status = (dp>0 && sisa>0) ? 'DP / BELUM LUNAS' : (total>0 && sisa<=0 ? 'LUNAS' : 'BELUM BAYAR'); }
+  return {type, nomor, tanggal, customer, block, items, total, dp, sisa, status, filename, raw:text};
+}
+async function arsipReadPDF(file){
+  if(!window.pdfjsLib) throw new Error('Library PDF belum termuat. Pastikan internet aktif.');
+  const arr=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:arr}).promise;
+  let text='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    text += content.items.map(it=>it.str).join('\n')+'\n';
+  }
+  return text;
+}
+async function arsipReadDocx(file){ const arr=await file.arrayBuffer(); const res=await mammoth.extractRawText({arrayBuffer:arr}); return res.value; }
+async function arsipReadXlsx(file){
+  const arr=await file.arrayBuffer();
+  const wb=XLSX.read(arr,{type:'array'});
+  let out='';
+  wb.SheetNames.forEach(name=>{
+    out+='\nSHEET '+name+'\n';
+    XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:''}).forEach(r=>out+=r.join(' ')+'\n');
+  });
+  return out;
+}
+async function arsipReadImage(file){
+  if(!window.Tesseract) throw new Error('OCR belum termuat. Upload PDF lebih disarankan.');
+  const res=await Tesseract.recognize(file,'eng+ind');
+  return res.data.text;
+}
+function arsipSaveParsed(parsed){
+  const now=new Date().toISOString();
+  if(parsed.type==='penawaran'){
+    const data={
+      nomor: parsed.nomor,
+      tanggal: parsed.tanggal,
+      lampiran:'-',
+      perihal:'Penawaran Harga Pekerjaan Signage',
+      kepada: parsed.block || parsed.customer,
+      pembuka:'Dengan hormat,\n\nBersama ini kami sampaikan penawaran harga sesuai arsip dokumen lama yang di-import ke aplikasi.',
+      catatan:'Data ini hasil import arsip lama. Mohon cek ulang deskripsi, qty, harga, PPN dan DP sebelum dikirim ulang.',
+      catatan_pembayaran:'Sistem pembayaran mengikuti kesepakatan dengan pihak customer.',
+      dp_persen:0,
+      ppn_mode:'none',
+      ppn_persen:0,
+      items: parsed.items.map(it=>({item:'Arsip Import', desc:it.desc, qty:it.qty, sat:it.sat||'Pcs', harga:it.harga})),
+      files:[], imported_from:parsed.filename, saved_at:now
+    };
+    const key='PENAWARAN_'+String(parsed.nomor).replace(/[\/\s]/g,'_');
+    localStorage.setItem(key,JSON.stringify(data));
+    return key;
+  } else {
+    const data={
+      nomor: parsed.nomor,
+      tanggal: parsed.tanggal,
+      po_ref:'',
+      po_tanggal:'',
+      customer: parsed.block || parsed.customer,
+      status: parsed.status,
+      dp: parsed.dp,
+      ppn_mode:'none',
+      ppn_persen:0,
+      catatan:'Data ini hasil import arsip lama. Mohon cek ulang sebelum dikirim ulang.',
+      items: parsed.items.map(it=>({desc:it.desc, qty:it.qty, sat:it.sat||'Pcs', harga:it.harga})),
+      imported_from:parsed.filename, saved_at:now
+    };
+    const key='INVOICE_'+String(parsed.nomor).replace(/[\/\s]/g,'_');
+    localStorage.setItem(key,JSON.stringify(data));
+    return key;
+  }
+}
+async function importArsipLama(){
+  const input=document.getElementById('arsipFiles');
+  const files=[...(input?.files||[])];
+  if(!files.length){ alert('Pilih file arsip lama dulu.'); return; }
+  let ok=0, fail=0;
+  for(const file of files){
+    try{
+      arsipLog('Membaca '+file.name+' ...');
+      if(file.name.toLowerCase().endsWith('.json')){
+        const json=JSON.parse(await file.text());
+        let count=0;
+        Object.keys(json||{}).forEach(k=>{
+          const val=json[k];
+          if(k.startsWith('PENAWARAN_') || k.startsWith('INVOICE_') || k.startsWith('dwi_mulia_')){ localStorage.setItem(k, typeof val==='string'?val:JSON.stringify(val)); count++; }
+        });
+        arsipLog('Restore JSON selesai: '+count+' data/key masuk dari '+file.name,'success'); ok++; continue;
+      }
+      let text='';
+      const name=file.name.toLowerCase();
+      if(name.endsWith('.pdf')) text=await arsipReadPDF(file);
+      else if(name.endsWith('.docx')) text=await arsipReadDocx(file);
+      else if(name.endsWith('.xlsx')||name.endsWith('.xls')) text=await arsipReadXlsx(file);
+      else if(file.type.startsWith('image/')) text=await arsipReadImage(file);
+      else throw new Error('Format tidak didukung');
+      const parsed=arsipParseDoc(text,file.name);
+      const key=arsipSaveParsed(parsed);
+      arsipLog((parsed.type==='penawaran'?'Penawaran':'Invoice')+' tersimpan: '+parsed.nomor+' - '+parsed.customer+' → '+key,'success');
+      ok++;
+    }catch(e){ fail++; arsipLog('Gagal import '+file.name+': '+e.message,'error'); }
+  }
+  if(typeof refreshDataPenawaranList==='function') refreshDataPenawaranList();
+  if(typeof refreshDataInvoiceList==='function') refreshDataInvoiceList();
+  if(typeof refreshDraftPenawaranList==='function') refreshDraftPenawaranList();
+  arsipLog('Selesai import. Berhasil '+ok+', gagal '+fail+'.','success');
+}
+function backupDatabaseMulia(){
+  const data={exported_at:new Date().toISOString(), source:'Mulia Advertising Group', localStorage:{}};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k && (k.startsWith('PENAWARAN_') || k.startsWith('INVOICE_') || k.startsWith('dwi_mulia_'))){ data.localStorage[k]=localStorage.getItem(k); }
+  }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Mulia_Advertising_Group_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+async function restoreDatabaseMulia(){
+  const input=document.getElementById('restoreDatabaseFile');
+  const file=input?.files?.[0];
+  if(!file){ alert('Pilih file JSON backup dulu.'); return; }
+  const json=JSON.parse(await file.text());
+  const obj=json.localStorage || json;
+  let count=0;
+  Object.keys(obj||{}).forEach(k=>{
+    if(k.startsWith('PENAWARAN_') || k.startsWith('INVOICE_') || k.startsWith('dwi_mulia_')){ localStorage.setItem(k, typeof obj[k]==='string'?obj[k]:JSON.stringify(obj[k])); count++; }
+  });
+  if(typeof refreshDataPenawaranList==='function') refreshDataPenawaranList();
+  if(typeof refreshDataInvoiceList==='function') refreshDataInvoiceList();
+  if(typeof refreshDraftPenawaranList==='function') refreshDraftPenawaranList();
+  arsipLog('Restore JSON berhasil: '+count+' data/key masuk.','success');
+  alert('Restore selesai. Data masuk: '+count);
+}
 </script>
 
 </body>
