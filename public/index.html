@@ -523,6 +523,165 @@ input[type="file"]::file-selector-button{border:0!important;border-radius:10px!i
 @media print{.mulia-pro-actionbar{display:none!important}}
 </style>
 
+
+
+<!-- === V18 PRINT / SAVE AS PDF A4 FIX: kanan tidak terpotong === -->
+<style id="mulia-v18-print-a4-fix">
+@page{
+  size:A4 portrait;
+  margin:7mm 7mm 8mm 7mm;
+}
+@media print{
+  html, body{
+    width:auto!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    overflow:visible!important;
+  }
+  body{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  /* Semua panel aplikasi disembunyikan saat print */
+  .no-print,
+  .mulia-v3-topbar,
+  .mulia-v3-dashboard,
+  .mulia-v4-actionbar,
+  .mulia-pro-actionbar,
+  .v9-sidebar,
+  .v9-topbar,
+  .v10-action-panel,
+  .v10-audit-summary,
+  .v11-customer-hub,
+  .v11-action-panel,
+  .v12-customer-select-wrap,
+  #v15FloatingActionMenu,
+  .v15-action-trigger{
+    display:none!important;
+  }
+
+  /* Area print dibuat sedikit lebih kecil dari lebar printable A4 agar aman di Chrome/Edge */
+  #print-area,
+  #invoice-print-area{
+    display:block!important;
+    visibility:visible!important;
+    width:190mm!important;
+    max-width:190mm!important;
+    min-width:0!important;
+    margin:0 auto!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+    transform:none!important;
+  }
+  #print-area *,
+  #invoice-print-area *{
+    box-sizing:border-box!important;
+    max-width:100%!important;
+  }
+
+  /* Kop surat tidak menyentuh batas kanan */
+  .letterhead-img{
+    display:block!important;
+    width:96%!important;
+    max-width:182mm!important;
+    height:auto!important;
+    margin:0 auto 5mm auto!important;
+    object-fit:contain!important;
+  }
+
+  /* Teks dan layout surat */
+  #print-area{
+    font-size:10.2px!important;
+    line-height:1.42!important;
+  }
+  #print-area p,
+  #print-area div,
+  #print-area span,
+  #print-area td,
+  #print-area th{
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+  }
+
+  /* Tabel rincian dipaksa masuk A4 */
+  #print-area table,
+  #invoice-print-area table{
+    width:100%!important;
+    max-width:100%!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+    page-break-inside:auto!important;
+  }
+  #print-area thead,
+  #invoice-print-area thead{
+    display:table-header-group!important;
+    position:static!important;
+  }
+  #print-area tfoot,
+  #invoice-print-area tfoot{
+    display:table-footer-group!important;
+  }
+  #print-area tr,
+  #invoice-print-area tr{
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+  #print-area th,
+  #print-area td,
+  #invoice-print-area th,
+  #invoice-print-area td{
+    font-size:9px!important;
+    line-height:1.25!important;
+    padding:3.5px 4px!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+    vertical-align:top!important;
+  }
+
+  /* Proporsi kolom tabel penawaran: total 100% */
+  #print-area table th:nth-child(1), #print-area table td:nth-child(1){width:5.5%!important;text-align:center!important;}
+  #print-area table th:nth-child(2), #print-area table td:nth-child(2){width:16%!important;}
+  #print-area table th:nth-child(3), #print-area table td:nth-child(3){width:35%!important;}
+  #print-area table th:nth-child(4), #print-area table td:nth-child(4){width:7.5%!important;text-align:center!important;}
+  #print-area table th:nth-child(5), #print-area table td:nth-child(5){width:7.5%!important;text-align:center!important;}
+  #print-area table th:nth-child(6), #print-area table td:nth-child(6){width:14%!important;text-align:right!important;}
+  #print-area table th:nth-child(7), #print-area table td:nth-child(7){width:14.5%!important;text-align:right!important;}
+
+  /* Hindari elemen flex/absolute melebar keluar halaman */
+  #print-area [style*="width"],
+  #invoice-print-area [style*="width"]{
+    max-width:100%!important;
+  }
+  #print-area img,
+  #invoice-print-area img{
+    max-width:100%!important;
+  }
+
+  /* Tanda tangan tetap proporsional */
+  .signature-stamp-img{
+    width:150px!important;
+    max-width:45mm!important;
+    height:auto!important;
+  }
+}
+</style>
+<script id="mulia-v18-title-print-fix">
+(function(){
+  try{
+    document.title = 'Mulia Advertising Group';
+    window.addEventListener('beforeprint', function(){ document.title = 'Mulia Advertising Group'; });
+  }catch(e){}
+})();
+</script>
+
 </head>
 <body class="min-h-screen p-4 md:p-6">
 
@@ -4453,6 +4612,107 @@ body.mulia-v11-erp .v9-topbar-card{
   setTimeout(install,5200);
 })();
 </script>
+
+
+
+<!-- === V19 PRINT HEADER PROFESSIONAL FIX: hilangkan ruang kosong atas kop surat === -->
+<style id="mulia-v19-print-header-professional-fix">
+@page{
+  size:A4 portrait;
+  margin:4mm 7mm 8mm 7mm;
+}
+@media print{
+  html,body{
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    overflow:visible!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  /* Pastikan hanya dokumen yang dicetak dan mulai dari atas halaman */
+  body:not(.print-invoice) #print-area,
+  body.print-invoice #invoice-print-area{
+    display:block!important;
+    visibility:visible!important;
+    width:190mm!important;
+    max-width:190mm!important;
+    min-width:0!important;
+    margin:0 auto!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:#fff!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+    transform:none!important;
+    position:relative!important;
+    top:0!important;
+    left:auto!important;
+    right:auto!important;
+  }
+
+  body:not(.print-invoice) #print-area > div:first-child,
+  body.print-invoice #invoice-print-area > div:first-child{
+    margin-top:0!important;
+    padding-top:0!important;
+  }
+
+  /* Kop surat dibuat lebih profesional: pas A4, tidak terlalu tinggi, tidak ada jarak kosong */
+  .letterhead-img{
+    display:block!important;
+    width:92%!important;
+    max-width:176mm!important;
+    max-height:29mm!important;
+    height:auto!important;
+    object-fit:contain!important;
+    margin:0 auto 4mm auto!important;
+    padding:0!important;
+  }
+
+  /* Rapikan jarak elemen setelah kop surat */
+  #print-area .pb-2,
+  #invoice-print-area .pb-2{
+    padding-bottom:1.5mm!important;
+  }
+  #print-area .mb-2,
+  #invoice-print-area .mb-2{
+    margin-bottom:1.5mm!important;
+  }
+
+  /* Tetap aman kanan-kiri A4 */
+  #print-area *,#invoice-print-area *{
+    box-sizing:border-box!important;
+    max-width:100%!important;
+  }
+  #print-area table,#invoice-print-area table{
+    width:100%!important;
+    max-width:100%!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+  }
+  #print-area th,#print-area td,#invoice-print-area th,#invoice-print-area td{
+    font-size:9px!important;
+    line-height:1.24!important;
+    padding:3.2px 4px!important;
+    overflow-wrap:anywhere!important;
+    white-space:normal!important;
+  }
+
+  .no-print,.mulia-v3-topbar,.mulia-v3-dashboard,.mulia-v4-actionbar,.mulia-pro-actionbar,
+  .v9-sidebar,.v9-topbar,.v9-command-center,.v10-action-panel,.v10-audit-summary,
+  .v11-customer-hub,.v11-action-panel,.v12-customer-select-wrap,#v15FloatingActionMenu,
+  #v16FloatingActionMenu,.v15-action-trigger,.v16-action-trigger{
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    margin:0!important;
+    padding:0!important;
+  }
+}
+</style>
 
 </body>
 </html>
