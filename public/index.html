@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mulia Advertising Group</title>
+<title>Mulia Advertising Group V4 Final</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -65,12 +65,377 @@ td, th { vertical-align:top; }
 }
 .invoice-signature-content { position:relative; z-index:2; }
 @media print { .invoice-watermark-text { color:rgba(30,41,59,0.08)!important; } }
+
+
+/* === UPGRADE UI RAPi + PASSWORD GATE === */
+:root { --mulia-dark:#0f172a; --mulia-blue:#2563eb; --mulia-green:#059669; --mulia-red:#dc2626; --mulia-purple:#7c3aed; }
+button { transition: all .18s ease; box-shadow: 0 1px 2px rgba(15,23,42,.08); }
+button:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15,23,42,.12); }
+button:active { transform: translateY(0); }
+.btn-row, .button-row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+.no-print .flex.gap-2, .no-print .flex.flex-wrap.gap-2 { gap:10px !important; }
+.no-print button { border-radius:10px !important; font-weight:700 !important; min-height:38px; }
+.no-print button[onclick*="addRow"], .no-print button[onclick*="Tambah"], .no-print button[onclick*="tambah"] { background:#0f172a !important; color:#fff !important; }
+.no-print button[onclick*="simpan"], .no-print button[onclick*="Simpan"] { background:#2563eb !important; color:#fff !important; }
+.no-print button[onclick*="Cetak"], .no-print button[onclick*="cetak"], .no-print button[onclick*="print"] { background:#059669 !important; color:#fff !important; }
+.no-print button[onclick*="hapus"], .no-print button[onclick*="Hapus"], .no-print button[onclick*="reset"], .no-print button[onclick*="Reset"] { background:#dc2626 !important; color:#fff !important; }
+.no-print button[onclick*="Import"], .no-print button[onclick*="import"] { background:#7c3aed !important; color:#fff !important; }
+.no-print button[onclick*="backup"], .no-print button[onclick*="Backup"] { background:#047857 !important; color:#fff !important; }
+.no-print button[onclick*="restore"], .no-print button[onclick*="Restore"] { background:#d97706 !important; color:#fff !important; }
+.mulia-section-title { font-size:12px; font-weight:900; text-transform:uppercase; color:#334155; letter-spacing:.04em; }
+#passwordGate { position:fixed; inset:0; background:linear-gradient(135deg,#020617,#0f172a 55%,#1e293b); z-index:999999; display:flex; align-items:center; justify-content:center; padding:18px; }
+#passwordGate .gate-card { width:100%; max-width:420px; background:#fff; border-radius:22px; box-shadow:0 30px 80px rgba(0,0,0,.35); overflow:hidden; }
+#passwordGate .gate-head { background:#0f172a; color:#fff; padding:22px; text-align:center; }
+#passwordGate .gate-body { padding:22px; }
+#passwordGate input { width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:12px 14px; font-size:16px; outline:none; }
+#passwordGate input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+#passwordGate button { width:100%; margin-top:12px; background:#2563eb; color:#fff; border-radius:12px; padding:12px 14px; font-weight:900; }
+#passwordError { display:none; color:#dc2626; font-size:12px; font-weight:700; margin-top:8px; }
+.mulia-logout-btn { float:right; margin-top:-2px; background:#334155 !important; color:white !important; padding:7px 12px !important; border-radius:10px !important; font-size:12px !important; min-height:32px !important; }
+@media(max-width:768px){ .no-print button{width:100%;} .no-print .flex.gap-2{flex-direction:column;} .mulia-logout-btn{float:none;margin-top:10px;width:auto!important;} }
+
 </style>
+
+<!-- Google Drive Auto Sync -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+
+<style id="mulia-v3-style">
+/* === MULIA ADVERTISING GROUP V3 UI === */
+html { scroll-behavior:smooth; }
+body { background:linear-gradient(180deg,#eef2f7 0%,#f8fafc 100%) !important; }
+.mulia-v3-shell { max-width:1280px; margin:0 auto 1rem auto; }
+.mulia-v3-topbar {
+  position:sticky; top:0; z-index:9999;
+  background:rgba(15,23,42,.96); color:#fff;
+  backdrop-filter: blur(10px);
+  border-radius:0 0 18px 18px;
+  box-shadow:0 16px 36px rgba(15,23,42,.22);
+  margin:-1rem auto 1rem auto; max-width:1280px;
+}
+.mulia-v3-topbar-inner { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 18px; }
+.mulia-v3-brand-title { font-size:18px; font-weight:900; line-height:1.1; letter-spacing:.02em; }
+.mulia-v3-brand-sub { font-size:11px; color:#cbd5e1; margin-top:3px; }
+.mulia-v3-nav { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+.mulia-v3-nav button, .mulia-v3-nav a {
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+  color:#fff; border-radius:999px; padding:8px 12px;
+  font-size:12px; font-weight:800; text-decoration:none;
+}
+.mulia-v3-nav button:hover, .mulia-v3-nav a:hover { background:#2563eb; transform:translateY(-1px); }
+.mulia-v3-dashboard {
+  max-width:1280px; margin:0 auto 1rem auto;
+  display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px;
+}
+.mulia-v3-card {
+  background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:14px;
+  box-shadow:0 10px 24px rgba(15,23,42,.06);
+}
+.mulia-v3-card .k { font-size:11px; font-weight:900; color:#64748b; text-transform:uppercase; }
+.mulia-v3-card .v { font-size:20px; font-weight:950; color:#0f172a; margin-top:4px; }
+.mulia-v3-card .s { font-size:11px; color:#64748b; margin-top:2px; }
+.mulia-v3-section {
+  border:1px solid #e2e8f0 !important;
+  border-radius:18px !important;
+  box-shadow:0 14px 30px rgba(15,23,42,.06) !important;
+  overflow:hidden !important;
+}
+.mulia-v3-section-header {
+  background:#f8fafc; border-bottom:1px solid #e2e8f0;
+  padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.mulia-v3-section-header h3 { margin:0; font-weight:950; color:#0f172a; font-size:14px; }
+.mulia-v3-toolbar {
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; margin-bottom:12px;
+}
+.mulia-v3-toolbar-title { font-size:11px; font-weight:950; color:#475569; text-transform:uppercase; width:100%; }
+.mulia-v3-toolbar button {
+  min-height:38px !important; border-radius:10px !important;
+  font-size:13px !important; font-weight:850 !important; padding:8px 12px !important;
+}
+.mulia-v3-primary { background:#2563eb !important; color:#fff !important; }
+.mulia-v3-success { background:#059669 !important; color:#fff !important; }
+.mulia-v3-warning { background:#d97706 !important; color:#fff !important; }
+.mulia-v3-danger { background:#dc2626 !important; color:#fff !important; }
+.mulia-v3-dark { background:#0f172a !important; color:#fff !important; }
+.mulia-v3-purple { background:#7c3aed !important; color:#fff !important; }
+.mulia-v3-hide { display:none !important; }
+.mulia-v3-compact-actions { display:flex !important; flex-wrap:wrap !important; gap:8px !important; align-items:center !important; }
+.no-print button { white-space:nowrap; }
+.no-print .bg-white.rounded-xl.shadow, .no-print.max-w-6xl.bg-white.rounded-xl.shadow {
+  border-radius:18px !important; box-shadow:0 14px 30px rgba(15,23,42,.06) !important;
+}
+table thead { position:sticky; top:0; z-index:2; }
+tbody tr:hover { background:#f8fafc; }
+@media(max-width:900px){
+  .mulia-v3-topbar-inner{flex-direction:column;align-items:flex-start}
+  .mulia-v3-nav{justify-content:flex-start}
+  .mulia-v3-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+  .mulia-v3-dashboard{grid-template-columns:1fr}
+  .mulia-v3-nav a, .mulia-v3-nav button{width:100%;text-align:center}
+  .mulia-v3-toolbar button{width:100%}
+}
+@media print {
+  .mulia-v3-topbar, .mulia-v3-dashboard, .mulia-v3-toolbar { display:none !important; }
+}
+</style>
+
+
+<style id="mulia-v4-final-ui">
+/* === MULIA ADVERTISING GROUP V4 FINAL UI === */
+.mulia-v4-actionbar{
+  max-width:1280px;
+  margin:0 auto 16px auto;
+  background:#ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:18px;
+  box-shadow:0 14px 30px rgba(15,23,42,.08);
+  overflow:hidden;
+}
+.mulia-v4-actionbar-head{
+  background:#0f172a;
+  color:#fff;
+  padding:13px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.mulia-v4-actionbar-head h2{
+  font-size:15px;
+  font-weight:950;
+  margin:0;
+}
+.mulia-v4-actionbar-head p{
+  font-size:11px;
+  color:#cbd5e1;
+  margin:2px 0 0 0;
+}
+.mulia-v4-grid{
+  padding:14px;
+  display:grid;
+  grid-template-columns:1.2fr 1.2fr 1fr;
+  gap:14px;
+}
+.mulia-v4-group{
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:12px;
+  background:#f8fafc;
+}
+.mulia-v4-group-title{
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+  color:#334155;
+  margin-bottom:8px;
+}
+.mulia-v4-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.mulia-v4-buttons button{
+  border:none;
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:900;
+  min-height:38px;
+  color:white;
+}
+.mulia-v4-file{
+  display:block;
+  width:100%;
+  margin-bottom:8px;
+  font-size:12px;
+}
+.mulia-v4-primary{background:#2563eb!important}
+.mulia-v4-dark{background:#0f172a!important}
+.mulia-v4-purple{background:#7c3aed!important}
+.mulia-v4-green{background:#047857!important}
+.mulia-v4-orange{background:#d97706!important}
+.mulia-v4-red{background:#dc2626!important}
+.mulia-v4-teal{background:#0f766e!important}
+
+/* Kurangi keramaian tombol lama, tapi fungsi tetap ada */
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-blue-50 button,
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-purple-50 button,
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-slate-50 button{
+  box-shadow:none!important;
+}
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-blue-50,
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-purple-50,
+#penawaranFormAnchor ~ .max-w-6xl .border.bg-slate-50{
+  display:none!important;
+}
+#penawaranFormAnchor ~ .max-w-6xl .px-5.pb-5 > .flex.gap-2.mb-3,
+#invoice-ui .flex.gap-2,
+#invoice-ui .flex.flex-wrap.gap-2{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:12px;
+}
+#penawaranFormAnchor ~ .max-w-6xl .px-5.pb-5 > .flex.gap-2.mb-3:before{
+  content:"Aksi Penawaran";
+  display:block;
+  width:100%;
+  font-size:11px;
+  font-weight:950;
+  color:#334155;
+  text-transform:uppercase;
+}
+#invoice-ui .flex.gap-2:before,
+#invoice-ui .flex.flex-wrap.gap-2:before{
+  content:"Aksi Invoice";
+  display:block;
+  width:100%;
+  font-size:11px;
+  font-weight:950;
+  color:#334155;
+  text-transform:uppercase;
+}
+@media(max-width:950px){
+  .mulia-v4-grid{grid-template-columns:1fr}
+  .mulia-v4-buttons button{width:100%}
+}
+@media print{
+  .mulia-v4-actionbar{display:none!important}
+}
+</style>
+
 </head>
 <body class="min-h-screen p-4 md:p-6">
 
+<div class="mulia-v3-topbar no-print" id="top">
+  <div class="mulia-v3-topbar-inner">
+    <div>
+      <div class="mulia-v3-brand-title">MULIA ADVERTISING GROUP</div>
+      <div class="mulia-v3-brand-sub">Penawaran • Invoice • Database • Google Drive Auto Sync</div>
+    </div>
+    <div class="mulia-v3-nav">
+      <a href="#gdrive-sync-panel">☁ Drive</a>
+      <a href="#penawaranFormAnchor">📄 Penawaran</a>
+      <a href="#invoiceFormAnchor">🧾 Invoice</a>
+      <a href="#dataPenawaranAnchor">📋 Data SPH</a>
+      <a href="#dataInvoiceAnchor">💰 Data Invoice</a>
+      <button onclick="muliaV3RefreshDashboard()">🔄 Refresh</button>
+    </div>
+  </div>
+</div>
+
+<div class="mulia-v3-dashboard no-print">
+  <div class="mulia-v3-card"><div class="k">Penawaran</div><div class="v" id="v3TotalPenawaran">0</div><div class="s">Total data SPH</div></div>
+  <div class="mulia-v3-card"><div class="k">Invoice</div><div class="v" id="v3TotalInvoice">0</div><div class="s">Total nota</div></div>
+  <div class="mulia-v3-card"><div class="k">Belum Bayar</div><div class="v" id="v3BelumBayar">0</div><div class="s">Perlu follow up</div></div>
+  <div class="mulia-v3-card"><div class="k">DP / Belum Lunas</div><div class="v" id="v3DP">0</div><div class="s">Masih ada sisa</div></div>
+  <div class="mulia-v3-card"><div class="k">Lunas</div><div class="v" id="v3Lunas">0</div><div class="s">Selesai</div></div>
+</div>
+
+
+<div class="max-w-6xl mx-auto bg-white rounded-xl shadow no-print mb-6 overflow-hidden" id="gdrive-sync-panel">
+  <div class="p-4 border-l-4 border-blue-600 bg-blue-50">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 class="font-bold text-slate-900">Google Drive Auto Sync</h2>
+        <p class="text-xs text-slate-600">Login Google lalu data penawaran & invoice bisa backup/restore ke Google Drive.</p>
+        <p id="gdriveStatus" class="text-xs font-semibold text-blue-700 mt-1">Status: Belum login Google Drive</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="initGoogleDrive()" class="bg-blue-700 hover:bg-blue-800 text-white text-sm px-4 py-2 rounded">🔐 Login Google</button>
+        <button onclick="backupToGoogleDrive()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm px-4 py-2 rounded">☁ Backup Drive</button>
+        <button onclick="restoreFromGoogleDrive()" class="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded">☁ Restore Drive</button>
+      </div>
+    </div>
+    <div class="mt-3 text-[11px] text-slate-600 bg-white border rounded p-3">Google Client ID sudah terpasang. Klik <b>Login Google</b>, lalu gunakan Backup/Restore Drive. Setiap klik Simpan/Hapus akan mencoba auto backup jika sudah login.</div>
+  </div>
+</div>
+
+
+<div id="passwordGate">
+  <div class="gate-card">
+    <div class="gate-head">
+      <div style="font-size:13px;letter-spacing:.16em;font-weight:800;color:#93c5fd;">LOGIN ADMIN</div>
+      <h2 style="font-size:22px;font-weight:900;margin-top:6px;">MULIA ADVERTISING GROUP</h2>
+      <p style="font-size:12px;color:#cbd5e1;margin-top:4px;">Penawaran • Invoice • Database Customer</p>
+    </div>
+    <div class="gate-body">
+      <label class="label">Masukkan Password</label>
+      <input id="appPasswordInput" type="password" placeholder="Password aplikasi" onkeydown="if(event.key==='Enter') checkAppPassword()">
+      <button onclick="checkAppPassword()">🔐 Masuk Aplikasi</button>
+      <div id="passwordError">Password salah. Coba lagi.</div>
+      <p style="font-size:11px;color:#64748b;margin-top:12px;line-height:1.5;">Password default: <b>mulia123</b>. Bisa diganti di dalam file HTML pada bagian <b>APP_PASSWORD</b>.</p>
+    </div>
+  </div>
+</div>
+
+
+<div class="mulia-v4-actionbar no-print" id="v4ActionBar">
+  <div class="mulia-v4-actionbar-head">
+    <div>
+      <h2>Toolbar Utama Mulia Advertising Group</h2>
+      <p>Semua import, backup, restore, dan Google Drive dikumpulkan di sini agar form penawaran & invoice lebih bersih.</p>
+    </div>
+    <div class="mulia-v4-buttons">
+      <button class="mulia-v4-dark" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆ Atas</button>
+      <button class="mulia-v4-teal" onclick="muliaV3RefreshDashboard()">🔄 Refresh Dashboard</button>
+    </div>
+  </div>
+  <div class="mulia-v4-grid">
+    <div class="mulia-v4-group">
+      <div class="mulia-v4-group-title">Import & Lampiran</div>
+      <input id="v4ImportHargaFile" class="mulia-v4-file" type="file" accept=".xlsx,.xls,.docx" onchange="muliaV4MirrorFile('v4ImportHargaFile','importHargaFile')">
+      <div class="mulia-v4-buttons">
+        <button class="mulia-v4-purple" onclick="bersihkanDanImport()">📥 Import Rincian</button>
+        <button class="mulia-v4-red" onclick="hapusSemuaItem()">🧹 Kosongkan Tabel</button>
+      </div>
+      <div style="height:10px"></div>
+      <input id="v4ArsipFiles" class="mulia-v4-file" type="file" multiple accept=".pdf,.docx,.xlsx,.xls,.jpg,.jpeg,.png,.webp,.json" onchange="muliaV4MirrorFile('v4ArsipFiles','arsipFiles')">
+      <div class="mulia-v4-buttons">
+        <button class="mulia-v4-purple" onclick="importArsipLama()">📂 Import Arsip</button>
+      </div>
+    </div>
+
+    <div class="mulia-v4-group">
+      <div class="mulia-v4-group-title">Backup, Restore & Google Drive</div>
+      <div class="mulia-v4-buttons">
+        <button class="mulia-v4-primary" onclick="initGoogleDrive()">🔐 Login Google</button>
+        <button class="mulia-v4-green" onclick="backupToGoogleDrive()">☁ Backup Drive</button>
+        <button class="mulia-v4-orange" onclick="restoreFromGoogleDrive()">☁ Restore Drive</button>
+      </div>
+      <div style="height:10px"></div>
+      <input id="v4RestoreDatabaseFile" class="mulia-v4-file" type="file" accept=".json" onchange="muliaV4MirrorFile('v4RestoreDatabaseFile','restoreDatabaseFile')">
+      <div class="mulia-v4-buttons">
+        <button class="mulia-v4-green" onclick="backupDatabaseMulia()">💾 Backup JSON</button>
+        <button class="mulia-v4-orange" onclick="restoreDatabaseMulia()">📂 Restore JSON</button>
+      </div>
+    </div>
+
+    <div class="mulia-v4-group">
+      <div class="mulia-v4-group-title">Draft & Navigasi Cepat</div>
+      <div class="mulia-v4-buttons">
+        <button class="mulia-v4-dark" onclick="location.hash='penawaranFormAnchor'">📄 Form Penawaran</button>
+        <button class="mulia-v4-dark" onclick="location.hash='invoiceFormAnchor'">🧾 Form Invoice</button>
+        <button class="mulia-v4-primary" onclick="typeof refreshDraftPenawaran==='function'?refreshDraftPenawaran():location.hash='dataPenawaranAnchor'">📋 Draft Penawaran</button>
+        <button class="mulia-v4-primary" onclick="typeof renderInvoiceList==='function'?renderInvoiceList():location.hash='dataInvoiceAnchor'">💰 Draft Invoice</button>
+        <button class="mulia-v4-teal" onclick="location.hash='dataPenawaranAnchor'">Data SPH</button>
+        <button class="mulia-v4-teal" onclick="location.hash='dataInvoiceAnchor'">Data Invoice</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="penawaranFormAnchor"></div>
 <div class="max-w-6xl mx-auto bg-white rounded-xl shadow no-print mb-6 overflow-hidden">
   <div class="bg-slate-900 text-white p-5">
+    <button onclick="logoutApp()" class="mulia-logout-btn">Keluar</button>
     <h1 class="text-xl font-bold">MULIA ADVERTISING GROUP</h1>
     <p class="text-slate-300 text-sm">Penawaran • Invoice • Database Customer</p>
     
@@ -250,7 +615,7 @@ Pelunasan dilakukan sesuai termin pekerjaan atau sebelum barang dikirim/dipasang
   </div>
 
   <div class="px-5 pb-5">
-    <div class="flex gap-2 mb-3">
+    <div class="mulia-v3-toolbar"><div class="mulia-v3-toolbar-title">Aksi Penawaran</div>
       <button onclick="addRow()" class="bg-slate-800 hover:bg-slate-900 text-white text-sm px-4 py-2 rounded">+ Tambah Item</button>
       <button onclick="simpanPenawaran(false)" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded">💾 Simpan Penawaran</button>
       <button onclick="simpanPenawaran(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded">🖨️ Simpan & Cetak PDF</button>
@@ -808,7 +1173,7 @@ render();
 <div id="data-penawaran-ui" class="max-w-6xl mx-auto bg-white rounded-xl shadow no-print my-6 overflow-hidden">
   <div class="bg-slate-900 text-white p-5 flex flex-wrap items-center justify-between gap-3">
     <div>
-      <h1 class="text-xl font-bold">Data Penawaran Tersimpan - MULIA ADVERTISING GROUP</h1>
+      <h1 class="text-xl font-bold"><span id="dataPenawaranAnchor"></span>Data Penawaran Tersimpan - MULIA ADVERTISING GROUP</h1>
       <p class="text-slate-300 text-sm">Cek, edit, update, hapus, atau buat invoice dari penawaran lama.</p>
     </div>
     <button onclick="refreshDataPenawaranList()" class="bg-white text-slate-900 hover:bg-slate-100 text-sm px-4 py-2 rounded font-bold">🔄 Refresh Data</button>
@@ -855,7 +1220,7 @@ render();
 <!-- ================= MODUL INVOICE DARI DRAFT PENAWARAN ================= -->
 <div id="invoice-ui" class="max-w-6xl mx-auto bg-white rounded-xl shadow no-print my-6 overflow-hidden">
   <div class="bg-indigo-900 text-white p-5">
-    <h1 class="text-xl font-bold">Modul Invoice / Nota Pembayaran</h1>
+    <h1 class="text-xl font-bold"><span id="invoiceFormAnchor"></span>Modul Invoice / Nota Pembayaran</h1>
     <p class="text-indigo-200 text-sm">Bisa buat invoice langsung atau ambil data dari penawaran tersimpan. PPN invoice bisa dipilih per PT.</p>
   </div>
   <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -970,7 +1335,7 @@ render();
 <div id="data-invoice-ui" class="max-w-6xl mx-auto bg-white rounded-xl shadow no-print my-6 overflow-hidden">
   <div class="bg-indigo-950 text-white p-5 flex flex-wrap items-center justify-between gap-3">
     <div>
-      <h1 class="text-xl font-bold">Data Invoice Tersimpan - MULIA ADVERTISING GROUP</h1>
+      <h1 class="text-xl font-bold"><span id="dataInvoiceAnchor"></span>Data Invoice Tersimpan - MULIA ADVERTISING GROUP</h1>
       <p class="text-indigo-200 text-sm">Cek invoice lama, edit status pembayaran, cetak ulang, update, atau hapus invoice.</p>
     </div>
     <button onclick="refreshDataInvoiceList()" class="bg-white text-indigo-950 hover:bg-indigo-100 text-sm px-4 py-2 rounded font-bold">🔄 Refresh Invoice</button>
@@ -1898,6 +2263,149 @@ async function restoreDatabaseMulia(){
   arsipLog('Restore JSON berhasil: '+count+' data/key masuk.','success');
   alert('Restore selesai. Data masuk: '+count);
 }
+</script>
+
+
+<script>
+/* === PASSWORD APP - static HTML protection === */
+const APP_PASSWORD = "mulia123";
+function checkAppPassword(){
+  const input = document.getElementById('appPasswordInput');
+  const err = document.getElementById('passwordError');
+  if(!input) return;
+  if(input.value === APP_PASSWORD){
+    sessionStorage.setItem('mulia_app_unlocked','yes');
+    document.getElementById('passwordGate').style.display='none';
+  } else {
+    err.style.display='block';
+    input.select();
+  }
+}
+function logoutApp(){
+  sessionStorage.removeItem('mulia_app_unlocked');
+  const gate = document.getElementById('passwordGate');
+  if(gate) gate.style.display='flex';
+  const input = document.getElementById('appPasswordInput');
+  if(input){ input.value=''; setTimeout(()=>input.focus(),100); }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  const gate = document.getElementById('passwordGate');
+  if(sessionStorage.getItem('mulia_app_unlocked') === 'yes'){
+    if(gate) gate.style.display='none';
+  } else {
+    if(gate) gate.style.display='flex';
+    setTimeout(()=>{ const input=document.getElementById('appPasswordInput'); if(input) input.focus(); },150);
+  }
+});
+</script>
+\n<script>\n/* GOOGLE DRIVE AUTO SYNC - MULIA ADVERTISING GROUP */\nconst GOOGLE_CLIENT_ID = "169606052820-5ij848mubicfdppo5b2g5qpaub67munt.apps.googleusercontent.com";\nconst GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";\nconst DRIVE_DB_FILENAME = "Mulia_Advertising_Group_Database_Latest.json";\nlet googleTokenClient = null;\nlet googleAccessToken = null;\nfunction setGDriveStatus(msg, ok=false){\n  const el=document.getElementById("gdriveStatus");\n  if(el){ el.textContent="Status: "+msg; el.className="text-xs font-semibold mt-1 "+(ok?"text-emerald-700":"text-blue-700"); }\n}\nfunction initGoogleDrive(){\n  if(GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")){ alert("Client ID Google belum diisi. Buka HTML di Notepad, cari GOOGLE_CLIENT_ID, lalu isi Client ID dari Google Cloud."); return; }\n  if(!window.google || !google.accounts || !google.accounts.oauth2){ alert("Google API belum siap. Pastikan internet aktif lalu refresh halaman."); return; }\n  googleTokenClient = google.accounts.oauth2.initTokenClient({\n    client_id: GOOGLE_CLIENT_ID, scope: GOOGLE_SCOPES,\n    callback: (tokenResponse)=>{ googleAccessToken=tokenResponse.access_token; setGDriveStatus("Login Google Drive berhasil", true); }\n  });\n  googleTokenClient.requestAccessToken({prompt:"consent"});\n}\nfunction collectAllLocalStorageForBackup(){\n  const all={};\n  for(let i=0;i<localStorage.length;i++){ const key=localStorage.key(i); all[key]=localStorage.getItem(key); }\n  return {app:"Mulia Advertising Group", version:"google-drive-auto-sync", exported_at:new Date().toISOString(), origin:location.href, localStorage:all};\n}\nasync function driveFindFile(){\n  const q="name='"+DRIVE_DB_FILENAME+"' and trashed=false";\n  const res=await fetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime)",{headers:{Authorization:"Bearer "+googleAccessToken}});\n  const data=await res.json();\n  return data.files && data.files.length ? data.files[0] : null;\n}\nasync function backupToGoogleDrive(){\n  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Backup Drive lagi."); return; }\n  const payload=collectAllLocalStorageForBackup();\n  const jsonBlob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});\n  const existing=await driveFindFile();\n  const metadata={name:DRIVE_DB_FILENAME,mimeType:"application/json"};\n  const form=new FormData();\n  form.append("metadata",new Blob([JSON.stringify(metadata)],{type:"application/json"}));\n  form.append("file",jsonBlob);\n  let url="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"; let method="POST";\n  if(existing){ url="https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart"; method="PATCH"; }\n  const res=await fetch(url,{method,headers:{Authorization:"Bearer "+googleAccessToken},body:form});\n  if(!res.ok){ alert("Backup Google Drive gagal: "+await res.text()); setGDriveStatus("Backup gagal"); return; }\n  setGDriveStatus("Backup tersimpan ke Google Drive", true); alert("Backup Google Drive berhasil.");\n}\nasync function restoreFromGoogleDrive(){\n  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Restore Drive lagi."); return; }\n  const file=await driveFindFile();\n  if(!file){ alert("File backup belum ditemukan di Google Drive."); return; }\n  const res=await fetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});\n  const payload=await res.json();\n  if(!payload.localStorage){ alert("Format backup tidak valid."); return; }\n  if(!confirm("Restore dari Google Drive akan menimpa data browser saat ini. Lanjutkan?")) return;\n  Object.keys(payload.localStorage).forEach(key=>localStorage.setItem(key,payload.localStorage[key]));\n  setGDriveStatus("Restore berhasil dari Google Drive", true); alert("Restore berhasil. Halaman akan direfresh."); location.reload();\n}\ndocument.addEventListener("click",function(e){\n  const txt=(e.target && e.target.innerText || "").toLowerCase();\n  const isSave=txt.includes("simpan penawaran")||txt.includes("simpan invoice")||txt.includes("hapus");\n  if(isSave && googleAccessToken){ setTimeout(()=>backupToGoogleDrive().catch(()=>{}),1200); }\n});\n</script>\n
+
+<script id="mulia-v3-script">
+function muliaV3GetAllStorageObjects(){
+  const values = [];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      const raw = localStorage.getItem(key);
+      if(!raw) continue;
+      try { values.push({key, value: JSON.parse(raw)}); }
+      catch(e){ values.push({key, value: raw}); }
+    }
+  }catch(e){}
+  return values;
+}
+function muliaV3CountByKeyNeedle(needles){
+  const data = muliaV3GetAllStorageObjects();
+  let count = 0;
+  const arrs = [];
+  data.forEach(x=>{
+    const k = String(x.key||"").toLowerCase();
+    if(needles.some(n=>k.includes(n))){
+      if(Array.isArray(x.value)) arrs.push(x.value);
+      else if(x.value && typeof x.value === "object"){
+        Object.values(x.value).forEach(v=>{ if(Array.isArray(v)) arrs.push(v); });
+      }
+    }
+  });
+  arrs.forEach(a=> count += a.length);
+  return count;
+}
+function muliaV3FindInvoices(){
+  const data = muliaV3GetAllStorageObjects();
+  let invoices = [];
+  data.forEach(x=>{
+    const k = String(x.key||"").toLowerCase();
+    const collect = (v)=>{
+      if(Array.isArray(v)){
+        v.forEach(item=>{
+          const s = JSON.stringify(item||{}).toLowerCase();
+          if(s.includes("inv-") || s.includes("invoice")) invoices.push(item);
+        });
+      } else if(v && typeof v==="object"){
+        Object.values(v).forEach(collect);
+      }
+    };
+    if(k.includes("invoice") || k.includes("mulia") || k.includes("database")) collect(x.value);
+  });
+  const seen = new Set();
+  invoices = invoices.filter(i=>{
+    const id = (i && (i.nomor || i.noInvoice || i.invoiceNo || i.id)) || JSON.stringify(i).slice(0,50);
+    if(seen.has(id)) return false;
+    seen.add(id); return true;
+  });
+  return invoices;
+}
+function muliaV3RefreshDashboard(){
+  const invoices = muliaV3FindInvoices();
+  const penawaranCount = Math.max(
+    muliaV3CountByKeyNeedle(["penawaran","quotation","sph"]),
+    document.querySelectorAll("tbody tr").length ? 0 : 0
+  );
+  let belum=0, dp=0, lunas=0;
+  invoices.forEach(inv=>{
+    const s = String(inv.status || inv.statusPembayaran || inv.payment_status || "").toLowerCase();
+    const total = Number(String(inv.total||inv.grandTotal||0).replace(/[^\d]/g,"")) || 0;
+    const paid = Number(String(inv.dp||inv.terbayar||inv.paid||0).replace(/[^\d]/g,"")) || 0;
+    const remain = Number(String(inv.sisa||inv.sisaTagihan||inv.remaining||0).replace(/[^\d]/g,"")) || Math.max(total-paid,0);
+    if(s.includes("lunas") && !s.includes("belum")) lunas++;
+    else if(s.includes("dp") || paid>0 || remain>0) dp++;
+    else belum++;
+  });
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  set("v3TotalPenawaran", penawaranCount || (document.body.innerText.match(/\/SPH\//g)||[]).length);
+  set("v3TotalInvoice", invoices.length || (document.body.innerText.match(/INV-\d+/g)||[]).length);
+  set("v3BelumBayar", belum);
+  set("v3DP", dp);
+  set("v3Lunas", lunas);
+}
+document.addEventListener("DOMContentLoaded", ()=>{
+  setTimeout(muliaV3RefreshDashboard, 800);
+  setInterval(muliaV3RefreshDashboard, 8000);
+});
+</script>
+
+
+<script id="mulia-v4-script">
+function muliaV4MirrorFile(fromId,toId){
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  if(!from || !to) return;
+  try{
+    const dt = new DataTransfer();
+    Array.from(from.files || []).forEach(f=>dt.items.add(f));
+    to.files = dt.files;
+    to.dispatchEvent(new Event("change", {bubbles:true}));
+  }catch(e){
+    alert("Browser tidak mengizinkan pemindahan file otomatis. Gunakan input file asli di bawah jika import belum berjalan.");
+  }
+}
+document.addEventListener("DOMContentLoaded", function(){
+  const st = document.getElementById("gdriveStatus");
+  if(st && !st.dataset.v4){
+    st.dataset.v4 = "1";
+    st.textContent = st.textContent + " • V4 Toolbar aktif";
+  }
+});
 </script>
 
 </body>
