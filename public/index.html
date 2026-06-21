@@ -2472,5 +2472,74 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
+
+<script id="mulia-dashboard-sync-fix">
+/* Dashboard FIX: hitung hanya dari database resmi aplikasi:
+   PENAWARAN_ dan INVOICE_, bukan dari seluruh teks halaman/localStorage lain. */
+function muliaGetPenawaranResmi(){
+  const arr = [];
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(key && key.startsWith("PENAWARAN_")){
+      try{ arr.push(JSON.parse(localStorage.getItem(key))); }catch(e){}
+    }
+  }
+  return arr;
+}
+function muliaGetInvoiceResmi(){
+  const arr = [];
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(key && key.startsWith("INVOICE_")){
+      try{ arr.push(JSON.parse(localStorage.getItem(key))); }catch(e){}
+    }
+  }
+  return arr;
+}
+function muliaNormalizeStatusInvoice(inv){
+  const status = String(inv.status || "").toUpperCase();
+  const dp = Number(String(inv.dp || inv.terbayar || 0).replace(/[^\d]/g,"")) || 0;
+  let sisa = Number(String(inv.sisa || inv.sisa_tagihan || inv.sisaTagihan || 0).replace(/[^\d]/g,"")) || 0;
+  const total = Number(String(inv.total || inv.grand_total || inv.grandTotal || 0).replace(/[^\d]/g,"")) || 0;
+  if(!sisa && total && dp) sisa = Math.max(total - dp, 0);
+
+  if(status.includes("LUNAS") && !status.includes("BELUM")) return "LUNAS";
+  if(status.includes("DP")) return "DP";
+  if(dp > 0 && sisa > 0) return "DP";
+  if(total > 0 && sisa <= 0 && dp >= total) return "LUNAS";
+  return "BELUM";
+}
+function muliaV3RefreshDashboard(){
+  const penawaran = (typeof getAllPenawaran === "function") ? getAllPenawaran().map(x=>x.data) : muliaGetPenawaranResmi();
+  const invoices = muliaGetInvoiceResmi();
+
+  let belum = 0, dp = 0, lunas = 0;
+  invoices.forEach(inv=>{
+    const st = muliaNormalizeStatusInvoice(inv);
+    if(st === "LUNAS") lunas++;
+    else if(st === "DP") dp++;
+    else belum++;
+  });
+
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=String(val); };
+  set("v3TotalPenawaran", penawaran.length);
+  set("v3TotalInvoice", invoices.length);
+  set("v3BelumBayar", belum);
+  set("v3DP", dp);
+  set("v3Lunas", lunas);
+
+  const totalSPH = document.getElementById("dataTotalPenawaran");
+  if(totalSPH) totalSPH.innerText = String(penawaran.length);
+  const totalINV = document.getElementById("dataTotalInvoice");
+  if(totalINV) totalINV.innerText = String(invoices.length);
+  const totalINV2 = document.getElementById("invoiceTotalCount");
+  if(totalINV2) totalINV2.innerText = String(invoices.length);
+}
+document.addEventListener("DOMContentLoaded", ()=>{
+  setTimeout(muliaV3RefreshDashboard, 500);
+  setInterval(muliaV3RefreshDashboard, 3000);
+});
+</script>
+
 </body>
 </html>
