@@ -2298,7 +2298,71 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 </script>
-\n<script>\n/* GOOGLE DRIVE AUTO SYNC - MULIA ADVERTISING GROUP */\nconst GOOGLE_CLIENT_ID = "169606052820-5ij848mubicfdppo5b2g5qpaub67munt.apps.googleusercontent.com";\nconst GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";\nconst DRIVE_DB_FILENAME = "Mulia_Advertising_Group_Database_Latest.json";\nlet googleTokenClient = null;\nlet googleAccessToken = null;\nfunction setGDriveStatus(msg, ok=false){\n  const el=document.getElementById("gdriveStatus");\n  if(el){ el.textContent="Status: "+msg; el.className="text-xs font-semibold mt-1 "+(ok?"text-emerald-700":"text-blue-700"); }\n}\nfunction initGoogleDrive(){\n  if(GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")){ alert("Client ID Google belum diisi. Buka HTML di Notepad, cari GOOGLE_CLIENT_ID, lalu isi Client ID dari Google Cloud."); return; }\n  if(!window.google || !google.accounts || !google.accounts.oauth2){ alert("Google API belum siap. Pastikan internet aktif lalu refresh halaman."); return; }\n  googleTokenClient = google.accounts.oauth2.initTokenClient({\n    client_id: GOOGLE_CLIENT_ID, scope: GOOGLE_SCOPES,\n    callback: (tokenResponse)=>{ googleAccessToken=tokenResponse.access_token; setGDriveStatus("Login Google Drive berhasil", true); }\n  });\n  googleTokenClient.requestAccessToken({prompt:"consent"});\n}\nfunction collectAllLocalStorageForBackup(){\n  const all={};\n  for(let i=0;i<localStorage.length;i++){ const key=localStorage.key(i); all[key]=localStorage.getItem(key); }\n  return {app:"Mulia Advertising Group", version:"google-drive-auto-sync", exported_at:new Date().toISOString(), origin:location.href, localStorage:all};\n}\nasync function driveFindFile(){\n  const q="name='"+DRIVE_DB_FILENAME+"' and trashed=false";\n  const res=await fetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime)",{headers:{Authorization:"Bearer "+googleAccessToken}});\n  const data=await res.json();\n  return data.files && data.files.length ? data.files[0] : null;\n}\nasync function backupToGoogleDrive(){\n  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Backup Drive lagi."); return; }\n  const payload=collectAllLocalStorageForBackup();\n  const jsonBlob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});\n  const existing=await driveFindFile();\n  const metadata={name:DRIVE_DB_FILENAME,mimeType:"application/json"};\n  const form=new FormData();\n  form.append("metadata",new Blob([JSON.stringify(metadata)],{type:"application/json"}));\n  form.append("file",jsonBlob);\n  let url="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"; let method="POST";\n  if(existing){ url="https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart"; method="PATCH"; }\n  const res=await fetch(url,{method,headers:{Authorization:"Bearer "+googleAccessToken},body:form});\n  if(!res.ok){ alert("Backup Google Drive gagal: "+await res.text()); setGDriveStatus("Backup gagal"); return; }\n  setGDriveStatus("Backup tersimpan ke Google Drive", true); alert("Backup Google Drive berhasil.");\n}\nasync function restoreFromGoogleDrive(){\n  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Restore Drive lagi."); return; }\n  const file=await driveFindFile();\n  if(!file){ alert("File backup belum ditemukan di Google Drive."); return; }\n  const res=await fetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});\n  const payload=await res.json();\n  if(!payload.localStorage){ alert("Format backup tidak valid."); return; }\n  if(!confirm("Restore dari Google Drive akan menimpa data browser saat ini. Lanjutkan?")) return;\n  Object.keys(payload.localStorage).forEach(key=>localStorage.setItem(key,payload.localStorage[key]));\n  setGDriveStatus("Restore berhasil dari Google Drive", true); alert("Restore berhasil. Halaman akan direfresh."); location.reload();\n}\ndocument.addEventListener("click",function(e){\n  const txt=(e.target && e.target.innerText || "").toLowerCase();\n  const isSave=txt.includes("simpan penawaran")||txt.includes("simpan invoice")||txt.includes("hapus");\n  if(isSave && googleAccessToken){ setTimeout(()=>backupToGoogleDrive().catch(()=>{}),1200); }\n});\n</script>\n
+
+<script>
+/* GOOGLE DRIVE AUTO SYNC - MULIA ADVERTISING GROUP */
+const GOOGLE_CLIENT_ID = "169606052820-5ij848mubicfdppo5b2g5qpaub67munt.apps.googleusercontent.com";
+const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
+const DRIVE_DB_FILENAME = "Mulia_Advertising_Group_Database_Latest.json";
+let googleTokenClient = null;
+let googleAccessToken = null;
+function setGDriveStatus(msg, ok=false){
+  const el=document.getElementById("gdriveStatus");
+  if(el){ el.textContent="Status: "+msg; el.className="text-xs font-semibold mt-1 "+(ok?"text-emerald-700":"text-blue-700"); }
+}
+function initGoogleDrive(){
+  if(GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")){ alert("Client ID Google belum diisi. Buka HTML di Notepad, cari GOOGLE_CLIENT_ID, lalu isi Client ID dari Google Cloud."); return; }
+  if(!window.google || !google.accounts || !google.accounts.oauth2){ alert("Google API belum siap. Pastikan internet aktif lalu refresh halaman."); return; }
+  googleTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID, scope: GOOGLE_SCOPES,
+    callback: (tokenResponse)=>{ googleAccessToken=tokenResponse.access_token; setGDriveStatus("Login Google Drive berhasil", true); }
+  });
+  googleTokenClient.requestAccessToken({prompt:"consent"});
+}
+function collectAllLocalStorageForBackup(){
+  const all={};
+  for(let i=0;i<localStorage.length;i++){ const key=localStorage.key(i); all[key]=localStorage.getItem(key); }
+  return {app:"Mulia Advertising Group", version:"google-drive-auto-sync", exported_at:new Date().toISOString(), origin:location.href, localStorage:all};
+}
+async function driveFindFile(){
+  const q="name='"+DRIVE_DB_FILENAME+"' and trashed=false";
+  const res=await fetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime)",{headers:{Authorization:"Bearer "+googleAccessToken}});
+  const data=await res.json();
+  return data.files && data.files.length ? data.files[0] : null;
+}
+async function backupToGoogleDrive(){
+  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Backup Drive lagi."); return; }
+  const payload=collectAllLocalStorageForBackup();
+  const jsonBlob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const existing=await driveFindFile();
+  const metadata={name:DRIVE_DB_FILENAME,mimeType:"application/json"};
+  const form=new FormData();
+  form.append("metadata",new Blob([JSON.stringify(metadata)],{type:"application/json"}));
+  form.append("file",jsonBlob);
+  let url="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"; let method="POST";
+  if(existing){ url="https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart"; method="PATCH"; }
+  const res=await fetch(url,{method,headers:{Authorization:"Bearer "+googleAccessToken},body:form});
+  if(!res.ok){ alert("Backup Google Drive gagal: "+await res.text()); setGDriveStatus("Backup gagal"); return; }
+  setGDriveStatus("Backup tersimpan ke Google Drive", true); alert("Backup Google Drive berhasil.");
+}
+async function restoreFromGoogleDrive(){
+  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Restore Drive lagi."); return; }
+  const file=await driveFindFile();
+  if(!file){ alert("File backup belum ditemukan di Google Drive."); return; }
+  const res=await fetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});
+  const payload=await res.json();
+  if(!payload.localStorage){ alert("Format backup tidak valid."); return; }
+  if(!confirm("Restore dari Google Drive akan menimpa data browser saat ini. Lanjutkan?")) return;
+  Object.keys(payload.localStorage).forEach(key=>localStorage.setItem(key,payload.localStorage[key]));
+  setGDriveStatus("Restore berhasil dari Google Drive", true); alert("Restore berhasil. Halaman akan direfresh."); location.reload();
+}
+document.addEventListener("click",function(e){
+  const txt=(e.target && e.target.innerText || "").toLowerCase();
+  const isSave=txt.includes("simpan penawaran")||txt.includes("simpan invoice")||txt.includes("hapus");
+  if(isSave && googleAccessToken){ setTimeout(()=>backupToGoogleDrive().catch(()=>{}),1200); }
+});
+</script>
+
 
 <script id="mulia-v3-script">
 function muliaV3GetAllStorageObjects(){
