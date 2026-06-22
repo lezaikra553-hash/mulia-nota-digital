@@ -7229,5 +7229,119 @@ body.v21-simple.v21-view-data-invoice #data-invoice-ui .overflow-x-auto{
 })();
 </script>
 
+
+
+<!-- =========================================================
+     V21.5 GOOGLE LOGIN RESTORED / ADMIN SAFE
+     Catatan: akses Google tidak bisa permanen setelah refresh browser.
+     File backup tetap aman di Google Drive, tetapi sesi harus login ulang.
+     ========================================================= -->
+<style id="mulia-v21-5-google-restored-style">
+.v215-google-bar{max-width:1180px;margin:0 auto 14px auto;padding:0 14px;box-sizing:border-box;}
+.v215-google-card{background:#fff;border:1px solid #dbe4ee;border-radius:20px;box-shadow:0 12px 28px rgba(15,23,42,.07);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.v215-google-left{display:flex;align-items:center;gap:10px;min-width:260px;}
+.v215-dot{width:12px;height:12px;border-radius:999px;background:#dc2626;box-shadow:0 0 0 5px rgba(220,38,38,.12);flex:0 0 auto;}
+.v215-google-card.ok .v215-dot{background:#059669;box-shadow:0 0 0 5px rgba(5,150,105,.14);}
+.v215-google-title{font-size:13px;font-weight:950;color:#0f172a;line-height:1.2;}
+.v215-google-sub{font-size:11px;font-weight:800;color:#64748b;margin-top:2px;line-height:1.35;}
+.v215-google-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.v215-btn{border:0;border-radius:12px;padding:10px 13px;font-size:12px;font-weight:950;cursor:pointer;min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.v215-blue{background:#2563eb;color:#fff}.v215-green{background:#047857;color:#fff}.v215-orange{background:#d97706;color:#fff}.v215-soft{background:#f8fafc;color:#0f172a;border:1px solid #dbe4ee}.v215-dark{background:#0f172a;color:#fff}
+body.v21-simple #gdrive-sync-panel.v215-show-gdrive{display:block!important;max-width:1180px!important;margin:14px auto!important;width:calc(100% - 28px)!important;}
+body.v21-simple #gdrive-sync-panel.v215-show-gdrive .p-4{display:block!important;}
+@media(max-width:720px){.v215-google-card{align-items:stretch}.v215-google-left{min-width:0}.v215-google-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.v215-btn{width:100%}}
+@media print{.v215-google-bar{display:none!important}}
+</style>
+<script id="mulia-v21-5-google-restored-js">
+(function(){
+  function $(id){return document.getElementById(id)}
+  function currentGStatus(){
+    var s=(($('gdriveStatus')||{}).textContent||'').replace(/^Status:\s*/,'').trim();
+    return s || 'Belum login sesi ini';
+  }
+  function isGoogleOk(){
+    var s=currentGStatus();
+    return /berhasil|tersimpan|restore berhasil|terhubung/i.test(s) && !/belum|gagal|error/i.test(s);
+  }
+  function ensureGoogleBar(){
+    if($('v215GoogleBar')){ updateGoogleBar(); return; }
+    var bar=document.createElement('div');
+    bar.id='v215GoogleBar';
+    bar.className='v215-google-bar no-print';
+    bar.innerHTML='<div class="v215-google-card" id="v215GoogleCard">'+
+      '<div class="v215-google-left"><span class="v215-dot"></span><div><div class="v215-google-title" id="v215GoogleTitle">Google Drive: Belum login sesi ini</div><div class="v215-google-sub" id="v215GoogleSub">Data lama di Google Drive tidak hilang. Setelah refresh/buka ulang HTML, klik Login Google lagi lalu Backup/Restore.</div></div></div>'+
+      '<div class="v215-google-actions">'+
+      '<button class="v215-btn v215-blue" onclick="initGoogleDrive&&initGoogleDrive()">🔐 Login Google</button>'+
+      '<button class="v215-btn v215-green" onclick="backupToGoogleDrive&&backupToGoogleDrive()">☁ Backup Drive</button>'+
+      '<button class="v215-btn v215-orange" onclick="restoreFromGoogleDrive&&restoreFromGoogleDrive()">☁ Restore Drive</button>'+
+      '<button class="v215-btn v215-soft" onclick="v215OpenGooglePanel&&v215OpenGooglePanel()">Buka Panel Drive</button>'+
+      '</div></div>';
+    var toolbar=document.querySelector('.v21-toolbar');
+    if(toolbar && toolbar.parentNode) toolbar.parentNode.insertBefore(bar, toolbar.nextSibling);
+    else document.body.insertBefore(bar, document.body.firstChild);
+    updateGoogleBar();
+  }
+  function updateGoogleBar(){
+    var ok=isGoogleOk();
+    var card=$('v215GoogleCard'); if(card) card.classList.toggle('ok',ok);
+    var title=$('v215GoogleTitle'); if(title) title.textContent= ok ? 'Google Drive: Terhubung sesi ini' : 'Google Drive: Belum login sesi ini';
+    var sub=$('v215GoogleSub'); if(sub) sub.textContent= ok ? currentGStatus() : 'Data backup Google tetap aman. Login Google memang perlu diulang setelah refresh/buka ulang file HTML.';
+    document.querySelectorAll('.v21-gdrive-pill .txt').forEach(function(x){x.textContent= ok ? 'Google Drive: Terhubung' : 'Google Drive: Belum login sesi ini';});
+    document.querySelectorAll('.v21-gdrive-pill').forEach(function(p){p.classList.toggle('ok',ok);});
+  }
+  window.v215OpenGooglePanel=function(){
+    var p=$('gdrive-sync-panel');
+    if(p){
+      p.classList.remove('v21-hidden-admin');
+      p.classList.add('v215-show-gdrive');
+      p.style.setProperty('display','block','important');
+      p.style.setProperty('visibility','visible','important');
+      p.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  };
+  /* Tambahkan tombol Google di menu Pengaturan tanpa menghapus tombol lama */
+  function patchSettings(){
+    var body=document.querySelector('#v21AdminModal .v21-modal-body');
+    if(body && !$('v215SettingsGoogleInfo')){
+      var box=document.createElement('div');
+      box.id='v215SettingsGoogleInfo';
+      box.className='v21-modal-note';
+      box.innerHTML='Google Drive tidak rusak. Token login Google tidak disimpan permanen oleh browser untuk keamanan. Jika halaman di-refresh atau file HTML dibuka ulang, klik <b>Login Google</b> lagi sebelum Backup/Restore.';
+      body.insertBefore(box, body.children[1] || null);
+      var btn=document.createElement('button');
+      btn.className='v21-btn v21-btn-primary';
+      btn.textContent='🔐 Login Google Sekarang';
+      btn.onclick=function(){ if(window.initGoogleDrive) initGoogleDrive(); };
+      body.insertBefore(btn, body.children[2] || null);
+    }
+  }
+  /* Jangan ubah fungsi Google asli, hanya monitor statusnya */
+  if(window.setGDriveStatus && !window.setGDriveStatus.__v215){
+    var old=window.setGDriveStatus;
+    window.setGDriveStatus=function(){
+      var r=old.apply(this,arguments);
+      setTimeout(updateGoogleBar,50);
+      setTimeout(updateGoogleBar,500);
+      return r;
+    };
+    window.setGDriveStatus.__v215=true;
+  }
+  /* Klik Backup/Restore akan tetap memanggil login kalau token belum ada, sesuai fungsi asli */
+  function boot(){
+    ensureGoogleBar(); patchSettings(); updateGoogleBar();
+    /* Jangan biarkan gdrive panel dianggap rusak karena disembunyikan mode simple */
+    var btns=document.querySelectorAll('button');
+    btns.forEach(function(b){
+      var t=(b.textContent||'').trim().toLowerCase();
+      if(t.indexOf('google drive')>-1 || t.indexOf('login google')>-1){
+        if(!b.__v215Tip){ b.title='Klik untuk login Google Drive sesi ini. Setelah refresh, login perlu diulang.'; b.__v215Tip=true; }
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,200);setTimeout(boot,1200);setTimeout(boot,3000);});
+  setInterval(boot,3000);
+})();
+</script>
+
 </body>
 </html>
