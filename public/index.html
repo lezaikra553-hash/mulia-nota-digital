@@ -2704,66 +2704,289 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <script>
-/* GOOGLE DRIVE AUTO SYNC - MULIA ADVERTISING GROUP */
+/* GOOGLE DRIVE AUTO SYNC - MULIA ADVERTISING GROUP
+   V21.6: session tetap aktif saat refresh halaman.
+   Catatan teknis:
+   - Access token Google hanya berlaku sementara.
+   - Token disimpan di sessionStorage agar tetap hidup saat refresh tab.
+   - Jika token habis, sistem coba silent login selama akun Google masih aktif di browser.
+*/
 const GOOGLE_CLIENT_ID = "169606052820-5ij848mubicfdppo5b2g5qpaub67munt.apps.googleusercontent.com";
 const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
 const DRIVE_DB_FILENAME = "Mulia_Advertising_Group_Database_Latest.json";
+const GDRIVE_SESSION_KEY = "mulia_gdrive_session_v216";
 let googleTokenClient = null;
 let googleAccessToken = null;
-function setGDriveStatus(msg, ok=false){
+let googleTokenExpiresAt = 0;
+let googleDriveReady = false;
+let googleDriveInitTimer = null;
+
+function setGDriveStatus(msg, ok=false, warn=false){
   const el=document.getElementById("gdriveStatus");
-  if(el){ el.textContent="Status: "+msg; el.className="text-xs font-semibold mt-1 "+(ok?"text-emerald-700":"text-blue-700"); }
+  if(el){
+    el.textContent="Status: "+msg;
+    el.className="text-xs font-semibold mt-1 "+(ok?"text-emerald-700":(warn?"text-amber-700":"text-blue-700"));
+  }
+  const badge=document.getElementById("gdriveSessionBadge");
+  if(badge){
+    badge.textContent = ok ? "Google Drive: Terhubung" : (warn ? "Google Drive: Perlu Login Ulang" : "Google Drive: Belum Login");
+    badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold "+(ok?"bg-emerald-100 text-emerald-800":"bg-amber-100 text-amber-800");
+  }
 }
-function initGoogleDrive(){
-  if(GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")){ alert("Client ID Google belum diisi. Buka HTML di Notepad, cari GOOGLE_CLIENT_ID, lalu isi Client ID dari Google Cloud."); return; }
-  if(!window.google || !google.accounts || !google.accounts.oauth2){ alert("Google API belum siap. Pastikan internet aktif lalu refresh halaman."); return; }
+
+function saveGoogleSession(token, expiresIn){
+  try{
+    googleAccessToken = token || googleAccessToken;
+    const ttl = Number(expiresIn || 3300);
+    googleTokenExpiresAt = Date.now() + Math.max(60, ttl - 60) * 1000;
+    sessionStorage.setItem(GDRIVE_SESSION_KEY, JSON.stringify({
+      access_token: googleAccessToken,
+      expires_at: googleTokenExpiresAt,
+      saved_at: Date.now()
+    }));
+  }catch(e){}
+}
+
+function loadGoogleSession(){
+  try{
+    const raw = sessionStorage.getItem(GDRIVE_SESSION_KEY);
+    if(!raw) return false;
+    const s = JSON.parse(raw);
+    if(!s || !s.access_token || !s.expires_at) return false;
+    if(Date.now() > Number(s.expires_at)){
+      sessionStorage.removeItem(GDRIVE_SESSION_KEY);
+      return false;
+    }
+    googleAccessToken = s.access_token;
+    googleTokenExpiresAt = Number(s.expires_at);
+    setGDriveStatus("Terhubung dari sesi browser. Refresh halaman tetap login.", true);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+function clearGoogleSession(){
+  googleAccessToken = null;
+  googleTokenExpiresAt = 0;
+  try{ sessionStorage.removeItem(GDRIVE_SESSION_KEY); }catch(e){}
+  setGDriveStatus("Belum login Google Drive");
+}
+
+function ensureGoogleLibReady(){
+  return !!(window.google && google.accounts && google.accounts.oauth2);
+}
+
+function initGoogleDriveClient(){
+  if(googleTokenClient) return true;
+  if(GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")){
+    setGDriveStatus("Client ID Google belum diisi", false, true);
+    return false;
+  }
+  if(!ensureGoogleLibReady()){
+    setGDriveStatus("Google API belum siap. Pastikan internet aktif.", false, true);
+    return false;
+  }
   googleTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID, scope: GOOGLE_SCOPES,
-    callback: (tokenResponse)=>{ googleAccessToken=tokenResponse.access_token; setGDriveStatus("Login Google Drive berhasil", true); }
+    client_id: GOOGLE_CLIENT_ID,
+    scope: GOOGLE_SCOPES,
+    callback: (tokenResponse)=>{
+      if(tokenResponse && tokenResponse.error){
+        setGDriveStatus("Login gagal / sesi Google belum aktif", false, true);
+        return;
+      }
+      if(tokenResponse && tokenResponse.access_token){
+        saveGoogleSession(tokenResponse.access_token, tokenResponse.expires_in);
+        setGDriveStatus("Login Google Drive berhasil. Sesi tetap aktif saat refresh.", true);
+      }
+    }
   });
+  googleDriveReady = true;
+  return true;
+}
+
+function initGoogleDrive(){
+  if(!initGoogleDriveClient()){
+    alert("Google API belum siap. Pastikan internet aktif, lalu refresh halaman.");
+    return;
+  }
   googleTokenClient.requestAccessToken({prompt:"consent"});
 }
+
+function silentGoogleReconnect(){
+  if(loadGoogleSession()) return true;
+  if(!initGoogleDriveClient()) return false;
+  try{
+    googleTokenClient.callback = (tokenResponse)=>{
+      if(tokenResponse && tokenResponse.access_token){
+        saveGoogleSession(tokenResponse.access_token, tokenResponse.expires_in);
+        setGDriveStatus("Terhubung otomatis dari akun Google browser", true);
+      }else{
+        setGDriveStatus("Belum login sesi ini. Klik Login Google.", false, true);
+      }
+    };
+    googleTokenClient.requestAccessToken({prompt:""});
+    return true;
+  }catch(e){
+    setGDriveStatus("Belum login sesi ini. Klik Login Google.", false, true);
+    return false;
+  }
+}
+
+async function ensureGoogleAccess(interactive=false){
+  if(googleAccessToken && Date.now() < googleTokenExpiresAt) return true;
+  if(loadGoogleSession()) return true;
+  if(!initGoogleDriveClient()) return false;
+  return await new Promise((resolve)=>{
+    googleTokenClient.callback = (tokenResponse)=>{
+      if(tokenResponse && tokenResponse.access_token){
+        saveGoogleSession(tokenResponse.access_token, tokenResponse.expires_in);
+        setGDriveStatus(interactive ? "Login Google Drive berhasil" : "Terhubung otomatis", true);
+        resolve(true);
+      }else{
+        setGDriveStatus("Perlu login Google ulang", false, true);
+        resolve(false);
+      }
+    };
+    try{
+      googleTokenClient.requestAccessToken({prompt: interactive ? "consent" : ""});
+    }catch(e){ resolve(false); }
+  });
+}
+
 function collectAllLocalStorageForBackup(){
   const all={};
-  for(let i=0;i<localStorage.length;i++){ const key=localStorage.key(i); all[key]=localStorage.getItem(key); }
-  return {app:"Mulia Advertising Group", version:"google-drive-auto-sync", exported_at:new Date().toISOString(), origin:location.href, localStorage:all};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    all[key]=localStorage.getItem(key);
+  }
+  return {
+    app:"Mulia Advertising Group",
+    version:"google-drive-auto-sync-v21.6",
+    exported_at:new Date().toISOString(),
+    origin:location.href,
+    localStorage:all
+  };
 }
+
+async function driveApiFetch(url, options={}){
+  if(!(await ensureGoogleAccess(false))){
+    initGoogleDrive();
+    throw new Error("Perlu login Google Drive.");
+  }
+  options.headers = Object.assign({}, options.headers || {}, {Authorization:"Bearer "+googleAccessToken});
+  let res = await fetch(url, options);
+  if(res.status === 401){
+    clearGoogleSession();
+    if(await ensureGoogleAccess(false)){
+      options.headers.Authorization = "Bearer "+googleAccessToken;
+      res = await fetch(url, options);
+    }
+  }
+  return res;
+}
+
 async function driveFindFile(){
   const q="name='"+DRIVE_DB_FILENAME+"' and trashed=false";
-  const res=await fetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime)",{headers:{Authorization:"Bearer "+googleAccessToken}});
+  const res=await driveApiFetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime)");
+  if(!res.ok){ throw new Error(await res.text()); }
   const data=await res.json();
   return data.files && data.files.length ? data.files[0] : null;
 }
+
 async function backupToGoogleDrive(){
-  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Backup Drive lagi."); return; }
-  const payload=collectAllLocalStorageForBackup();
-  const jsonBlob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-  const existing=await driveFindFile();
-  const metadata={name:DRIVE_DB_FILENAME,mimeType:"application/json"};
-  const form=new FormData();
-  form.append("metadata",new Blob([JSON.stringify(metadata)],{type:"application/json"}));
-  form.append("file",jsonBlob);
-  let url="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"; let method="POST";
-  if(existing){ url="https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart"; method="PATCH"; }
-  const res=await fetch(url,{method,headers:{Authorization:"Bearer "+googleAccessToken},body:form});
-  if(!res.ok){ alert("Backup Google Drive gagal: "+await res.text()); setGDriveStatus("Backup gagal"); return; }
-  setGDriveStatus("Backup tersimpan ke Google Drive", true); alert("Backup Google Drive berhasil.");
+  try{
+    if(!(await ensureGoogleAccess(false))){
+      initGoogleDrive();
+      alert("Silakan klik Login Google dulu, lalu klik Backup Drive lagi.");
+      return;
+    }
+    const payload=collectAllLocalStorageForBackup();
+    const jsonBlob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    const existing=await driveFindFile();
+    const metadata={name:DRIVE_DB_FILENAME,mimeType:"application/json"};
+    const form=new FormData();
+    form.append("metadata",new Blob([JSON.stringify(metadata)],{type:"application/json"}));
+    form.append("file",jsonBlob);
+    let url="https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+    let method="POST";
+    if(existing){
+      url="https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart";
+      method="PATCH";
+    }
+    const res=await driveApiFetch(url,{method,body:form});
+    if(!res.ok){
+      const err=await res.text();
+      setGDriveStatus("Backup gagal", false, true);
+      alert("Backup Google Drive gagal: "+err);
+      return;
+    }
+    setGDriveStatus("Backup tersimpan ke Google Drive", true);
+    alert("Backup Google Drive berhasil.");
+  }catch(err){
+    setGDriveStatus("Backup gagal / perlu login ulang", false, true);
+    alert("Backup Google Drive gagal: "+(err && err.message ? err.message : err));
+  }
 }
+
 async function restoreFromGoogleDrive(){
-  if(!googleAccessToken){ initGoogleDrive(); alert("Silakan login Google dulu, lalu klik Restore Drive lagi."); return; }
-  const file=await driveFindFile();
-  if(!file){ alert("File backup belum ditemukan di Google Drive."); return; }
-  const res=await fetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});
-  const payload=await res.json();
-  if(!payload.localStorage){ alert("Format backup tidak valid."); return; }
-  if(!confirm("Restore dari Google Drive akan menimpa data browser saat ini. Lanjutkan?")) return;
-  Object.keys(payload.localStorage).forEach(key=>localStorage.setItem(key,payload.localStorage[key]));
-  setGDriveStatus("Restore berhasil dari Google Drive", true); alert("Restore berhasil. Halaman akan direfresh."); location.reload();
+  try{
+    if(!(await ensureGoogleAccess(false))){
+      initGoogleDrive();
+      alert("Silakan klik Login Google dulu, lalu klik Restore Drive lagi.");
+      return;
+    }
+    const file=await driveFindFile();
+    if(!file){ alert("File backup belum ditemukan di Google Drive."); return; }
+    const res=await driveApiFetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media");
+    if(!res.ok){ alert("Restore gagal: "+await res.text()); return; }
+    const payload=await res.json();
+    if(!payload.localStorage){ alert("Format backup tidak valid."); return; }
+    if(!confirm("Restore dari Google Drive akan menimpa data browser saat ini. Lanjutkan?")) return;
+    Object.keys(payload.localStorage).forEach(key=>localStorage.setItem(key,payload.localStorage[key]));
+    setGDriveStatus("Restore berhasil dari Google Drive", true);
+    alert("Restore berhasil. Halaman akan direfresh.");
+    location.reload();
+  }catch(err){
+    setGDriveStatus("Restore gagal / perlu login ulang", false, true);
+    alert("Restore Google Drive gagal: "+(err && err.message ? err.message : err));
+  }
 }
+
+function addGoogleSessionBadge(){
+  try{
+    if(document.getElementById("gdriveSessionBadge")) return;
+    const panel=document.getElementById("gdrive-sync-panel");
+    if(!panel) return;
+    const target=panel.querySelector(".flex.flex-wrap.items-center.justify-between") || panel;
+    const badge=document.createElement("div");
+    badge.id="gdriveSessionBadge";
+    badge.className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800";
+    badge.textContent="Google Drive: Belum Login";
+    target.appendChild(badge);
+  }catch(e){}
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  addGoogleSessionBadge();
+  loadGoogleSession();
+  let tries=0;
+  googleDriveInitTimer=setInterval(function(){
+    tries++;
+    if(initGoogleDriveClient()){
+      clearInterval(googleDriveInitTimer);
+      if(!googleAccessToken) silentGoogleReconnect();
+    }
+    if(tries>20) clearInterval(googleDriveInitTimer);
+  },500);
+});
+
 document.addEventListener("click",function(e){
   const txt=(e.target && e.target.innerText || "").toLowerCase();
   const isSave=txt.includes("simpan penawaran")||txt.includes("simpan invoice")||txt.includes("hapus");
-  if(isSave && googleAccessToken){ setTimeout(()=>backupToGoogleDrive().catch(()=>{}),1200); }
+  if(isSave && googleAccessToken){
+    setTimeout(()=>backupToGoogleDrive().catch(()=>{}),1200);
+  }
 });
 </script>
 
