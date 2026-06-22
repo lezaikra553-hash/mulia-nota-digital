@@ -5931,5 +5931,939 @@ body.mag-customer-selecting #v12CustomerSelect{
 })();
 </script>
 
+
+
+<!-- =========================================================
+     V21 SIMPLIFIED PROFESSIONAL — MODE ADMIN BARU / STAFF KANTOR
+     Tujuan: fungsi lama tetap ada, tampilan harian dibuat sederhana.
+     ========================================================= -->
+<style id="mulia-v21-simplified-professional">
+:root{--v21-blue:#2563eb;--v21-dark:#0f172a;--v21-line:#dbe4ee;--v21-soft:#f8fafc;--v21-green:#059669;--v21-red:#dc2626;--v21-orange:#d97706;--v21-purple:#7c3aed;}
+body.v21-simple{background:#f4f7fb!important;color:#0f172a!important;padding:0!important;overflow-x:hidden!important;}
+body.v21-simple .mulia-v3-topbar,
+body.v21-simple .mulia-v3-dashboard,
+body.v21-simple #gdrive-sync-panel,
+body.v21-simple #v4ActionBar,
+body.v21-simple .mulia-pro-actionbar,
+body.v21-simple .v9-sidebar,
+body.v21-simple .v9-topbar,
+body.v21-simple .v9-command-center,
+body.v21-simple .v10-action-panel,
+body.v21-simple .v11-customer-hub,
+body.v21-simple .v10-audit-summary{display:none!important;}
+body.v21-simple > .max-w-6xl,
+body.v21-simple > #print-area,
+body.v21-simple > #invoice-print-area,
+body.v21-simple #invoice-ui,
+body.v21-simple #data-invoice-ui{max-width:1180px!important;margin-left:auto!important;margin-right:auto!important;}
+body.v21-simple .v21-hidden-admin{display:none!important;}
+.v21-shell{max-width:1180px;margin:0 auto;padding:18px 14px 0;}
+.v21-header{background:linear-gradient(135deg,#0f172a,#1e3a8a 58%,#0f766e);color:#fff;border-radius:0 0 26px 26px;margin:0 auto 18px;box-shadow:0 20px 48px rgba(15,23,42,.18);}
+.v21-header-inner{max-width:1180px;margin:0 auto;padding:18px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+.v21-brand-badge{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:950;letter-spacing:.08em;margin-bottom:8px;}
+.v21-title{font-size:24px;font-weight:950;line-height:1.1;letter-spacing:.01em;}
+.v21-sub{font-size:13px;color:#dbeafe;font-weight:700;margin-top:4px;}
+.v21-header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.v21-btn{border:0!important;border-radius:14px!important;min-height:46px!important;padding:12px 16px!important;font-size:14px!important;font-weight:950!important;display:inline-flex!important;gap:8px!important;align-items:center!important;justify-content:center!important;box-shadow:0 10px 24px rgba(15,23,42,.12)!important;white-space:normal!important;}
+.v21-btn-primary{background:var(--v21-blue)!important;color:white!important}.v21-btn-dark{background:#111827!important;color:white!important}.v21-btn-green{background:var(--v21-green)!important;color:white!important}.v21-btn-red{background:var(--v21-red)!important;color:white!important}.v21-btn-orange{background:var(--v21-orange)!important;color:white!important}.v21-btn-soft{background:#fff!important;color:#0f172a!important;border:1px solid #dbe4ee!important;box-shadow:none!important}.v21-btn-purple{background:var(--v21-purple)!important;color:white!important}
+.v21-dashboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px;}
+.v21-card{background:#fff;border:1px solid var(--v21-line);border-radius:24px;padding:18px;box-shadow:0 14px 34px rgba(15,23,42,.08);}
+.v21-card h3{font-size:15px;font-weight:950;margin:0 0 8px;color:#0f172a}.v21-card p{font-size:12px;line-height:1.55;color:#64748b;margin:0 0 14px;font-weight:700}.v21-card .v21-card-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.v21-steps{background:#fff;border:1px solid var(--v21-line);border-radius:24px;padding:16px 18px;margin-bottom:18px;box-shadow:0 12px 28px rgba(15,23,42,.06);}
+.v21-steps-title{font-size:14px;font-weight:950;margin-bottom:10px;color:#0f172a}.v21-step-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.v21-step{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:12px}.v21-step b{display:block;font-size:13px;color:#0f172a}.v21-step span{display:block;font-size:11px;color:#64748b;font-weight:700;margin-top:3px;line-height:1.35}
+.v21-toolbar{position:sticky;top:0;z-index:9990;background:rgba(244,247,251,.96);backdrop-filter:blur(10px);border-bottom:1px solid #dbe4ee;margin-bottom:16px;}
+.v21-toolbar-inner{max-width:1180px;margin:0 auto;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 12px;}
+.v21-admin-modal{display:none;position:fixed;inset:0;z-index:100000;background:rgba(15,23,42,.58);padding:18px;align-items:center;justify-content:center;}
+.v21-admin-modal.show{display:flex}.v21-modal-card{width:100%;max-width:760px;max-height:86vh;overflow:auto;background:#fff;border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.30);border:1px solid var(--v21-line)}.v21-modal-head{background:#0f172a;color:#fff;padding:18px;display:flex;justify-content:space-between;gap:12px;align-items:center}.v21-modal-head h2{font-size:18px;font-weight:950;margin:0}.v21-modal-body{padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v21-modal-note{grid-column:1/-1;background:#fffbeb;border:1px solid #fde68a;border-radius:16px;padding:12px;font-size:12px;line-height:1.5;color:#92400e;font-weight:700}
+.v21-help-box{background:#ecfdf5;border:1px solid #a7f3d0;border-radius:18px;padding:12px 14px;color:#065f46;font-size:12px;font-weight:800;line-height:1.5;margin:12px 0;}
+body.v21-simple .bg-slate-900.text-white.p-5{background:#fff!important;color:#0f172a!important;border-bottom:1px solid #e2e8f0!important;padding:18px 22px!important;}
+body.v21-simple .bg-slate-900.text-white.p-5 h1{font-size:20px!important;color:#0f172a!important}body.v21-simple .bg-slate-900.text-white.p-5 p{color:#64748b!important}
+body.v21-simple .mulia-logout-btn{display:none!important;}
+body.v21-simple .p-5.grid{padding:18px!important;gap:12px!important;}
+body.v21-simple .p-5.grid>div{border-radius:18px!important;}
+body.v21-simple .mulia-compact-toolbar{background:#f8fafc!important;border:1px solid #dbe4ee!important;border-radius:20px!important;padding:14px!important;margin-bottom:12px!important;}
+body.v21-simple .mulia-compact-title small{display:none!important;}
+body.v21-simple input,body.v21-simple textarea,body.v21-simple select{font-size:14px!important;}
+body.v21-simple .label{font-size:12px!important;color:#334155!important;}
+body.v21-simple #print-area, body.v21-simple #invoice-print-area{background:#fff!important;}
+.v21-quick-note{font-size:12px;color:#64748b;font-weight:800;line-height:1.5;margin:8px 0 0}.v21-warning{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:16px;padding:12px;font-size:12px;font-weight:800;line-height:1.5;margin-top:10px;}
+@media(max-width:900px){.v21-dashboard{grid-template-columns:1fr}.v21-step-grid{grid-template-columns:1fr 1fr}.v21-modal-body{grid-template-columns:1fr}.v21-title{font-size:20px}.v21-header-inner{align-items:flex-start}.v21-header-actions{width:100%;}.v21-header-actions .v21-btn{flex:1}.v21-toolbar{position:relative}.v21-btn{width:100%!important}.v21-toolbar-inner{display:grid;grid-template-columns:1fr 1fr}.v21-shell{padding-left:12px;padding-right:12px}}
+@media(max-width:560px){.v21-step-grid,.v21-toolbar-inner{grid-template-columns:1fr}.v21-header-actions{display:grid;grid-template-columns:1fr;width:100%}}
+@media print{.v21-header,.v21-toolbar,.v21-shell,.v21-admin-modal{display:none!important}body.v21-simple > .max-w-6xl{display:none!important}}
+</style>
+
+<div class="v21-header no-print" id="v21Top">
+  <div class="v21-header-inner">
+    <div>
+      <div class="v21-brand-badge">V21 SIMPLIFIED PROFESSIONAL</div>
+      <div class="v21-title">MULIA ADVERTISING GROUP</div>
+      <div class="v21-sub">Mode kerja sederhana untuk admin baru, staff kantor, dan user non-teknis.</div>
+    </div>
+    <div class="v21-header-actions">
+      <button class="v21-btn v21-btn-primary" onclick="v21NewSPH()">📄 Buat Penawaran</button>
+      <button class="v21-btn v21-btn-green" onclick="v21NewInvoice()">🧾 Buat Invoice</button>
+      <button class="v21-btn v21-btn-soft" onclick="v21OpenSettings()">⚙️ Pengaturan</button>
+    </div>
+  </div>
+</div>
+
+<div class="v21-toolbar no-print">
+  <div class="v21-toolbar-inner">
+    <button class="v21-btn v21-btn-primary" onclick="v21NewSPH()">Penawaran</button>
+    <button class="v21-btn v21-btn-green" onclick="v21NewInvoice()">Invoice</button>
+    <button class="v21-btn v21-btn-soft" onclick="v21DataSPH()">Data SPH</button>
+    <button class="v21-btn v21-btn-soft" onclick="v21DataInvoice()">Data Invoice</button>
+    <button class="v21-btn v21-btn-soft" onclick="v21CustomerHub()">Customer</button>
+    <button class="v21-btn v21-btn-dark" onclick="v21OpenSettings()">Admin</button>
+  </div>
+</div>
+
+<div class="v21-shell no-print" id="v21Home">
+  <div class="v21-dashboard">
+    <div class="v21-card">
+      <h3>📄 Penawaran / SPH</h3>
+      <p>Untuk pekerjaan harian: isi customer, isi item pekerjaan, lalu simpan atau cetak PDF.</p>
+      <div class="v21-card-actions">
+        <button class="v21-btn v21-btn-primary" onclick="v21NewSPH()">Buat Penawaran Baru</button>
+        <button class="v21-btn v21-btn-soft" onclick="v21DataSPH()">Lihat Data Penawaran</button>
+      </div>
+    </div>
+    <div class="v21-card">
+      <h3>🧾 Invoice</h3>
+      <p>Invoice bisa dibuat dari data penawaran yang sudah tersimpan, lalu dicetak sebagai PDF.</p>
+      <div class="v21-card-actions">
+        <button class="v21-btn v21-btn-green" onclick="v21NewInvoice()">Buat Invoice</button>
+        <button class="v21-btn v21-btn-soft" onclick="v21DataInvoice()">Lihat Data Invoice</button>
+      </div>
+    </div>
+    <div class="v21-card">
+      <h3>👥 Customer & Admin</h3>
+      <p>Cari riwayat customer, backup data, import arsip, dan pengaturan teknis.</p>
+      <div class="v21-card-actions">
+        <button class="v21-btn v21-btn-soft" onclick="v21CustomerHub()">Cari Customer</button>
+        <button class="v21-btn v21-btn-dark" onclick="v21OpenSettings()">Pengaturan Owner</button>
+      </div>
+    </div>
+  </div>
+  <div class="v21-steps">
+    <div class="v21-steps-title">Alur kerja admin — cukup ikuti urutan ini</div>
+    <div class="v21-step-grid">
+      <div class="v21-step"><b>1. Pilih Customer</b><span>Isi data customer atau gunakan data lama.</span></div>
+      <div class="v21-step"><b>2. Isi Item</b><span>Tambah item, qty, satuan, dan harga.</span></div>
+      <div class="v21-step"><b>3. Simpan</b><span>Draft untuk belum selesai, final untuk siap kirim.</span></div>
+      <div class="v21-step"><b>4. Cetak PDF</b><span>Simpan & cetak untuk dikirim ke customer.</span></div>
+    </div>
+    <div class="v21-help-box">Catatan: fitur teknis seperti backup, restore, import arsip, Google Drive, dan audit tetap ada, tetapi disimpan di menu <b>Pengaturan</b> agar admin tidak bingung.</div>
+  </div>
+</div>
+
+<div class="v21-admin-modal no-print" id="v21AdminModal">
+  <div class="v21-modal-card">
+    <div class="v21-modal-head"><h2>⚙️ Pengaturan Owner / Admin Senior</h2><button class="v21-btn v21-btn-soft" onclick="v21CloseSettings()">Tutup</button></div>
+    <div class="v21-modal-body">
+      <div class="v21-modal-note">Menu ini untuk owner/admin senior. Admin harian cukup pakai tombol Penawaran, Invoice, Data SPH, dan Data Invoice.</div>
+      <button class="v21-btn v21-btn-primary" onclick="v21ShowLegacyPanel('gdrive-sync-panel')">☁️ Google Drive</button>
+      <button class="v21-btn v21-btn-green" onclick="backupDatabaseMulia&&backupDatabaseMulia()">💾 Backup JSON</button>
+      <button class="v21-btn v21-btn-orange" onclick="v21ShowAdvancedImport()">📥 Import / Restore</button>
+      <button class="v21-btn v21-btn-purple" onclick="v21CustomerHub();v21CloseSettings()">👥 Customer Hub</button>
+      <button class="v21-btn v21-btn-soft" onclick="typeof window.MuliaFinalPreparePrintHeader==='function'&&MuliaFinalPreparePrintHeader();alert('Header PDF & watermark disiapkan ulang.')">🖨️ Perbaiki Header PDF</button>
+      <button class="v21-btn v21-btn-red" onclick="v21WarningReset()">⚠️ Reset / Hapus Data</button>
+    </div>
+  </div>
+</div>
+
+<script id="mulia-v21-simplified-professional-js">
+(function(){
+  function el(id){return document.getElementById(id)}
+  function show(e){ if(e){ e.classList.remove('v21-hidden-admin'); e.style.display=''; } }
+  function hide(e){ if(e){ e.classList.add('v21-hidden-admin'); } }
+  function scrollToEl(target){
+    var node=typeof target==='string'?el(target):target;
+    if(!node && typeof target==='string') node=document.querySelector(target);
+    if(node) node.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function parentBox(id){ var n=el(id); return n ? (n.closest('.md\\:col-span-4') || n.closest('[class*="col-span"]') || n.closest('.border') || n.parentElement) : null; }
+  function v21CleanHome(){
+    document.body.classList.add('v21-simple');
+    /* Sembunyikan fitur teknis dari layar harian */
+    ['gdrive-sync-panel'].forEach(function(id){hide(el(id));});
+    ['importHargaFile','arsipFiles','restoreDatabaseFile','lampiranFiles'].forEach(function(id){ hide(parentBox(id)); });
+    /* Pastikan form utama, invoice, dan data tetap rapi */
+    document.querySelectorAll('.v9-sidebar,.v9-topbar,.v9-command-center,.v11-customer-hub').forEach(function(n){n.style.display='none';});
+    try{ if(typeof window.MuliaFinalCleanPaymentText==='function') window.MuliaFinalCleanPaymentText(); }catch(e){}
+    try{ if(typeof window.MuliaFinalPreparePrintHeader==='function') window.MuliaFinalPreparePrintHeader(); }catch(e){}
+  }
+  window.v21NewSPH=function(){
+    v21CleanHome();
+    scrollToEl('penawaranFormAnchor');
+    setTimeout(function(){ var k=el('kepada'); if(k) k.focus(); },450);
+  };
+  window.v21NewInvoice=function(){
+    v21CleanHome();
+    if(typeof initInvoice==='function') { try{ initInvoice(); }catch(e){} }
+    scrollToEl('invoiceFormAnchor');
+  };
+  window.v21DataSPH=function(){
+    v21CleanHome();
+    if(typeof refreshDataPenawaranList==='function') { try{ refreshDataPenawaranList(); }catch(e){} }
+    scrollToEl('dataPenawaranAnchor');
+  };
+  window.v21DataInvoice=function(){
+    v21CleanHome();
+    if(typeof refreshDataInvoiceList==='function') { try{ refreshDataInvoiceList(); }catch(e){} }
+    scrollToEl('dataInvoiceAnchor');
+  };
+  window.v21CustomerHub=function(){
+    v21CleanHome();
+    var hub=document.querySelector('.v11-customer-hub');
+    if(typeof renderMuliaV11Hub==='function') { try{ renderMuliaV11Hub(); }catch(e){} }
+    if(hub){ hub.style.display='block'; hub.classList.remove('v21-hidden-admin'); hub.scrollIntoView({behavior:'smooth',block:'start'}); }
+    else { v21DataSPH(); }
+  };
+  window.v21OpenSettings=function(){ var m=el('v21AdminModal'); if(m) m.classList.add('show'); };
+  window.v21CloseSettings=function(){ var m=el('v21AdminModal'); if(m) m.classList.remove('show'); };
+  window.v21ShowLegacyPanel=function(id){ var p=el(id); if(p){ show(p); v21CloseSettings(); setTimeout(function(){scrollToEl(p)},80); } };
+  window.v21ShowAdvancedImport=function(){
+    ['importHargaFile','arsipFiles','restoreDatabaseFile','lampiranFiles'].forEach(function(id){ show(parentBox(id)); });
+    v21CloseSettings(); scrollToEl('importHargaFile');
+  };
+  window.v21WarningReset=function(){ alert('Untuk keamanan, sebelum reset atau hapus data wajib Backup JSON dulu. Tombol hapus data lama tetap tersedia di bagian data masing-masing.'); };
+
+  /* Tombol Data SPH / Data Invoice distabilkan: tetap refresh lalu scroll */
+  function patchDataButtons(){
+    document.querySelectorAll('button').forEach(function(b){
+      var t=(b.textContent||'').trim().toLowerCase();
+      if(t==='📋 data sph' || t==='data sph') b.onclick=function(ev){ev.preventDefault();v21DataSPH();return false;};
+      if(t==='💰 data invoice' || t==='data invoice') b.onclick=function(ev){ev.preventDefault();v21DataInvoice();return false;};
+    });
+  }
+
+  /* Dropdown pilih customer: jangan langsung tertutup ketika user sedang pilih */
+  function patchCustomerDropdownSlow(){
+    document.querySelectorAll('select,.v12-customer-select,#v11CustomerSearch').forEach(function(node){
+      if(node.__v21SlowPatched) return; node.__v21SlowPatched=true;
+      ['mousedown','touchstart','click','focus','keydown'].forEach(function(evt){
+        node.addEventListener(evt,function(e){
+          e.stopPropagation();
+          document.body.classList.add('v21-customer-selecting');
+          clearTimeout(window.__v21CustTimer);
+          window.__v21CustTimer=setTimeout(function(){document.body.classList.remove('v21-customer-selecting');},1200);
+        },true);
+      });
+      node.addEventListener('blur',function(){
+        clearTimeout(window.__v21CustTimer);
+        window.__v21CustTimer=setTimeout(function(){document.body.classList.remove('v21-customer-selecting');},900);
+      },true);
+    });
+    if(typeof window.renderMuliaV11Hub==='function' && !window.renderMuliaV11Hub.__v21Guarded){
+      var old=window.renderMuliaV11Hub;
+      window.renderMuliaV11Hub=function(){
+        if(document.body.classList.contains('v21-customer-selecting')){
+          var args=arguments, self=this;
+          clearTimeout(window.__v21RenderTimer);
+          window.__v21RenderTimer=setTimeout(function(){ try{ old.apply(self,args); patchCustomerDropdownSlow(); }catch(e){} },900);
+          return;
+        }
+        var r=old.apply(this,arguments);
+        setTimeout(patchCustomerDropdownSlow,150);
+        return r;
+      };
+      window.renderMuliaV11Hub.__v21Guarded=true;
+    }
+  }
+
+  function boot(){
+    v21CleanHome(); patchDataButtons(); patchCustomerDropdownSlow();
+    setTimeout(function(){ try{ if(typeof muliaV3RefreshDashboard==='function') muliaV3RefreshDashboard(); }catch(e){} },500);
+  }
+  document.addEventListener('DOMContentLoaded',function(){ setTimeout(boot,350); setTimeout(boot,1400); setTimeout(boot,2800); setInterval(function(){patchDataButtons();patchCustomerDropdownSlow();},3000); });
+  window.addEventListener('beforeprint',function(){ try{ if(typeof window.MuliaFinalPreparePrintHeader==='function') MuliaFinalPreparePrintHeader(); if(typeof window.MuliaFinalCleanPaymentText==='function') MuliaFinalCleanPaymentText(); }catch(e){} });
+})();
+</script>
+
+
+<!-- =========================================================
+     V21.1 ADMIN EASY CLEAN LAYOUT PATCH
+     Fokus: Admin baru / staff kantor. Menu sederhana, form lama tetap utuh.
+     ========================================================= -->
+<style id="mulia-v21-1-admin-easy-clean">
+body.v21-simple{
+  background:#f3f6fb!important;
+}
+
+/* Pindahkan area kerja menjadi layar sederhana */
+body.v21-simple .v21-header{
+  position:relative!important;
+  margin:0 0 14px 0!important;
+  border-radius:0 0 24px 24px!important;
+}
+body.v21-simple .v21-toolbar{
+  position:sticky!important;
+  top:0!important;
+  z-index:99950!important;
+  margin:0 0 16px 0!important;
+}
+body.v21-simple .v21-toolbar-inner{
+  justify-content:flex-start!important;
+}
+body.v21-simple .v21-shell{
+  max-width:1120px!important;
+  padding:0 14px 18px!important;
+}
+.v21-work-title{
+  max-width:1120px;
+  margin:0 auto 12px;
+  padding:0 14px;
+  display:none;
+}
+.v21-work-title .box{
+  background:#ffffff;
+  border:1px solid #dbe4ee;
+  border-radius:20px;
+  padding:14px 16px;
+  box-shadow:0 10px 24px rgba(15,23,42,.06);
+}
+.v21-work-title b{
+  display:block;
+  font-size:18px;
+  color:#0f172a;
+}
+.v21-work-title span{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  color:#64748b;
+  font-weight:800;
+}
+body.v21-view-sph .v21-work-title,
+body.v21-view-invoice .v21-work-title,
+body.v21-view-data-sph .v21-work-title,
+body.v21-view-data-invoice .v21-work-title,
+body.v21-view-customer .v21-work-title{
+  display:block;
+}
+
+/* Default: layar utama hanya dashboard sederhana */
+body.v21-simple.v21-view-home > .max-w-6xl,
+body.v21-simple.v21-view-home > #print-area,
+body.v21-simple.v21-view-home > #invoice-print-area,
+body.v21-simple.v21-view-home #invoice-ui,
+body.v21-simple.v21-view-home #data-penawaran-ui,
+body.v21-simple.v21-view-home #data-invoice-ui,
+body.v21-simple.v21-view-home .v11-customer-hub{
+  display:none!important;
+}
+
+/* View penawaran: hanya form penawaran + preview surat */
+body.v21-simple.v21-view-sph .v21-shell{display:none!important;}
+body.v21-simple.v21-view-sph > .max-w-6xl,
+body.v21-simple.v21-view-sph > #print-area{
+  display:block!important;
+}
+body.v21-simple.v21-view-sph #invoice-ui,
+body.v21-simple.v21-view-sph #data-penawaran-ui,
+body.v21-simple.v21-view-sph #data-invoice-ui,
+body.v21-simple.v21-view-sph > #invoice-print-area,
+body.v21-simple.v21-view-sph .v11-customer-hub{
+  display:none!important;
+}
+
+/* View invoice: hanya form invoice + preview invoice */
+body.v21-simple.v21-view-invoice .v21-shell{display:none!important;}
+body.v21-simple.v21-view-invoice #invoice-ui,
+body.v21-simple.v21-view-invoice > #invoice-print-area{
+  display:block!important;
+}
+body.v21-simple.v21-view-invoice > .max-w-6xl,
+body.v21-simple.v21-view-invoice > #print-area,
+body.v21-simple.v21-view-invoice #data-penawaran-ui,
+body.v21-simple.v21-view-invoice #data-invoice-ui,
+body.v21-simple.v21-view-invoice .v11-customer-hub{
+  display:none!important;
+}
+
+/* View data */
+body.v21-simple.v21-view-data-sph .v21-shell{display:none!important;}
+body.v21-simple.v21-view-data-sph #data-penawaran-ui{
+  display:block!important;
+}
+body.v21-simple.v21-view-data-sph > .max-w-6xl,
+body.v21-simple.v21-view-data-sph > #print-area,
+body.v21-simple.v21-view-data-sph #invoice-ui,
+body.v21-simple.v21-view-data-sph > #invoice-print-area,
+body.v21-simple.v21-view-data-sph #data-invoice-ui,
+body.v21-simple.v21-view-data-sph .v11-customer-hub{
+  display:none!important;
+}
+body.v21-simple.v21-view-data-invoice .v21-shell{display:none!important;}
+body.v21-simple.v21-view-data-invoice #data-invoice-ui{
+  display:block!important;
+}
+body.v21-simple.v21-view-data-invoice > .max-w-6xl,
+body.v21-simple.v21-view-data-invoice > #print-area,
+body.v21-simple.v21-view-data-invoice #invoice-ui,
+body.v21-simple.v21-view-data-invoice > #invoice-print-area,
+body.v21-simple.v21-view-data-invoice #data-penawaran-ui,
+body.v21-simple.v21-view-data-invoice .v11-customer-hub{
+  display:none!important;
+}
+
+/* Customer */
+body.v21-simple.v21-view-customer .v21-shell{display:none!important;}
+body.v21-simple.v21-view-customer .v11-customer-hub{
+  display:block!important;
+}
+body.v21-simple.v21-view-customer > .max-w-6xl,
+body.v21-simple.v21-view-customer > #print-area,
+body.v21-simple.v21-view-customer #invoice-ui,
+body.v21-simple.v21-view-customer > #invoice-print-area,
+body.v21-simple.v21-view-customer #data-penawaran-ui,
+body.v21-simple.v21-view-customer #data-invoice-ui{
+  display:none!important;
+}
+
+/* Bagian teknis hanya muncul dari pengaturan */
+body.v21-simple .v21-advanced-visible{
+  display:block!important;
+}
+
+/* Rapikan form untuk admin */
+body.v21-simple > .max-w-6xl,
+body.v21-simple #invoice-ui,
+body.v21-simple #data-penawaran-ui,
+body.v21-simple #data-invoice-ui,
+body.v21-simple > #print-area,
+body.v21-simple > #invoice-print-area{
+  max-width:1120px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.v21-simple > .max-w-6xl,
+body.v21-simple #invoice-ui,
+body.v21-simple #data-penawaran-ui,
+body.v21-simple #data-invoice-ui{
+  border-radius:22px!important;
+  overflow:hidden!important;
+  box-shadow:0 14px 34px rgba(15,23,42,.08)!important;
+  border:1px solid #dbe4ee!important;
+  background:#fff!important;
+}
+body.v21-simple .p-5.grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+body.v21-simple .p-5.grid > div{
+  grid-column:auto!important;
+}
+body.v21-simple .p-5.grid > div.md\:col-span-4,
+body.v21-simple .p-5.grid > div.md\:col-span-2{
+  grid-column:1 / -1!important;
+}
+body.v21-simple .p-5.grid > div:has(#nomor),
+body.v21-simple .p-5.grid > div:has(#tanggal),
+body.v21-simple .p-5.grid > div:has(#lampiran),
+body.v21-simple .p-5.grid > div:has(#perihal){
+  grid-column:auto!important;
+}
+body.v21-simple .bg-slate-900.text-white.p-5{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  flex-wrap:wrap!important;
+}
+body.v21-simple .bg-slate-900.text-white.p-5::after{
+  content:"Isi data → tambah item → simpan → cetak PDF";
+  background:#eff6ff;
+  color:#1d4ed8;
+  border:1px solid #bfdbfe;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:12px;
+  font-weight:900;
+}
+
+/* Import/backup/lampiran tidak tampil di form harian, kecuali Advanced */
+body.v21-simple:not(.v21-show-advanced) #importHargaFile,
+body.v21-simple:not(.v21-show-advanced) #arsipFiles,
+body.v21-simple:not(.v21-show-advanced) #restoreDatabaseFile,
+body.v21-simple:not(.v21-show-advanced) #lampiranFiles{
+  display:none!important;
+}
+body.v21-simple:not(.v21-show-advanced) #importHargaFile,
+body.v21-simple:not(.v21-show-advanced) #arsipFiles,
+body.v21-simple:not(.v21-show-advanced) #restoreDatabaseFile,
+body.v21-simple:not(.v21-show-advanced) #lampiranFiles{
+  visibility:hidden!important;
+}
+body.v21-simple:not(.v21-show-advanced) #importHargaFile,
+body.v21-simple:not(.v21-show-advanced) #arsipFiles,
+body.v21-simple:not(.v21-show-advanced) #restoreDatabaseFile,
+body.v21-simple:not(.v21-show-advanced) #lampiranFiles{
+  height:0!important;
+}
+body.v21-simple:not(.v21-show-advanced) .v21-hide-daily{
+  display:none!important;
+}
+
+/* Data tabel lebih rapi */
+body.v21-simple table{
+  width:100%!important;
+}
+body.v21-simple th{
+  background:#f1f5f9!important;
+  color:#334155!important;
+}
+body.v21-simple td, body.v21-simple th{
+  font-size:12px!important;
+}
+body.v21-simple .v21-btn.active{
+  outline:3px solid rgba(37,99,235,.22)!important;
+  transform:none!important;
+}
+
+/* Mobile */
+@media(max-width:860px){
+  body.v21-simple .p-5.grid{
+    grid-template-columns:1fr!important;
+  }
+  body.v21-simple .v21-toolbar-inner{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+  }
+}
+@media(max-width:520px){
+  body.v21-simple .v21-toolbar-inner{
+    grid-template-columns:1fr!important;
+  }
+  body.v21-simple .v21-header-inner{
+    padding:14px 12px!important;
+  }
+}
+@media print{
+  .v21-work-title{display:none!important;}
+}
+</style>
+
+<div class="v21-work-title no-print" id="v21WorkTitle">
+  <div class="box">
+    <b id="v21WorkTitleText">Mode Kerja</b>
+    <span id="v21WorkTitleSub">Ikuti tombol utama agar tidak bingung.</span>
+  </div>
+</div>
+
+<script id="mulia-v21-1-admin-easy-clean-js">
+(function(){
+  function el(id){return document.getElementById(id);}
+  function qs(s){return document.querySelector(s);}
+  function qsa(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+  function setTitle(title, sub){
+    var t=el('v21WorkTitleText'), s=el('v21WorkTitleSub');
+    if(t) t.textContent=title || 'Mode Kerja';
+    if(s) s.textContent=sub || 'Ikuti tombol utama agar tidak bingung.';
+  }
+  function resetViews(){
+    document.body.classList.add('v21-simple');
+    ['v21-view-home','v21-view-sph','v21-view-invoice','v21-view-data-sph','v21-view-data-invoice','v21-view-customer'].forEach(function(c){document.body.classList.remove(c);});
+    qsa('.v21-toolbar .v21-btn').forEach(function(b){b.classList.remove('active');});
+  }
+  function moveV21ToTop(){
+    var body=document.body;
+    ['v21AdminModal','v21WorkTitle','v21Home'].forEach(function(id){
+      var n=el(id); if(n && n.parentNode===body) body.insertBefore(n, body.firstChild);
+    });
+    var toolbar=qs('.v21-toolbar'); if(toolbar && toolbar.parentNode===body) body.insertBefore(toolbar, body.firstChild);
+    var header=qs('.v21-header'); if(header && header.parentNode===body) body.insertBefore(header, body.firstChild);
+  }
+  function hideTechBlocks(){
+    ['importHargaFile','arsipFiles','restoreDatabaseFile','lampiranFiles'].forEach(function(id){
+      var n=el(id);
+      if(!n) return;
+      var box=n.closest('.md\\:col-span-4') || n.closest('[class*="col-span"]') || n.closest('.border') || n.parentElement;
+      if(box) box.classList.add('v21-hide-daily');
+    });
+  }
+  function scrollTopSmooth(){
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function refreshSafe(){
+    try{ if(typeof window.MuliaFinalCleanPaymentText==='function') window.MuliaFinalCleanPaymentText(); }catch(e){}
+    try{ if(typeof window.MuliaFinalPreparePrintHeader==='function') window.MuliaFinalPreparePrintHeader(); }catch(e){}
+    try{ if(typeof window.muliaV3RefreshDashboard==='function') window.muliaV3RefreshDashboard(); }catch(e){}
+  }
+  function activeButton(match){
+    qsa('.v21-toolbar .v21-btn').forEach(function(b){
+      if((b.textContent||'').toLowerCase().indexOf(match)>=0) b.classList.add('active');
+    });
+  }
+  window.v21GoHome=function(){
+    resetViews(); document.body.classList.add('v21-view-home'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Dashboard Admin', 'Pilih pekerjaan yang akan dilakukan hari ini.');
+    activeButton('');
+    scrollTopSmooth(); refreshSafe();
+  };
+  window.v21NewSPH=function(){
+    resetViews(); document.body.classList.add('v21-view-sph'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Buat Penawaran / SPH', 'Admin cukup isi customer, item pekerjaan, DP/PPN jika perlu, lalu simpan atau cetak PDF.');
+    activeButton('penawaran');
+    scrollTopSmooth(); refreshSafe();
+    setTimeout(function(){ var k=el('kepada'); if(k) k.focus(); },350);
+  };
+  window.v21NewInvoice=function(){
+    resetViews(); document.body.classList.add('v21-view-invoice'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Buat Invoice', 'Pilih atau ambil data dari penawaran, isi pembayaran, lalu cetak PDF.');
+    activeButton('invoice');
+    try{ if(typeof window.initInvoice==='function') window.initInvoice(); }catch(e){}
+    scrollTopSmooth(); refreshSafe();
+  };
+  window.v21DataSPH=function(){
+    resetViews(); document.body.classList.add('v21-view-data-sph'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Data Penawaran / SPH', 'Cari, buka, edit, print, atau buat invoice dari data penawaran.');
+    activeButton('data sph');
+    try{ if(typeof window.refreshDataPenawaranList==='function') window.refreshDataPenawaranList(); }catch(e){}
+    scrollTopSmooth(); refreshSafe();
+  };
+  window.v21DataInvoice=function(){
+    resetViews(); document.body.classList.add('v21-view-data-invoice'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Data Invoice', 'Cari invoice, cek status pembayaran, buka, edit, atau print ulang.');
+    activeButton('data invoice');
+    try{ if(typeof window.refreshDataInvoiceList==='function') window.refreshDataInvoiceList(); }catch(e){}
+    scrollTopSmooth(); refreshSafe();
+  };
+  window.v21CustomerHub=function(){
+    resetViews(); document.body.classList.add('v21-view-customer'); document.body.classList.remove('v21-show-advanced');
+    setTitle('Customer', 'Cari riwayat customer dan gunakan kembali data yang sudah pernah dibuat.');
+    activeButton('customer');
+    try{ if(typeof window.renderMuliaV11Hub==='function') window.renderMuliaV11Hub(); }catch(e){}
+    scrollTopSmooth(); refreshSafe();
+  };
+  window.v21ShowAdvancedImport=function(){
+    document.body.classList.add('v21-show-advanced');
+    var blocks=qsa('.v21-hide-daily'); blocks.forEach(function(b){ b.style.display='block'; });
+    var node=el('importHargaFile') || el('arsipFiles') || el('restoreDatabaseFile');
+    if(node){
+      var box=node.closest('.md\\:col-span-4') || node.closest('[class*="col-span"]') || node.closest('.border') || node.parentElement;
+      if(box) box.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  };
+  window.v21OpenSettings=function(){
+    var m=el('v21AdminModal'); if(m) m.classList.add('show');
+  };
+  window.v21CloseSettings=function(){
+    var m=el('v21AdminModal'); if(m) m.classList.remove('show');
+  };
+  window.v21ShowLegacyPanel=function(id){
+    document.body.classList.add('v21-show-advanced');
+    var p=el(id);
+    if(p){ p.classList.remove('v21-hidden-admin'); p.style.display='block'; v21CloseSettings(); setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'start'});},80); }
+  };
+  function patchButtons(){
+    qsa('button').forEach(function(b){
+      var txt=(b.textContent||'').trim().toLowerCase();
+      if(txt==='data sph' || txt==='📋 data sph'){ b.onclick=function(e){e.preventDefault();v21DataSPH();return false;};}
+      if(txt==='data invoice' || txt==='💰 data invoice'){ b.onclick=function(e){e.preventDefault();v21DataInvoice();return false;};}
+    });
+    var header=qs('.v21-header-actions');
+    if(header && !el('v21HomeBtn')){
+      var btn=document.createElement('button');
+      btn.id='v21HomeBtn';
+      btn.className='v21-btn v21-btn-soft';
+      btn.textContent='🏠 Dashboard';
+      btn.onclick=function(){v21GoHome();};
+      header.insertBefore(btn, header.firstChild);
+    }
+  }
+  function patchCustomerDropdown(){
+    qsa('select,.v12-customer-select,#v11CustomerSearch,[id*="Customer"],[id*="customer"]').forEach(function(node){
+      if(node.__v211Patched) return; node.__v211Patched=true;
+      ['mousedown','touchstart','click','focus','keydown'].forEach(function(evt){
+        node.addEventListener(evt,function(e){
+          e.stopPropagation();
+          document.body.classList.add('v21-customer-selecting');
+          clearTimeout(window.__v211CustTimer);
+          window.__v211CustTimer=setTimeout(function(){document.body.classList.remove('v21-customer-selecting');},1600);
+        },true);
+      });
+    });
+  }
+  function boot(){
+    moveV21ToTop();
+    hideTechBlocks();
+    patchButtons();
+    patchCustomerDropdown();
+    if(!document.body.classList.contains('v21-view-sph') && !document.body.classList.contains('v21-view-invoice') && !document.body.classList.contains('v21-view-data-sph') && !document.body.classList.contains('v21-view-data-invoice') && !document.body.classList.contains('v21-view-customer')){
+      v21GoHome();
+    }
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(boot,200);
+    setTimeout(boot,900);
+    setTimeout(boot,2200);
+    setInterval(function(){patchButtons();patchCustomerDropdown();},2500);
+  });
+  window.addEventListener('beforeprint',refreshSafe);
+})();
+</script>
+
+
+
+<!-- =========================================================
+     V21.2 ADMIN CLEAN ALIGNED PATCH
+     Tujuan: layar admin rapi, sejajar, tidak dobel panel V20/V20.1,
+     fitur lama tetap ada tetapi tidak mengganggu alur admin baru.
+========================================================= -->
+<style id="mulia-v21-2-admin-clean-aligned">
+html,body{max-width:100%!important;overflow-x:hidden!important;}
+body.v21-simple{background:linear-gradient(135deg,#eef4fb 0%,#f8fafc 50%,#eef7f5 100%)!important;}
+
+/* Sembunyikan panel teknis lama dari layar admin harian */
+body.v21-simple #v20StatusPanel,
+body.v21-simple #v201AdminEasyPanel,
+body.v21-simple .v201-admin-panel,
+body.v21-simple #v20PenawaranFilter,
+body.v21-simple #v20InvoiceFilter,
+body.v21-simple .v20-filterbar,
+body.v21-simple .v20-panel:not(#v20AuditPanel),
+body.v21-simple #gdrive-sync-panel,
+body.v21-simple #v4ActionBar,
+body.v21-simple .mulia-pro-actionbar,
+body.v21-simple .mulia-v3-topbar,
+body.v21-simple .mulia-v3-dashboard{
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+
+/* Semua area utama memakai lebar sama */
+body.v21-simple .v21-header-inner,
+body.v21-simple .v21-toolbar-inner,
+body.v21-simple .v21-shell,
+body.v21-simple > .max-w-6xl,
+body.v21-simple #invoice-ui,
+body.v21-simple #data-invoice-ui,
+body.v21-simple #print-area,
+body.v21-simple #invoice-print-area{
+  width:calc(100% - 48px)!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Header V21 dibuat bersih */
+body.v21-simple .v21-header{
+  width:100%!important;
+  margin:0 0 16px 0!important;
+  border-radius:0 0 24px 24px!important;
+}
+body.v21-simple .v21-header-inner{
+  padding:16px 0!important;
+}
+body.v21-simple .v21-title{font-size:22px!important;}
+body.v21-simple .v21-sub{font-size:12px!important;}
+
+/* Toolbar tombol sederhana */
+body.v21-simple .v21-toolbar{
+  margin:0 0 16px 0!important;
+  top:0!important;
+  background:rgba(244,247,251,.96)!important;
+}
+body.v21-simple .v21-toolbar-inner{
+  padding:10px 0!important;
+  justify-content:flex-start!important;
+}
+body.v21-simple .v21-toolbar .v21-btn{
+  min-height:40px!important;
+  padding:9px 14px!important;
+  font-size:13px!important;
+  border-radius:12px!important;
+  flex:0 0 auto!important;
+}
+
+/* Dashboard V21 lebih sejajar dan tidak terlalu besar */
+body.v21-simple .v21-shell{
+  padding:0!important;
+}
+body.v21-simple .v21-dashboard{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  margin:0 0 16px 0!important;
+}
+body.v21-simple .v21-card{
+  border-radius:20px!important;
+  padding:16px!important;
+  box-shadow:0 12px 28px rgba(15,23,42,.07)!important;
+}
+body.v21-simple .v21-card h3{font-size:15px!important;margin-bottom:6px!important;}
+body.v21-simple .v21-card p{font-size:12px!important;margin-bottom:12px!important;}
+body.v21-simple .v21-card .v21-btn{width:100%!important;min-height:42px!important;}
+body.v21-simple .v21-steps{
+  border-radius:20px!important;
+  margin-bottom:18px!important;
+  box-shadow:0 10px 24px rgba(15,23,42,.05)!important;
+}
+
+/* Form utama sejajar dengan dashboard */
+body.v21-simple > .max-w-6xl.mx-auto.bg-white.rounded-xl.shadow.no-print,
+body.v21-simple > .max-w-6xl.mx-auto.bg-white.rounded-xl.shadow.no-print.mb-6.overflow-hidden{
+  width:calc(100% - 48px)!important;
+  max-width:1180px!important;
+  margin:18px auto!important;
+  border-radius:22px!important;
+  border:1px solid #dbe4ee!important;
+  box-shadow:0 16px 38px rgba(15,23,42,.08)!important;
+  overflow:hidden!important;
+}
+body.v21-simple .bg-slate-900.text-white.p-5{
+  padding:18px 22px!important;
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  gap:12px!important;
+  flex-wrap:wrap!important;
+}
+body.v21-simple .bg-slate-900.text-white.p-5 h1{font-size:20px!important;margin:0!important;}
+body.v21-simple .bg-slate-900.text-white.p-5 p{margin:3px 0 0 0!important;}
+body.v21-simple .bg-slate-900.text-white.p-5:after{
+  content:'Isi data → tambah item → simpan → cetak PDF';
+  display:inline-flex;
+  align-items:center;
+  border:1px solid #bfdbfe;
+  background:#eff6ff;
+  color:#1d4ed8;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:950;
+}
+
+/* Form grid lebih rapih */
+body.v21-simple .p-5.grid{
+  padding:18px 22px!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+body.v21-simple .p-5.grid > div{
+  min-width:0!important;
+}
+body.v21-simple .input,
+body.v21-simple input,
+body.v21-simple textarea,
+body.v21-simple select{
+  border-radius:12px!important;
+  min-height:42px!important;
+  font-size:13px!important;
+}
+body.v21-simple textarea.input{line-height:1.45!important;}
+body.v21-simple .label{font-size:11px!important;letter-spacing:.05em!important;margin-bottom:6px!important;}
+
+/* Kotak fitur teknis dalam form jangan terlalu mencolok */
+body.v21-simple .border.bg-blue-50,
+body.v21-simple .border.bg-purple-50{
+  display:none!important;
+}
+body.v21-simple .border.bg-slate-50,
+body.v21-simple .border.bg-emerald-50,
+body.v21-simple .border.bg-amber-50{
+  border-radius:18px!important;
+  box-shadow:none!important;
+}
+
+/* Toolbar aksi bawah lebih sejajar */
+body.v21-simple .px-5.pb-5{
+  padding:0 22px 22px!important;
+}
+body.v21-simple .mulia-compact-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  flex-wrap:wrap!important;
+  border-radius:18px!important;
+  margin-bottom:14px!important;
+}
+body.v21-simple .mulia-compact-title span{
+  font-size:14px!important;
+  font-weight:950!important;
+}
+body.v21-simple .mulia-compact-actions{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:8px!important;
+}
+body.v21-simple .mulia-compact-actions .pro-btn{
+  min-height:40px!important;
+  padding:9px 13px!important;
+  font-size:12px!important;
+  border-radius:12px!important;
+  width:auto!important;
+}
+
+/* Tabel item lebih bersih */
+body.v21-simple .overflow-x-auto.border.rounded-lg{
+  border-radius:18px!important;
+  overflow:auto!important;
+  box-shadow:none!important;
+}
+body.v21-simple table th,
+body.v21-simple table td{
+  font-size:12px!important;
+  padding:9px 8px!important;
+}
+
+/* Area print preview sejajar */
+body.v21-simple #print-area,
+body.v21-simple #invoice-print-area{
+  margin-top:18px!important;
+  border-radius:22px!important;
+  box-shadow:0 14px 34px rgba(15,23,42,.08)!important;
+}
+
+/* Modal audit/draft tetap bisa dibuka dari Admin */
+body.v21-simple #v20AuditPanel,
+body.v21-simple #v201DraftModal{
+  visibility:visible!important;
+}
+
+@media(max-width:1000px){
+  body.v21-simple .v21-dashboard{grid-template-columns:1fr!important;}
+  body.v21-simple .p-5.grid{grid-template-columns:1fr 1fr!important;}
+}
+@media(max-width:680px){
+  body.v21-simple .v21-header-inner,
+  body.v21-simple .v21-toolbar-inner,
+  body.v21-simple .v21-shell,
+  body.v21-simple > .max-w-6xl,
+  body.v21-simple #invoice-ui,
+  body.v21-simple #data-invoice-ui,
+  body.v21-simple #print-area,
+  body.v21-simple #invoice-print-area{
+    width:calc(100% - 24px)!important;
+  }
+  body.v21-simple .p-5.grid{grid-template-columns:1fr!important;padding:14px!important;}
+  body.v21-simple .px-5.pb-5{padding:0 14px 14px!important;}
+  body.v21-simple .v21-toolbar-inner{display:grid!important;grid-template-columns:1fr 1fr!important;}
+  body.v21-simple .v21-toolbar .v21-btn{width:100%!important;}
+}
+@media(max-width:460px){body.v21-simple .v21-toolbar-inner{grid-template-columns:1fr!important;}}
+</style>
+<script id="mulia-v21-2-admin-clean-aligned-script">
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    document.body.classList.add('v21-simple');
+    document.title = 'Mulia Advertising Group V21.2 Admin Clean';
+    // pastikan panel lama yang membingungkan tidak muncul di mode admin sederhana
+    ['v20StatusPanel','v201AdminEasyPanel','v20PenawaranFilter','v20InvoiceFilter'].forEach(function(id){
+      var el=document.getElementById(id); if(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
