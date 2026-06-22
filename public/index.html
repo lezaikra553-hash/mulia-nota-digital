@@ -64,6 +64,86 @@ td, th { vertical-align:top; }
 .invoice-signature-content { position:relative; z-index:2; }
 @media print { .invoice-watermark-text { color:rgba(30,41,59,0.08)!important; } }
 </style>
+
+<!-- Google Drive Auto Sync - Mulia V22 -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
+<style id="mulia-v22-professional-google-style">
+:root{
+  --m22-dark:#0f172a; --m22-blue:#2563eb; --m22-green:#059669; --m22-orange:#d97706;
+  --m22-red:#dc2626; --m22-line:#dbe4ee; --m22-bg:#eef3f8; --m22-text:#0f172a;
+  --m22-shadow:0 18px 45px rgba(15,23,42,.10);
+}
+body.min-h-screen{
+  padding:0!important;
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,.12), transparent 30%),
+    linear-gradient(180deg,#f8fafc 0%,#eef3f8 55%,#f8fafc 100%)!important;
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif!important;
+}
+.no-print{max-width:1280px!important;margin-left:auto!important;margin-right:auto!important;}
+.m22-topbar{
+  position:sticky;top:0;z-index:99999;background:linear-gradient(135deg,#07111f,#0f172a 55%,#1e3a8a);
+  color:#fff;box-shadow:0 16px 36px rgba(15,23,42,.25);
+}
+.m22-topbar-inner{max-width:1280px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.m22-brand{display:flex;align-items:center;gap:12px}
+.m22-logo{width:44px;height:44px;border-radius:14px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:950;letter-spacing:.06em}
+.m22-title{font-size:19px;font-weight:950;letter-spacing:.03em;line-height:1.1}
+.m22-sub{font-size:11px;color:#cbd5e1;margin-top:3px}
+.m22-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.m22-btn,.m22-nav button,.m22-nav a{
+  border:0;border-radius:999px;min-height:38px;padding:9px 13px;font-size:12px;font-weight:900;text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;white-space:nowrap
+}
+.m22-nav a,.m22-nav button{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
+.m22-nav a:hover,.m22-nav button:hover{background:#2563eb}
+.m22-wrap{max-width:1280px;margin:16px auto;padding:0 18px}
+.m22-dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.m22-card{background:#fff;border:1px solid var(--m22-line);border-radius:20px;padding:16px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
+.m22-card .k{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:950;letter-spacing:.06em}
+.m22-card .v{font-size:26px;color:#0f172a;font-weight:950;margin-top:4px}
+.m22-card .s{font-size:11px;color:#64748b;margin-top:2px}
+.m22-google{
+  background:#fff;border:1px solid #bfdbfe;border-radius:22px;box-shadow:var(--m22-shadow);overflow:hidden;margin-bottom:16px
+}
+.m22-google-head{background:linear-gradient(135deg,#eff6ff,#fff);padding:16px 18px;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.m22-status{font-size:12px;font-weight:900;border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:6px;background:#dbeafe;color:#1d4ed8;margin-top:6px}
+.m22-status.ok{background:#dcfce7;color:#047857}.m22-status.warn{background:#fef3c7;color:#b45309}.m22-status.err{background:#fee2e2;color:#b91c1c}
+.m22-actions{display:flex;gap:8px;flex-wrap:wrap}
+.m22-actions button{border:0;border-radius:12px;padding:10px 13px;font-size:12px;font-weight:950;color:#fff;box-shadow:0 8px 16px rgba(15,23,42,.10)}
+.m22-primary{background:#2563eb}.m22-green{background:#059669}.m22-orange{background:#d97706}.m22-dark{background:#0f172a}.m22-red{background:#dc2626}
+.m22-note{font-size:11px;color:#64748b;background:#f8fafc;border-top:1px solid #dbe4ee;padding:10px 18px;line-height:1.5}
+.m22-actionbar{
+  background:#fff;border:1px solid var(--m22-line);border-radius:22px;box-shadow:var(--m22-shadow);
+  padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px
+}
+.m22-action-title{font-size:15px;font-weight:950;color:#0f172a}.m22-action-sub{font-size:11px;color:#64748b;margin-top:2px}
+.m22-action-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.m22-action-buttons button{border:0;border-radius:12px;min-height:40px;padding:10px 13px;font-size:12px;font-weight:950;color:#fff;box-shadow:0 8px 18px rgba(15,23,42,.12)}
+.max-w-6xl.mx-auto.bg-white.rounded-xl.shadow.no-print{
+  border:1px solid var(--m22-line)!important;border-radius:22px!important;box-shadow:var(--m22-shadow)!important;overflow:hidden!important;
+}
+.bg-slate-900.text-white.p-5{background:linear-gradient(135deg,#0f172a,#1e3a8a)!important}
+.input,select.input,textarea.input,input[type="text"],input[type="number"],input[type="date"],textarea,select{
+  border-radius:12px!important;min-height:40px!important;border-color:#cbd5e1!important
+}
+.label{font-weight:950!important;letter-spacing:.055em!important;color:#334155!important}
+button{transition:.18s ease}
+button:hover{transform:translateY(-1px)}
+@media(max-width:900px){
+  .m22-topbar-inner,.m22-actionbar{flex-direction:column;align-items:flex-start}
+  .m22-nav,.m22-action-buttons,.m22-actions{width:100%;justify-content:flex-start}
+  .m22-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .m22-dashboard{grid-template-columns:1fr}
+  .m22-nav a,.m22-nav button,.m22-actions button,.m22-action-buttons button{width:100%}
+}
+@media print{.m22-topbar,.m22-wrap{display:none!important}}
+</style>
+
 </head>
 <body class="min-h-screen p-4 md:p-6">
 
@@ -1640,6 +1720,293 @@ resetInvoiceForm = function(konfirmasi=false){
 };
 
 setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
+</script>
+
+
+<script id="mulia-v22-professional-google-script">
+(function(){
+  "use strict";
+
+  const GOOGLE_CLIENT_ID = "169606052820-5ij848mubicfdppo5b2g5qpaub67munt.apps.googleusercontent.com";
+  const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
+  const DRIVE_DB_FILENAME = "Mulia_Advertising_Group_Database_Latest.json";
+  const TOKEN_KEY = "mulia_google_access_token_session";
+  const TOKEN_TIME_KEY = "mulia_google_access_token_time";
+  let googleTokenClient = null;
+  let googleAccessToken = sessionStorage.getItem(TOKEN_KEY) || "";
+  let autoBackupTimer = null;
+
+  function qs(id){ return document.getElementById(id); }
+  function safeJSON(raw){ try{return JSON.parse(raw)}catch(e){return null} }
+  function nowID(){ return new Date().toLocaleString("id-ID"); }
+
+  function getBackupKeys(){
+    const out = [];
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      if(key) out.push(key);
+    }
+    return out.sort();
+  }
+
+  function countByPrefix(prefix){
+    return getBackupKeys().filter(k=>k.startsWith(prefix)).length;
+  }
+
+  function collectAllLocalStorageForBackup(){
+    const all = {};
+    getBackupKeys().forEach(key => all[key] = localStorage.getItem(key));
+    return {
+      app:"Mulia Advertising Group",
+      version:"V22 Professional Google Auto Sync",
+      exported_at:new Date().toISOString(),
+      exported_at_id:nowID(),
+      origin:location.href,
+      storage_keys:Object.keys(all).length,
+      localStorage:all
+    };
+  }
+
+  function setStatus(msg, type){
+    const el = qs("m22GoogleStatus") || qs("gdriveStatus");
+    if(!el) return;
+    el.textContent = msg;
+    el.className = (el.id==="m22GoogleStatus" ? "m22-status " : "text-xs font-semibold mt-1 ") + (type||"");
+  }
+
+  function tokenStillFresh(){
+    const t = Number(sessionStorage.getItem(TOKEN_TIME_KEY)||0);
+    return !!googleAccessToken && (Date.now()-t) < 55*60*1000;
+  }
+
+  async function driveFindFile(){
+    const q = "name='" + DRIVE_DB_FILENAME.replace(/'/g,"\\'") + "' and trashed=false";
+    const res = await fetch("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,modifiedTime,size)",{
+      headers:{Authorization:"Bearer "+googleAccessToken}
+    });
+    if(!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    return data.files && data.files.length ? data.files[0] : null;
+  }
+
+  async function backupToGoogleDrive(silent){
+    if(!tokenStillFresh()){
+      if(!silent) alert("Silakan klik Login Google dulu.");
+      setStatus("Google Drive: belum login sesi ini", "warn");
+      return false;
+    }
+    setStatus("Google Drive: proses backup...", "warn");
+    const payload = collectAllLocalStorageForBackup();
+    const existing = await driveFindFile();
+    const metadata = {name:DRIVE_DB_FILENAME,mimeType:"application/json"};
+    const form = new FormData();
+    form.append("metadata", new Blob([JSON.stringify(metadata)], {type:"application/json"}));
+    form.append("file", new Blob([JSON.stringify(payload,null,2)], {type:"application/json"}));
+    let url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+    let method = "POST";
+    if(existing){
+      url = "https://www.googleapis.com/upload/drive/v3/files/"+existing.id+"?uploadType=multipart";
+      method = "PATCH";
+    }
+    const res = await fetch(url,{method,headers:{Authorization:"Bearer "+googleAccessToken},body:form});
+    if(!res.ok){
+      const txt = await res.text();
+      setStatus("Google Drive: backup gagal", "err");
+      if(!silent) alert("Backup Google Drive gagal: "+txt);
+      return false;
+    }
+    setStatus("Google Drive: terhubung & backup tersimpan " + new Date().toLocaleTimeString("id-ID"), "ok");
+    if(!silent) alert("Backup Google Drive berhasil.");
+    return true;
+  }
+
+  async function restoreFromGoogleDrive(){
+    if(!tokenStillFresh()){
+      alert("Silakan klik Login Google dulu.");
+      setStatus("Google Drive: belum login sesi ini", "warn");
+      return false;
+    }
+    const file = await driveFindFile();
+    if(!file){ alert("File backup belum ditemukan di Google Drive."); return false; }
+    const res = await fetch("https://www.googleapis.com/drive/v3/files/"+file.id+"?alt=media",{
+      headers:{Authorization:"Bearer "+googleAccessToken}
+    });
+    if(!res.ok){ alert("Restore gagal: "+await res.text()); return false; }
+    const payload = await res.json();
+    if(!payload || !payload.localStorage){ alert("Format backup tidak valid."); return false; }
+
+    const localCount = getBackupKeys().length;
+    const driveCount = Object.keys(payload.localStorage).length;
+    const msg = "Restore akan MENGGABUNGKAN data Drive ke browser ini.\\n\\n"+
+      "Data lokal sekarang: "+localCount+" key\\n"+
+      "Data di Google Drive: "+driveCount+" key\\n\\n"+
+      "Data lokal yang tidak ada di Drive tidak akan dihapus. Lanjutkan?";
+    if(!confirm(msg)) return false;
+
+    Object.keys(payload.localStorage).forEach(key=>{
+      // Merge aman: jangan hapus data lokal. Jika key sama, pakai versi Drive.
+      localStorage.setItem(key, payload.localStorage[key]);
+    });
+    setStatus("Google Drive: restore/merge berhasil", "ok");
+    alert("Restore/merge berhasil. Halaman akan direfresh.");
+    location.reload();
+    return true;
+  }
+
+  function initGoogleDrive(){
+    if(!window.google || !google.accounts || !google.accounts.oauth2){
+      alert("Google API belum siap. Pastikan internet aktif lalu refresh halaman.");
+      return;
+    }
+    googleTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: GOOGLE_SCOPES,
+      callback: async (tokenResponse)=>{
+        if(tokenResponse && tokenResponse.access_token){
+          googleAccessToken = tokenResponse.access_token;
+          sessionStorage.setItem(TOKEN_KEY, googleAccessToken);
+          sessionStorage.setItem(TOKEN_TIME_KEY, String(Date.now()));
+          setStatus("Google Drive: terhubung", "ok");
+          try{ await backupToGoogleDrive(true); }catch(e){ console.warn(e); }
+        }else{
+          setStatus("Google Drive: login gagal", "err");
+        }
+      }
+    });
+    googleTokenClient.requestAccessToken({prompt:""});
+  }
+
+  function scheduleAutoBackup(){
+    if(!tokenStillFresh()) return;
+    clearTimeout(autoBackupTimer);
+    autoBackupTimer = setTimeout(()=>backupToGoogleDrive(true).catch(err=>{
+      console.warn("Auto backup gagal:", err);
+      setStatus("Google Drive: auto backup gagal", "err");
+    }), 1200);
+  }
+
+  function wrapSaveFunctions(){
+    ["simpanPenawaran","simpanInvoice"].forEach(fn=>{
+      const old = window[fn];
+      if(typeof old === "function" && !old.__m22Wrapped){
+        const wrapped = function(){
+          const res = old.apply(this, arguments);
+          scheduleAutoBackup();
+          setTimeout(refreshDashboard,300);
+          return res;
+        };
+        wrapped.__m22Wrapped = true;
+        window[fn] = wrapped;
+      }
+    });
+  }
+
+  function refreshDashboard(){
+    const set=(id,val)=>{ const el=qs(id); if(el) el.textContent=val; };
+    set("m22CountSPH", countByPrefix("PENAWARAN_"));
+    set("m22CountINV", countByPrefix("INVOICE_"));
+    set("m22CountKeys", getBackupKeys().length);
+    set("m22LastSync", localStorage.getItem("mulia_last_backup_time") || "-");
+    if(typeof window.muliaV3RefreshDashboard==="function"){
+      try{ window.muliaV3RefreshDashboard(); }catch(e){}
+    }
+  }
+
+  function goHash(hash){
+    location.hash = hash;
+    setTimeout(()=>{ const el=document.querySelector(hash); if(el) el.scrollIntoView({behavior:"smooth",block:"start"}); },80);
+    if(hash==="#dataPenawaranAnchor" && typeof window.refreshDraftPenawaran==="function") setTimeout(window.refreshDraftPenawaran,150);
+    if(hash==="#dataInvoiceAnchor" && typeof window.renderInvoiceList==="function") setTimeout(window.renderInvoiceList,150);
+  }
+
+  function buildShell(){
+    if(qs("m22Topbar")) return;
+    const top = document.createElement("div");
+    top.id = "m22Topbar";
+    top.className = "m22-topbar no-print";
+    top.innerHTML = `
+      <div class="m22-topbar-inner">
+        <div class="m22-brand">
+          <div class="m22-logo">MA</div>
+          <div><div class="m22-title">MULIA ADVERTISING GROUP</div><div class="m22-sub">Penawaran • Invoice • Database • Google Drive Auto Sync</div></div>
+        </div>
+        <div class="m22-nav">
+          <a href="javascript:muliaV22Go('#penawaranFormAnchor')">📄 Penawaran</a>
+          <a href="javascript:muliaV22Go('#invoiceFormAnchor')">🧾 Invoice</a>
+          <a href="javascript:muliaV22Go('#dataPenawaranAnchor')">📋 Data SPH</a>
+          <a href="javascript:muliaV22Go('#dataInvoiceAnchor')">💰 Data Invoice</a>
+          <button onclick="refreshMuliaV22()">🔄 Refresh</button>
+        </div>
+      </div>`;
+    document.body.insertBefore(top, document.body.firstChild);
+
+    const wrap = document.createElement("div");
+    wrap.className = "m22-wrap no-print";
+    wrap.innerHTML = `
+      <div class="m22-dashboard">
+        <div class="m22-card"><div class="k">Data SPH</div><div class="v" id="m22CountSPH">0</div><div class="s">PENAWARAN_ tersimpan</div></div>
+        <div class="m22-card"><div class="k">Data Invoice</div><div class="v" id="m22CountINV">0</div><div class="s">INVOICE_ tersimpan</div></div>
+        <div class="m22-card"><div class="k">Total Database</div><div class="v" id="m22CountKeys">0</div><div class="s">Semua key localStorage</div></div>
+        <div class="m22-card"><div class="k">Last Sync</div><div class="v" style="font-size:15px" id="m22LastSync">-</div><div class="s">Backup otomatis setelah login</div></div>
+      </div>
+      <div class="m22-google" id="m22GooglePanel">
+        <div class="m22-google-head">
+          <div>
+            <div style="font-size:15px;font-weight:950;color:#0f172a">☁ Google Drive Auto Backup</div>
+            <div style="font-size:12px;color:#64748b;margin-top:3px">Data lama & data baru tetap memakai key asli: PENAWARAN_, INVOICE_, dan nomor otomatis.</div>
+            <div id="m22GoogleStatus" class="m22-status warn">Google Drive: belum login sesi ini</div>
+          </div>
+          <div class="m22-actions">
+            <button class="m22-primary" onclick="initGoogleDrive()">🔐 Login Google</button>
+            <button class="m22-green" onclick="backupToGoogleDrive(false)">☁ Backup Sekarang</button>
+            <button class="m22-orange" onclick="restoreFromGoogleDrive()">↩ Restore / Gabungkan</button>
+          </div>
+        </div>
+        <div class="m22-note">
+          Setelah klik <b>Login Google</b>, setiap <b>Simpan Penawaran</b> atau <b>Simpan Invoice</b> akan otomatis dibackup ke Drive.
+          Restore dibuat mode <b>gabung</b>, jadi data lokal tidak dihapus.
+        </div>
+      </div>
+      <div class="m22-actionbar">
+        <div><div class="m22-action-title">Panel Kerja Cepat</div><div class="m22-action-sub">Tombol harian untuk admin/staff kantor.</div></div>
+        <div class="m22-action-buttons">
+          <button class="m22-dark" onclick="addRow&&addRow()">＋ Item</button>
+          <button class="m22-primary" onclick="simpanPenawaran&&simpanPenawaran(false)">💾 Simpan SPH</button>
+          <button class="m22-green" onclick="simpanPenawaran&&simpanPenawaran(true)">🖨 Simpan & Cetak</button>
+          <button class="m22-orange" onclick="muliaV22Go('#invoiceFormAnchor')">🧾 Invoice</button>
+          <button class="m22-red" onclick="resetForm&&resetForm()">Reset</button>
+        </div>
+      </div>`;
+    document.body.insertBefore(wrap, top.nextSibling);
+  }
+
+  // Expose
+  window.initGoogleDrive = initGoogleDrive;
+  window.backupToGoogleDrive = async function(silent){ 
+    const ok = await backupToGoogleDrive(!!silent); 
+    if(ok) localStorage.setItem("mulia_last_backup_time", nowID());
+    refreshDashboard();
+    return ok;
+  };
+  window.restoreFromGoogleDrive = restoreFromGoogleDrive;
+  window.muliaV22Go = goHash;
+  window.refreshMuliaV22 = function(){ refreshDashboard(); wrapSaveFunctions(); if(tokenStillFresh()) setStatus("Google Drive: terhubung sesi browser", "ok"); };
+
+  window.addEventListener("load", function(){
+    buildShell();
+    wrapSaveFunctions();
+    refreshDashboard();
+    if(tokenStillFresh()) setStatus("Google Drive: terhubung sesi browser", "ok");
+    else setStatus("Google Drive: belum login sesi ini", "warn");
+  });
+
+  document.addEventListener("click", function(e){
+    const txt = (e.target && e.target.innerText || "").toLowerCase();
+    if(txt.includes("simpan") || txt.includes("hapus") || txt.includes("reset")){
+      setTimeout(()=>{ refreshDashboard(); scheduleAutoBackup(); }, 800);
+    }
+  });
+})();
 </script>
 
 </body>
