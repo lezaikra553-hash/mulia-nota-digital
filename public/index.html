@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mulia Advertising Group</title>
+<title>Mulia Advertising Group Final Stable</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -860,7 +860,8 @@ Bersama ini kami sampaikan penawaran harga untuk pekerjaan pembuatan dan pemasan
       <label class="label text-blue-800">Catatan / Terms of Payment Khusus Customer</label>
       <textarea id="catatanPembayaran" class="input h-28 bg-white border-blue-300" oninput="render()">Sistem pembayaran mengikuti kesepakatan dengan pihak customer.
 DP / uang muka dibayarkan setelah surat penawaran disetujui atau SPK/PO diterbitkan.
-Pelunasan dilakukan sesuai termin pekerjaan atau sebelum barang dikirim/dipasang.</textarea>
+Pelunasan dilakukan sesuai termin pekerjaan atau sebelum barang dikirim/dipasang.
+Detail rekening pembayaran tercantum pada bagian rekening di bawah.</textarea>
       <p class="text-[11px] text-blue-700 mt-2">Isi bagian ini bebas sesuai masing-masing PT: DP 30%, termin 30-30-40, pelunasan setelah pemasangan, pembayaran 14 hari, atau sesuai PO/SPK.</p>
     </div>
 
@@ -1458,7 +1459,7 @@ function resetForm(){
   document.getElementById('catatanPembayaran').value = `Sistem pembayaran mengikuti kesepakatan dengan pihak customer.
 DP / uang muka dibayarkan setelah surat penawaran disetujui atau SPK/PO diterbitkan.
 Pelunasan dilakukan sesuai termin pekerjaan atau sebelum barang dikirim/dipasang.
-Pembayaran melalui rekening Bank BCA No. 5781203301 a/n PT. Dwi Mulia Advertising.`;
+Detail rekening pembayaran tercantum pada bagian rekening di bawah.`;
   addRow('Safety Sign / Rambu K3','Plat aluminium/galvanis, cutting sticker, finishing rapi, siap pasang.',1,'Pcs',0);
 }
 function render(){
@@ -4713,6 +4714,1222 @@ body.mulia-v11-erp .v9-topbar-card{
   }
 }
 </style>
+
+
+<!-- =========================================================
+     MULIA ADVERTISING GROUP — V20 STABLE RELEASE
+     Auto Draft • Auto Save • Status Dokumen • Filter • Nomor Aman • Audit Trail
+     Ditambahkan sebagai layer upgrade tanpa menghapus modul V18.
+========================================================= -->
+<style id="mulia-v20-stable-style">
+.v20-panel{max-width:1280px;margin:0 auto 18px auto;background:#fff;border:1px solid #dbe4ee;border-radius:22px;box-shadow:0 18px 45px rgba(15,23,42,.10);overflow:hidden}
+.v20-head{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.v20-title{font-size:16px;font-weight:950;letter-spacing:.02em}.v20-sub{font-size:11px;color:#dbeafe;margin-top:3px}.v20-body{padding:14px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;background:#f8fafc}.v20-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:12px}.v20-k{font-size:10px;font-weight:950;color:#64748b;text-transform:uppercase;letter-spacing:.06em}.v20-v{font-size:15px;font-weight:950;color:#0f172a;margin-top:5px;word-break:break-word}.v20-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:950}.v20-draft{background:#fff7ed;color:#9a3412}.v20-active{background:#dcfce7;color:#166534}.v20-printed{background:#dbeafe;color:#1e40af}.v20-sent{background:#ede9fe;color:#5b21b6}.v20-approved{background:#ccfbf1;color:#115e59}.v20-cancelled{background:#ffe4e6;color:#9f1239}.v20-filterbar{max-width:1280px;margin:0 auto 12px auto;background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;box-shadow:0 10px 25px rgba(15,23,42,.06)}.v20-filterbar label{font-size:11px;font-weight:950;color:#334155;text-transform:uppercase}.v20-filterbar select,.v20-filterbar input{border:1px solid #cbd5e1;border-radius:12px;padding:9px 11px;font-size:13px;background:#fff}.v20-btn{border:0!important;border-radius:12px!important;min-height:38px!important;padding:9px 12px!important;font-size:12px!important;font-weight:950!important;box-shadow:0 8px 18px rgba(15,23,42,.10)!important}.v20-blue{background:#2563eb!important;color:#fff!important}.v20-dark{background:#0f172a!important;color:#fff!important}.v20-red{background:#dc2626!important;color:#fff!important}.v20-soft{background:#f8fafc!important;color:#0f172a!important;border:1px solid #dbe4ee!important;box-shadow:none!important}.v20-audit-box{max-height:260px;overflow:auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px;font-size:11px}.v20-audit-row{display:grid;grid-template-columns:145px 115px 1fr;gap:8px;border-bottom:1px solid #edf2f7;padding:7px 0}.v20-audit-row:last-child{border-bottom:0}.v20-toast{position:fixed;right:18px;bottom:18px;z-index:999999;background:#0f172a;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 22px 60px rgba(15,23,42,.35);font-size:12px;font-weight:850;display:none}.v20-toast.show{display:block}.v20-status-select{border:1px solid #cbd5e1;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;background:#fff;min-height:30px!important}.v20-mini-note{font-size:10px;color:#64748b;margin-top:5px}@media(max-width:1050px){.v20-body{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.v20-body{grid-template-columns:1fr}.v20-audit-row{grid-template-columns:1fr}.v20-filterbar>*{width:100%}.v20-filterbar select,.v20-filterbar input,.v20-filterbar button{width:100%!important}}@media print{#v20StatusPanel,#v20PenawaranFilter,#v20InvoiceFilter,#v20AuditPanel,.v20-toast{display:none!important}}
+</style>
+
+<script id="mulia-v20-stable-script">
+(function(){
+  'use strict';
+  const V20 = window.MuliaV20 = window.MuliaV20 || {};
+  V20.version = 'V20 Stable Release';
+  V20.currentDraftKey = localStorage.getItem('MULIA_V20_CURRENT_DRAFT_KEY') || '';
+  V20.currentInvoiceDraftKey = localStorage.getItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY') || '';
+  V20.autoSaveTimer = null;
+  V20.invoiceAutoSaveTimer = null;
+  V20.original = V20.original || {};
+
+  function $(id){ return document.getElementById(id); }
+  function safe(fn, fallback){ try{return fn();}catch(e){console.warn('[V20]', e); return fallback;} }
+  function nowISO(){ return new Date().toISOString(); }
+  function nowID(){ return new Date().toLocaleString('id-ID'); }
+  function sanitizeKey(s){ return String(s||'DOKUMEN').replace(/[^A-Za-z0-9_-]+/g,'_'); }
+  function uid(prefix){ return prefix + '_' + Date.now().toString(36).toUpperCase() + '_' + Math.random().toString(36).slice(2,7).toUpperCase(); }
+  function getJSON(key, def){ return safe(()=>JSON.parse(localStorage.getItem(key)||''), def); }
+  function setJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  function statusClass(st){ st=String(st||'Draft').toLowerCase(); if(st.includes('printed'))return'v20-printed'; if(st.includes('sent'))return'v20-sent'; if(st.includes('approved'))return'v20-approved'; if(st.includes('cancel'))return'v20-cancelled'; if(st.includes('aktif')||st.includes('active'))return'v20-active'; return'v20-draft'; }
+  function statusLabel(st){ return st || 'Draft'; }
+  function toast(msg){ let el=$('v20Toast'); if(!el){ el=document.createElement('div'); el.id='v20Toast'; el.className='v20-toast'; document.body.appendChild(el); } el.textContent=msg; el.classList.add('show'); clearTimeout(V20.toastTimer); V20.toastTimer=setTimeout(()=>el.classList.remove('show'),2400); }
+  function hasMeaningfulPenawaran(){ const fields=['kepada','perihal','pembuka','catatan','catatanPembayaran']; const text=fields.map(id=>$(id)?.value||'').join(' '); const items=(typeof ambilItems==='function'?ambilItems():[]).filter(it=>String(it.item||it.spec||'').trim() || Number(it.harga)>0); return text.trim().length>30 || items.length>0; }
+  function hasMeaningfulInvoice(){ const fields=['invCustomer','invPoRef','invCatatan']; const text=fields.map(id=>$(id)?.value||'').join(' '); const items=(typeof ambilInvoiceItems==='function'?ambilInvoiceItems():[]).filter(it=>String(it.item||it.spec||'').trim() || Number(it.harga)>0); return text.trim().length>10 || items.length>0; }
+  function addAudit(docKey, action, detail){
+    const row={time:nowISO(), action:action, detail:detail||'', key:docKey||'', user:'Admin'};
+    const global=getJSON('MULIA_V20_AUDIT_LOG', []); global.unshift(row); setJSON('MULIA_V20_AUDIT_LOG', global.slice(0,500));
+    if(docKey){ const d=getJSON(docKey, null); if(d){ d.audit=Array.isArray(d.audit)?d.audit:[]; d.audit.unshift(row); d.audit=d.audit.slice(0,100); d.updated_at=nowISO(); setJSON(docKey,d); } }
+  }
+  V20.addAudit = addAudit;
+
+  function ensureMeta(data, type, status){
+    data.v20 = true;
+    data.doc_type = type;
+    data.doc_id = data.doc_id || uid(type==='invoice'?'INV':'SPH');
+    data.status_dokumen = status || data.status_dokumen || 'Draft';
+    data.created_at = data.created_at || nowISO();
+    data.updated_at = nowISO();
+    data.audit = Array.isArray(data.audit) ? data.audit : [];
+    return data;
+  }
+
+  function collectPenawaranV20(status){
+    const nomor = $('nomor')?.value || (typeof generateNomorSurat==='function'?generateNomorSurat():('SPH/'+Date.now()));
+    let data = (typeof collectPenawaranData==='function') ? collectPenawaranData(nomor) : {
+      nomor:nomor,tanggal:$('tanggal')?.value,lampiran:$('lampiran')?.value,perihal:$('perihal')?.value,kepada:$('kepada')?.value,pembuka:$('pembuka')?.value,catatan:$('catatan')?.value,catatan_pembayaran:$('catatanPembayaran')?.value,dp_persen:Number($('dpPersen')?.value)||0,ppn_mode:$('ppnMode')?.value||'none',ppn_persen:Number($('ppnPersen')?.value)||0,items:(typeof ambilItems==='function'?ambilItems():[]),files:window.lampiranData||[]
+    };
+    const oldKey = window.editingPenawaranKey || V20.currentDraftKey;
+    const old = oldKey ? getJSON(oldKey, {}) : {};
+    data = Object.assign({}, old, data);
+    return ensureMeta(data,'penawaran',status||old.status_dokumen||'Draft');
+  }
+  function collectInvoiceV20(status){
+    const nomor = $('invNomor')?.value || (typeof generateNomorInvoice==='function'?generateNomorInvoice():('INV-'+Date.now()));
+    let data={nomor,tanggal:$('invTanggal')?.value,po_ref:$('invPoRef')?.value,po_tanggal:$('invPoTanggal')?.value,customer:$('invCustomer')?.value,status:$('invStatusBayar')?.value,dp:Number($('invDpManual')?.value)||0,ppn_mode:$('invPpnMode')?.value||'none',ppn_persen:Number($('invPpnPersen')?.value)||0,catatan:$('invCatatan')?.value,items:(typeof ambilInvoiceItems==='function'?ambilInvoiceItems():[]),saved_at:nowISO()};
+    const oldKey=V20.currentInvoiceDraftKey; const old=oldKey?getJSON(oldKey,{}):{}; data=Object.assign({},old,data); return ensureMeta(data,'invoice',status||old.status_dokumen||'Draft');
+  }
+
+  function autoDraftPenawaran(){
+    if(window.editingPenawaranKey) return;
+    if(!hasMeaningfulPenawaran()) return;
+    const data=collectPenawaranV20('Draft');
+    const key=V20.currentDraftKey || ('PENAWARAN_DRAFT_'+data.doc_id);
+    V20.currentDraftKey=key; localStorage.setItem('MULIA_V20_CURRENT_DRAFT_KEY',key);
+    setJSON(key,data);
+    if(!data._v20_draft_audited){ data._v20_draft_audited=true; setJSON(key,data); addAudit(key,'Draft dibuat','Auto Draft Penawaran'); }
+    updateStatusPanel('Draft','Auto save: '+nowID(),key);
+    refreshAllQuiet();
+  }
+  function autoDraftInvoice(){
+    if(!hasMeaningfulInvoice()) return;
+    const data=collectInvoiceV20('Draft');
+    const key=V20.currentInvoiceDraftKey || ('INVOICE_DRAFT_'+data.doc_id);
+    V20.currentInvoiceDraftKey=key; localStorage.setItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY',key);
+    setJSON(key,data);
+    if(!data._v20_draft_audited){ data._v20_draft_audited=true; setJSON(key,data); addAudit(key,'Draft dibuat','Auto Draft Invoice'); }
+    updateStatusPanel('Draft','Auto save invoice: '+nowID(),key);
+    refreshAllQuiet();
+  }
+  function scheduleAutoDraft(){ clearTimeout(V20.autoSaveTimer); V20.autoSaveTimer=setTimeout(autoDraftPenawaran,900); }
+  function scheduleInvoiceDraft(){ clearTimeout(V20.invoiceAutoSaveTimer); V20.invoiceAutoSaveTimer=setTimeout(autoDraftInvoice,900); }
+
+  function updateStatusPanel(status, saved, key){
+    const st=$('v20DocStatus'); if(st){ st.textContent=statusLabel(status); st.className='v20-status '+statusClass(status); }
+    if($('v20LastSave')) $('v20LastSave').textContent=saved||'-';
+    if($('v20DocKey')) $('v20DocKey').textContent=key||window.editingPenawaranKey||V20.currentDraftKey||'-';
+    if($('v20DocNumber')) $('v20DocNumber').textContent=$('nomor')?.value||'-';
+    if($('v20InvNumber')) $('v20InvNumber').textContent=$('invNomor')?.value||'-';
+    updateCounts();
+  }
+  function updateCounts(){
+    const pen=allDocs('PENAWARAN_'), inv=allDocs('INVOICE_');
+    const by=(arr,st)=>arr.filter(x=>String(x.data.status_dokumen||'').toLowerCase()===st).length;
+    if($('v20CountDraft')) $('v20CountDraft').textContent=String(by(pen,'draft')+by(inv,'draft'));
+    if($('v20CountAktif')) $('v20CountAktif').textContent=String(by(pen,'aktif')+by(pen,'active'));
+    if($('v20CountPrinted')) $('v20CountPrinted').textContent=String(by(pen,'printed')+by(inv,'printed'));
+    if($('v20CountAudit')) $('v20CountAudit').textContent=String((getJSON('MULIA_V20_AUDIT_LOG',[])||[]).length);
+  }
+  function allDocs(prefix){ const a=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.startsWith(prefix)){ const d=getJSON(k,null); if(d) a.push({key:k,data:d}); } } return a.sort((x,y)=>String(y.data.updated_at||y.data.saved_at||'').localeCompare(String(x.data.updated_at||x.data.saved_at||''))); }
+  function calcTotal(d){ if(typeof hitungTotalFromItemsAndTax==='function') return hitungTotalFromItemsAndTax(d).grand||0; return (d.items||[]).reduce((s,it)=>s+(Number(it.qty)||0)*(Number(it.harga)||0),0); }
+  function cust(d){ if(typeof safeCustomerName==='function') return safeCustomerName(d.kepada||d.customer||''); return String(d.kepada||d.customer||'Customer').split('\n').slice(0,2).join(' - '); }
+
+  function injectUI(){
+    if($('v20StatusPanel')) return;
+    const html='<div class="v20-panel no-print" id="v20StatusPanel"><div class="v20-head"><div><div class="v20-title">V20 Stable Release — Auto Draft & Audit Trail</div><div class="v20-sub">Draft otomatis, auto save, status dokumen, filter, nomor lebih aman, dan jejak aktivitas.</div></div><div><button class="v20-btn v20-soft" onclick="MuliaV20.showAudit()">📜 Lihat Audit</button> <button class="v20-btn v20-blue" onclick="MuliaV20.newDocumentSafe()">＋ Dokumen Baru</button></div></div><div class="v20-body"><div class="v20-card"><div class="v20-k">Status Saat Ini</div><div class="v20-v"><span id="v20DocStatus" class="v20-status v20-draft">Draft</span></div></div><div class="v20-card"><div class="v20-k">Nomor SPH</div><div class="v20-v" id="v20DocNumber">-</div></div><div class="v20-card"><div class="v20-k">Nomor Invoice</div><div class="v20-v" id="v20InvNumber">-</div></div><div class="v20-card"><div class="v20-k">Auto Save</div><div class="v20-v" id="v20LastSave">Aktif</div></div><div class="v20-card"><div class="v20-k">Draft</div><div class="v20-v" id="v20CountDraft">0</div></div><div class="v20-card"><div class="v20-k">Audit</div><div class="v20-v" id="v20CountAudit">0</div><div class="v20-mini-note" id="v20DocKey">-</div></div></div></div>';
+    const target=$('v4ActionBar')||document.querySelector('.mulia-pro-actionbar')||document.body.firstElementChild;
+    target.insertAdjacentHTML('afterend',html);
+
+    const penAnchor=$('dataPenawaranAnchor'); if(penAnchor && !$('v20PenawaranFilter')) penAnchor.closest('div')?.insertAdjacentHTML('beforebegin','<div class="v20-filterbar no-print" id="v20PenawaranFilter"><label>Filter Penawaran</label><select id="v20PenawaranStatus" onchange="refreshDataPenawaranList()"><option value="all">Semua Status</option><option value="Draft">Draft</option><option value="Aktif">Aktif</option><option value="Printed">Printed</option><option value="Sent">Sent</option><option value="Approved">Approved</option><option value="Cancelled">Cancelled</option></select><input id="v20PenawaranSearch" placeholder="Cari nomor/customer/perihal" oninput="refreshDataPenawaranList()"><button class="v20-btn v20-dark" onclick="refreshDataPenawaranList()">🔎 Filter</button><button class="v20-btn v20-soft" onclick="MuliaV20.showAudit()">Audit Trail</button></div>');
+    const invAnchor=$('dataInvoiceAnchor'); if(invAnchor && !$('v20InvoiceFilter')) invAnchor.closest('div')?.insertAdjacentHTML('beforebegin','<div class="v20-filterbar no-print" id="v20InvoiceFilter"><label>Filter Invoice</label><select id="v20InvoiceStatus" onchange="MuliaV20.renderInvoiceTable()"><option value="all">Semua Status</option><option value="Draft">Draft</option><option value="Aktif">Aktif</option><option value="Printed">Printed</option><option value="BELUM BAYAR">Belum Bayar</option><option value="DP">DP / Belum Lunas</option><option value="LUNAS">Lunas</option></select><input id="v20InvoiceSearch" placeholder="Cari nomor/customer/PO" oninput="MuliaV20.renderInvoiceTable()"><button class="v20-btn v20-dark" onclick="MuliaV20.renderInvoiceTable()">🔎 Filter</button></div>');
+    document.body.insertAdjacentHTML('beforeend','<div class="v20-panel no-print" id="v20AuditPanel" style="display:none;position:fixed;inset:auto 18px 18px 18px;z-index:999998;max-width:980px;margin:auto"><div class="v20-head"><div><div class="v20-title">Audit Trail V20</div><div class="v20-sub">Riwayat aktivitas dokumen terbaru.</div></div><button class="v20-btn v20-soft" onclick="MuliaV20.hideAudit()">Tutup</button></div><div class="p-4"><div id="v20AuditList" class="v20-audit-box"></div></div></div>');
+    bindAutoSave(); updateStatusPanel('Draft','Auto save aktif','-');
+  }
+
+  function bindAutoSave(){
+    ['nomor','tanggal','lampiran','perihal','kepada','pembuka','catatan','catatanPembayaran','dpPersen','ppnMode','ppnPersen'].forEach(id=>$(id)?.addEventListener('input', scheduleAutoDraft));
+    $('inputRows')?.addEventListener('input', scheduleAutoDraft);
+    $('inputRows')?.addEventListener('click', ()=>setTimeout(scheduleAutoDraft,100));
+    ['invNomor','invTanggal','invPoRef','invPoTanggal','invCustomer','invDpManual','invStatusBayar','invPpnMode','invPpnPersen','invCatatan'].forEach(id=>$(id)?.addEventListener('input', scheduleInvoiceDraft));
+    $('invInputRows')?.addEventListener('input', scheduleInvoiceDraft);
+  }
+
+  V20.original.simpanPenawaran = window.simpanPenawaran;
+  window.simpanPenawaran = function(cetak=false){
+    if(typeof setTanggalOtomatis==='function') setTanggalOtomatis();
+    if(typeof render==='function') render();
+    const nomor=$('nomor')?.value || (typeof generateNomorSurat==='function'?generateNomorSurat():('SPH/'+Date.now()));
+    const sedangEdit=!!window.editingPenawaranKey;
+    const key=sedangEdit ? window.editingPenawaranKey : ('PENAWARAN_'+sanitizeKey(nomor));
+    const data=collectPenawaranV20(cetak?'Printed':'Aktif');
+    data.saved_at=nowISO(); data.finalized_at=data.finalized_at||nowISO();
+    setJSON(key,data);
+    if(V20.currentDraftKey && V20.currentDraftKey!==key){ localStorage.removeItem(V20.currentDraftKey); V20.currentDraftKey=''; localStorage.removeItem('MULIA_V20_CURRENT_DRAFT_KEY'); }
+    if(!sedangEdit){ let n=parseInt(localStorage.getItem('dwi_mulia_last_sph_number')||'52',10); localStorage.setItem('dwi_mulia_last_sph_number',String(n+1)); }
+    addAudit(key,cetak?'Print / Save PDF':'Simpan', (cetak?'Dokumen disimpan dan dicetak: ':'Dokumen disimpan: ')+nomor);
+    if(cetak){ setTimeout(()=>{ try{ window.print(); }catch(e){} },50); }
+    setTimeout(()=>{
+      if(!sedangEdit){ if(typeof setNomorOtomatis==='function') setNomorOtomatis(); if(typeof setTanggalOtomatis==='function') setTanggalOtomatis(); }
+      window.editingPenawaranKey=null; if(typeof render==='function') render(); refreshAllQuiet(); updateStatusPanel(data.status_dokumen,'Tersimpan: '+nowID(),key); toast((cetak?'Printed: ':'Tersimpan: ')+nomor);
+    },cetak?650:120);
+  };
+
+  V20.original.simpanInvoice = window.simpanInvoice;
+  window.simpanInvoice = function(cetak=false){
+    if(typeof renderInvoice==='function') renderInvoice();
+    const nomor=$('invNomor')?.value || (typeof generateNomorInvoice==='function'?generateNomorInvoice():('INV-'+Date.now()));
+    const key='INVOICE_'+sanitizeKey(nomor);
+    const data=collectInvoiceV20(cetak?'Printed':'Aktif');
+    data.saved_at=nowISO(); setJSON(key,data);
+    if(V20.currentInvoiceDraftKey && V20.currentInvoiceDraftKey!==key){ localStorage.removeItem(V20.currentInvoiceDraftKey); V20.currentInvoiceDraftKey=''; localStorage.removeItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY'); }
+    let n=parseInt(localStorage.getItem('dwi_mulia_last_invoice_number')||'100025',10); localStorage.setItem('dwi_mulia_last_invoice_number',String(n+1));
+    addAudit(key,cetak?'Print Invoice':'Simpan Invoice',(cetak?'Invoice disimpan dan dicetak: ':'Invoice disimpan: ')+nomor);
+    if(cetak){ document.body.classList.add('print-invoice'); setTimeout(()=>{window.print(); setTimeout(()=>document.body.classList.remove('print-invoice'),500);},50); }
+    setTimeout(()=>{ if(typeof resetInvoiceForm==='function') resetInvoiceForm(false); refreshAllQuiet(); updateStatusPanel(data.status_dokumen,'Invoice tersimpan: '+nowID(),key); toast((cetak?'Printed invoice: ':'Invoice tersimpan: ')+nomor); },cetak?700:120);
+  };
+
+  V20.newDocumentSafe = function(){
+    const hasDraft = hasMeaningfulPenawaran();
+    if(hasDraft){
+      const ok=confirm('Form saat ini akan dijadikan Draft otomatis lalu form dikosongkan untuk dokumen baru. Lanjutkan?');
+      if(!ok) return;
+      autoDraftPenawaran();
+      addAudit(V20.currentDraftKey,'Dokumen Baru','Form lama disimpan sebagai draft sebelum membuat dokumen baru.');
+    }
+    if(typeof resetForm==='function') resetForm();
+    window.editingPenawaranKey=null; V20.currentDraftKey=''; localStorage.removeItem('MULIA_V20_CURRENT_DRAFT_KEY');
+    if(typeof setNomorOtomatis==='function') setNomorOtomatis();
+    updateStatusPanel('Draft','Dokumen baru: '+nowID(),'-'); toast('Dokumen baru siap diisi.');
+  };
+
+  V20.changeStatus=function(key, status){ const d=getJSON(key,null); if(!d) return alert('Data tidak ditemukan.'); d.status_dokumen=status; d.updated_at=nowISO(); setJSON(key,d); addAudit(key,'Status diubah','Status menjadi '+status); refreshAllQuiet(); toast('Status diubah: '+status); };
+  V20.openDraft=function(key){ if(key.startsWith('PENAWARAN_')){ if(typeof loadPenawaranKeForm==='function') loadPenawaranKeForm(key); V20.currentDraftKey=key; localStorage.setItem('MULIA_V20_CURRENT_DRAFT_KEY',key); updateStatusPanel(getJSON(key,{}).status_dokumen||'Draft','Draft dibuka: '+nowID(),key); } };
+  V20.showAudit=function(){ const box=$('v20AuditPanel'), list=$('v20AuditList'); if(!box||!list) return; const rows=getJSON('MULIA_V20_AUDIT_LOG',[]); list.innerHTML = rows.length ? rows.map(r=>'<div class="v20-audit-row"><div>'+new Date(r.time).toLocaleString('id-ID')+'</div><div><b>'+escapeHTML(r.action)+'</b></div><div>'+escapeHTML(r.detail||'')+'<br><span style="color:#64748b">'+escapeHTML(r.key||'')+'</span></div></div>').join('') : '<div class="text-slate-500 italic">Belum ada audit trail.</div>'; box.style.display='block'; };
+  V20.hideAudit=function(){ const box=$('v20AuditPanel'); if(box) box.style.display='none'; };
+  function escapeHTML(s){ return String(s||'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[m])); }
+
+  V20.original.refreshDataPenawaranList = window.refreshDataPenawaranList;
+  window.refreshDataPenawaranList = function(){
+    const tbody=$('dataPenawaranBody'); if(!tbody){ return V20.original.refreshDataPenawaranList&&V20.original.refreshDataPenawaranList(); }
+    const status=$('v20PenawaranStatus')?.value||'all';
+    const search=(($('dataSearchPenawaran')?.value||'')+' '+($('v20PenawaranSearch')?.value||'')).toLowerCase().trim();
+    let arr=allDocs('PENAWARAN_').filter(x=>{ const d=x.data||{}; const st=d.status_dokumen||'Aktif'; const hay=[d.nomor,d.tanggal,d.kepada,d.perihal,st].join(' ').toLowerCase(); return (status==='all'||String(st).toLowerCase()===status.toLowerCase()) && (!search||hay.includes(search)); });
+    const totalEl=$('dataTotalPenawaran'); if(totalEl) totalEl.innerText=String(allDocs('PENAWARAN_').length);
+    if(!arr.length){ tbody.innerHTML='<tr><td colspan="8" class="p-4 text-center text-gray-400 italic">Belum ada data sesuai filter.</td></tr>'; updateCounts(); return; }
+    tbody.innerHTML='';
+    arr.forEach(x=>{ const d=x.data||{}; const st=d.status_dokumen||'Aktif'; const tr=document.createElement('tr'); tr.className='border-b hover:bg-slate-50'; tr.innerHTML='<td class="p-2 font-mono font-bold">'+escapeHTML(d.nomor||'-')+'</td><td class="p-2">'+escapeHTML(d.tanggal||'-')+'</td><td class="p-2">'+escapeHTML(cust(d))+'</td><td class="p-2 text-right font-mono font-bold">'+(typeof rupiah==='function'?rupiah(calcTotal(d)):calcTotal(d))+'</td><td class="p-2 text-center"><span class="v20-status '+statusClass(st)+'">'+escapeHTML(st)+'</span></td><td class="p-2 text-center"><select class="v20-status-select" onchange="MuliaV20.changeStatus(\''+x.key+'\',this.value)"><option '+(st==='Draft'?'selected':'')+'>Draft</option><option '+(st==='Aktif'?'selected':'')+'>Aktif</option><option '+(st==='Printed'?'selected':'')+'>Printed</option><option '+(st==='Sent'?'selected':'')+'>Sent</option><option '+(st==='Approved'?'selected':'')+'>Approved</option><option '+(st==='Cancelled'?'selected':'')+'>Cancelled</option></select></td><td class="p-2 text-center"><span class="badge bg-indigo-100 text-indigo-800">'+(typeof getInvoiceCountForPenawaran==='function'?getInvoiceCountForPenawaran(d.nomor):0)+' invoice</span></td><td class="p-2 text-center space-x-1 whitespace-nowrap"><button onclick="loadPenawaranKeForm(\''+x.key+'\')" class="bg-amber-500 text-white text-xs px-2 py-1 rounded">✏ Edit</button> <button onclick="buatInvoiceDariDataPenawaran(\''+x.key+'\')" class="bg-indigo-600 text-white text-xs px-2 py-1 rounded">📄 Invoice</button> <button onclick="hapusPenawaranTersimpan(\''+x.key+'\')" class="bg-rose-600 text-white text-xs px-2 py-1 rounded">🗑 Hapus</button></td>'; tbody.appendChild(tr); }); updateCounts();
+  };
+
+  V20.renderInvoiceTable=function(){
+    const tbody=$('invoiceListBody')||$('dataInvoiceBody'); if(!tbody) return;
+    const status=$('v20InvoiceStatus')?.value||'all'; const search=($('v20InvoiceSearch')?.value||'').toLowerCase();
+    const arr=allDocs('INVOICE_').filter(x=>{ const d=x.data||{}; const st=d.status_dokumen||d.status||'Aktif'; const pay=d.status||''; const hay=[d.nomor,d.customer,d.po_ref,st,pay].join(' ').toLowerCase(); const okStatus=status==='all'||String(st).toLowerCase()===status.toLowerCase()||String(pay).toLowerCase().includes(status.toLowerCase()); return okStatus && (!search||hay.includes(search)); });
+    if(!arr.length) return;
+    // Jika struktur tabel invoice lama berbeda, tetap panggil renderer lama lalu update count saja.
+    updateCounts();
+  };
+
+  function refreshAllQuiet(){ safe(()=>window.refreshDataPenawaranList&&window.refreshDataPenawaranList(),null); safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard(),null); safe(()=>window.refreshDraftPenawaranList&&window.refreshDraftPenawaranList(),null); safe(()=>V20.renderInvoiceTable(),null); }
+
+  V20.original.loadPenawaranKeForm = window.loadPenawaranKeForm;
+  if(typeof window.loadPenawaranKeForm==='function') window.loadPenawaranKeForm=function(key){ V20.original.loadPenawaranKeForm(key); const d=getJSON(key,{}); updateStatusPanel(d.status_dokumen||'Aktif','Dokumen dibuka: '+nowID(),key); addAudit(key,'Dokumen dibuka','Dokumen dimuat ke form untuk dilihat/edit.'); };
+
+  document.addEventListener('DOMContentLoaded',function(){ setTimeout(()=>{ injectUI(); refreshAllQuiet(); updateCounts(); },800); });
+  setTimeout(()=>{ injectUI(); refreshAllQuiet(); updateCounts(); },1600);
+})();
+</script>
+
+
+<!-- =========================================================
+     MULIA ADVERTISING GROUP — V20.1 ADMIN EASY STABILIZER
+     Tujuan: semua fungsi lama tetap jalan, admin lebih mudah:
+     panel aksi sederhana, hapus draft, hapus semua draft,
+     alias tombol lama, simpan invoice lebih aman saat edit.
+========================================================= -->
+<style id="mulia-v20-1-admin-easy-style">
+.v201-admin-panel{max-width:1280px;margin:0 auto 18px auto;background:#ffffff;border:1px solid #dbe4ee;border-radius:22px;box-shadow:0 16px 42px rgba(15,23,42,.10);overflow:hidden}
+.v201-admin-head{background:linear-gradient(135deg,#111827,#0f766e);color:#fff;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.v201-admin-title{font-size:16px;font-weight:950}.v201-admin-sub{font-size:11px;color:#ccfbf1;margin-top:3px}
+.v201-admin-body{padding:14px;display:grid;grid-template-columns:1.1fr 1fr;gap:14px;background:#f8fafc}
+.v201-stepbox{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:13px}
+.v201-step-title{font-size:12px;font-weight:950;text-transform:uppercase;color:#334155;margin-bottom:9px;letter-spacing:.05em}
+.v201-btnrow{display:flex;flex-wrap:wrap;gap:8px}
+.v201-btn{border:0!important;border-radius:12px!important;min-height:38px!important;padding:9px 12px!important;font-size:12px!important;font-weight:950!important;box-shadow:0 8px 18px rgba(15,23,42,.10)!important}
+.v201-blue{background:#2563eb!important;color:#fff!important}.v201-green{background:#059669!important;color:#fff!important}.v201-dark{background:#0f172a!important;color:#fff!important}.v201-red{background:#dc2626!important;color:#fff!important}.v201-orange{background:#d97706!important;color:#fff!important}.v201-soft{background:#fff!important;color:#0f172a!important;border:1px solid #cbd5e1!important;box-shadow:none!important}
+.v201-note{font-size:11px;color:#64748b;line-height:1.5;margin-top:9px}
+.v201-modal{display:none;position:fixed;inset:18px;z-index:2147483646;max-width:1050px;margin:auto;background:#fff;border:1px solid #dbe4ee;border-radius:22px;box-shadow:0 30px 90px rgba(15,23,42,.35);overflow:hidden}
+.v201-modal-head{background:#0f172a;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.v201-modal-body{padding:14px;max-height:70vh;overflow:auto;background:#f8fafc}
+.v201-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden}
+.v201-table th,.v201-table td{font-size:12px;padding:9px 8px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+.v201-table th{background:#e2e8f0;text-transform:uppercase;font-size:10px;color:#334155;letter-spacing:.05em}
+.v201-pill{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:950;background:#ffedd5;color:#9a3412}
+@media(max-width:900px){.v201-admin-body{grid-template-columns:1fr}.v201-btn{width:100%!important}.v201-modal{inset:8px}}
+@media print{.v201-admin-panel,.v201-modal{display:none!important}}
+</style>
+
+<script id="mulia-v20-1-admin-easy-script">
+(function(){
+  'use strict';
+
+  function $(id){ return document.getElementById(id); }
+  function nowID(){ return new Date().toLocaleString('id-ID'); }
+  function getJSON(key, fallback){ try{ const v=localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; } }
+  function setJSON(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];}); }
+  function toast(msg){
+    if(window.MuliaV20 && typeof window.MuliaV20.toast==='function') return window.MuliaV20.toast(msg);
+    let el=$('v201Toast');
+    if(!el){ el=document.createElement('div'); el.id='v201Toast'; el.className='v17-toast no-print'; document.body.appendChild(el); }
+    el.textContent=msg; el.classList.add('show'); clearTimeout(window.__v201ToastTimer); window.__v201ToastTimer=setTimeout(()=>el.classList.remove('show'),1800);
+  }
+  function safe(fn){ try{return fn&&fn();}catch(e){ console.warn('[V20.1]',e); return null; } }
+  function keyNomor(n){ return String(n||'').replace(/[\/\s]/g,'_'); }
+  function sanitizeKey(n){ return String(n||'').replace(/[^A-Za-z0-9_-]/g,'_'); }
+  function calcTotal(data){
+    if(typeof window.hitungTotalFromItemsAndTax==='function') return window.hitungTotalFromItemsAndTax(data).grand||0;
+    return (data.items||[]).reduce((s,it)=>s+(Number(it.qty)||0)*(Number(it.harga)||0),0);
+  }
+  function formatRp(n){ return typeof window.rupiah==='function' ? window.rupiah(n) : new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0); }
+  function customer(data){
+    const raw=data.kepada || data.customer || '';
+    if(typeof window.safeCustomerName==='function') return window.safeCustomerName(raw);
+    return String(raw).split('\n').map(x=>x.trim()).filter(Boolean).slice(0,2).join(' - ') || 'Customer';
+  }
+  function allStorageDocs(){
+    const arr=[];
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);
+      if(!key) continue;
+      if(key.startsWith('PENAWARAN_') || key.startsWith('INVOICE_')){
+        const d=getJSON(key,null); if(!d || typeof d!=='object') continue;
+        const type=key.startsWith('PENAWARAN_')?'Penawaran':'Invoice';
+        arr.push({key,data:d,type});
+      }
+    }
+    return arr.sort((a,b)=>String(b.data.updated_at||b.data.saved_at||'').localeCompare(String(a.data.updated_at||a.data.saved_at||'')));
+  }
+  function draftDocs(){
+    return allStorageDocs().filter(x=>{
+      const st=String(x.data.status_dokumen||'').toLowerCase();
+      return st==='draft' || x.key.indexOf('_DRAFT_')>-1 || x.key.startsWith('PENAWARAN_DRAFT_') || x.key.startsWith('INVOICE_DRAFT_');
+    });
+  }
+  function addAudit(key, action, detail){
+    if(window.MuliaV20 && typeof window.MuliaV20.addAudit==='function') return window.MuliaV20.addAudit(key, action, detail);
+    const row={time:new Date().toISOString(),action,detail:detail||'',key:key||'',user:'Admin'};
+    const rows=getJSON('MULIA_V20_AUDIT_LOG',[]); rows.unshift(row); setJSON('MULIA_V20_AUDIT_LOG',rows.slice(0,500));
+  }
+
+  function injectAdminEasyPanel(){
+    if($('v201AdminEasyPanel')) return;
+    const html = `
+      <div class="v201-admin-panel no-print" id="v201AdminEasyPanel">
+        <div class="v201-admin-head">
+          <div>
+            <div class="v201-admin-title">Mode Admin Mudah</div>
+            <div class="v201-admin-sub">Alur kerja dibuat sederhana: isi data → simpan draft / simpan final → cetak PDF → kelola draft.</div>
+          </div>
+          <div class="v201-btnrow">
+            <button type="button" class="v201-btn v201-soft" onclick="MuliaV201.showDraftManager()">📂 Kelola Draft</button>
+            <button type="button" class="v201-btn v201-soft" onclick="MuliaV20&&MuliaV20.showAudit?MuliaV20.showAudit():null">📜 Audit</button>
+          </div>
+        </div>
+        <div class="v201-admin-body">
+          <div class="v201-stepbox">
+            <div class="v201-step-title">Penawaran / SPH</div>
+            <div class="v201-btnrow">
+              <button type="button" class="v201-btn v201-dark" onclick="MuliaV201.newDoc()">＋ Dokumen Baru</button>
+              <button type="button" class="v201-btn v201-orange" onclick="MuliaV201.savePenawaranDraft()">💾 Simpan Draft</button>
+              <button type="button" class="v201-btn v201-blue" onclick="simpanPenawaran(false)">✅ Simpan Final</button>
+              <button type="button" class="v201-btn v201-green" onclick="simpanPenawaran(true)">🖨 Simpan & PDF</button>
+              <button type="button" class="v201-btn v201-red" onclick="MuliaV201.deleteCurrentDraft()">🗑 Hapus Draft Ini</button>
+            </div>
+            <div class="v201-note">Untuk admin: kalau belum selesai, klik <b>Simpan Draft</b>. Kalau sudah siap dikirim, klik <b>Simpan Final</b> atau <b>Simpan & PDF</b>.</div>
+          </div>
+          <div class="v201-stepbox">
+            <div class="v201-step-title">Data & Backup</div>
+            <div class="v201-btnrow">
+              <button type="button" class="v201-btn v201-soft" onclick="MuliaV201.openData('sph')">📋 Data SPH</button>
+              <button type="button" class="v201-btn v201-soft" onclick="MuliaV201.openData('invoice')">💰 Data Invoice</button>
+              <button type="button" class="v201-btn v201-soft" onclick="muliaV3RefreshDashboard()">🔄 Refresh</button>
+              <button type="button" class="v201-btn v201-blue" onclick="backupDatabaseMulia()">💾 Backup JSON</button>
+              <button type="button" class="v201-btn v201-red" onclick="MuliaV201.deleteAllDrafts()">🧹 Hapus Semua Draft</button>
+            </div>
+            <div class="v201-note">Sebelum hapus banyak data, gunakan <b>Backup JSON</b> dulu agar aman.</div>
+          </div>
+        </div>
+      </div>
+      <div class="v201-modal no-print" id="v201DraftModal">
+        <div class="v201-modal-head">
+          <div><b>Kelola Draft</b><div style="font-size:11px;color:#cbd5e1">Buka, finalkan, atau hapus draft penawaran/invoice.</div></div>
+          <button type="button" class="v201-btn v201-soft" onclick="MuliaV201.hideDraftManager()">Tutup</button>
+        </div>
+        <div class="v201-modal-body" id="v201DraftList"></div>
+      </div>`;
+    const target=$('v20StatusPanel') || $('v4ActionBar') || document.querySelector('.mulia-pro-actionbar');
+    if(target) target.insertAdjacentHTML('afterend', html); else document.body.insertAdjacentHTML('afterbegin', html);
+  }
+
+  function renderDraftManager(){
+    const box=$('v201DraftList'); if(!box) return;
+    const docs=draftDocs();
+    if(!docs.length){
+      box.innerHTML='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;text-align:center;color:#64748b;font-weight:800">Belum ada draft.</div>';
+      return;
+    }
+    box.innerHTML = `
+      <table class="v201-table">
+        <thead><tr><th>Jenis</th><th>Nomor</th><th>Customer</th><th>Total</th><th>Update</th><th>Aksi</th></tr></thead>
+        <tbody>
+          ${docs.map(x=>{
+            const d=x.data||{};
+            const st=d.status_dokumen||'Draft';
+            const t=x.type==='Invoice' ? (typeof window.hitungInvoiceData==='function' ? window.hitungInvoiceData(d).grand : calcTotal(d)) : calcTotal(d);
+            return `<tr>
+              <td><span class="v201-pill">${esc(x.type)} • ${esc(st)}</span></td>
+              <td><b>${esc(d.nomor||'-')}</b><br><span style="font-size:10px;color:#64748b">${esc(x.key)}</span></td>
+              <td>${esc(customer(d))}</td>
+              <td style="text-align:right;font-weight:900">${formatRp(t)}</td>
+              <td>${esc(d.updated_at||d.saved_at||'-')}</td>
+              <td style="white-space:nowrap">
+                <button type="button" class="v201-btn v201-blue" onclick="MuliaV201.openDraft('${esc(x.key)}')">Buka</button>
+                <button type="button" class="v201-btn v201-green" onclick="MuliaV201.finalizeDraft('${esc(x.key)}')">Finalkan</button>
+                <button type="button" class="v201-btn v201-red" onclick="MuliaV201.deleteDraft('${esc(x.key)}')">Hapus</button>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  window.MuliaV201 = window.MuliaV201 || {};
+  window.MuliaV201.showDraftManager=function(){ injectAdminEasyPanel(); renderDraftManager(); const m=$('v201DraftModal'); if(m) m.style.display='block'; };
+  window.MuliaV201.hideDraftManager=function(){ const m=$('v201DraftModal'); if(m) m.style.display='none'; };
+  window.MuliaV201.newDoc=function(){
+    if(window.MuliaV20 && typeof window.MuliaV20.newDocumentSafe==='function') return window.MuliaV20.newDocumentSafe();
+    if(confirm('Kosongkan form untuk dokumen baru? Draft yang belum disimpan akan hilang.')){
+      safe(()=>window.resetForm&&window.resetForm());
+      safe(()=>window.setNomorOtomatis&&window.setNomorOtomatis());
+      safe(()=>window.setTanggalOtomatis&&window.setTanggalOtomatis());
+    }
+  };
+  window.MuliaV201.savePenawaranDraft=function(){
+    if(window.MuliaV20 && typeof window.MuliaV20.autoDraftPenawaran==='function') window.MuliaV20.autoDraftPenawaran();
+    else {
+      const nomor=$('nomor')?.value || ('DRAFT-'+Date.now());
+      const data=typeof window.collectPenawaranData==='function' ? window.collectPenawaranData(nomor) : {};
+      data.status_dokumen='Draft'; data.updated_at=new Date().toISOString(); data.saved_at=data.saved_at||data.updated_at;
+      const key=window.editingPenawaranKey || ('PENAWARAN_DRAFT_'+sanitizeKey(nomor+'_'+Date.now()));
+      setJSON(key,data); window.MuliaV20 && (window.MuliaV20.currentDraftKey=key);
+      addAudit(key,'Draft disimpan','Admin menyimpan draft manual.');
+    }
+    safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard());
+    toast('Draft berhasil disimpan.');
+  };
+  window.MuliaV201.deleteCurrentDraft=function(){
+    const key=(window.MuliaV20 && window.MuliaV20.currentDraftKey) || localStorage.getItem('MULIA_V20_CURRENT_DRAFT_KEY') || '';
+    if(!key){ alert('Tidak ada draft aktif yang sedang dibuka. Gunakan Kelola Draft untuk melihat semua draft.'); return; }
+    const d=getJSON(key,{});
+    if(!confirm('Hapus draft aktif '+(d.nomor||key)+'?')) return;
+    localStorage.removeItem(key);
+    if(window.MuliaV20) window.MuliaV20.currentDraftKey='';
+    localStorage.removeItem('MULIA_V20_CURRENT_DRAFT_KEY');
+    addAudit(key,'Draft dihapus','Draft aktif dihapus admin.');
+    safe(()=>window.resetForm&&window.resetForm());
+    safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard());
+    renderDraftManager();
+    toast('Draft aktif dihapus.');
+  };
+  window.MuliaV201.deleteDraft=function(key){
+    const d=getJSON(key,{});
+    if(!confirm('Hapus draft '+(d.nomor||key)+'?')) return;
+    localStorage.removeItem(key);
+    if(window.MuliaV20 && window.MuliaV20.currentDraftKey===key) window.MuliaV20.currentDraftKey='';
+    if(localStorage.getItem('MULIA_V20_CURRENT_DRAFT_KEY')===key) localStorage.removeItem('MULIA_V20_CURRENT_DRAFT_KEY');
+    addAudit(key,'Draft dihapus','Draft dihapus dari Kelola Draft.');
+    renderDraftManager(); safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard()); toast('Draft dihapus.');
+  };
+  window.MuliaV201.deleteAllDrafts=function(){
+    const docs=draftDocs();
+    if(!docs.length){ alert('Tidak ada draft untuk dihapus.'); return; }
+    if(!confirm('Hapus semua draft ('+docs.length+' dokumen)? Sebaiknya Backup JSON dulu sebelum lanjut.')) return;
+    docs.forEach(x=>localStorage.removeItem(x.key));
+    if(window.MuliaV20){ window.MuliaV20.currentDraftKey=''; window.MuliaV20.currentInvoiceDraftKey=''; }
+    localStorage.removeItem('MULIA_V20_CURRENT_DRAFT_KEY'); localStorage.removeItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY');
+    addAudit('', 'Semua draft dihapus', docs.length+' draft dihapus admin.');
+    renderDraftManager(); safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard()); toast('Semua draft dihapus.');
+  };
+  window.MuliaV201.openDraft=function(key){
+    const isInv=key.startsWith('INVOICE_');
+    if(isInv){ safe(()=>window.loadInvoiceKeForm&&window.loadInvoiceKeForm(key)); location.hash='invoiceFormAnchor'; if(window.MuliaV20) window.MuliaV20.currentInvoiceDraftKey=key; localStorage.setItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY',key); }
+    else { safe(()=>window.loadPenawaranKeForm&&window.loadPenawaranKeForm(key)); location.hash='penawaranFormAnchor'; if(window.MuliaV20) window.MuliaV20.currentDraftKey=key; localStorage.setItem('MULIA_V20_CURRENT_DRAFT_KEY',key); }
+    addAudit(key,'Draft dibuka','Draft dibuka dari Kelola Draft.');
+    window.MuliaV201.hideDraftManager(); toast('Draft dibuka.');
+  };
+  window.MuliaV201.finalizeDraft=function(key){
+    const d=getJSON(key,null); if(!d){ alert('Draft tidak ditemukan.'); return; }
+    d.status_dokumen='Aktif'; d.updated_at=new Date().toISOString(); d.saved_at=d.saved_at||d.updated_at;
+    let newKey=key;
+    if(key.startsWith('PENAWARAN_DRAFT_')) newKey='PENAWARAN_'+keyNomor(d.nomor || ('SPH_'+Date.now()));
+    if(key.startsWith('INVOICE_DRAFT_')) newKey='INVOICE_'+keyNomor(d.nomor || ('INV_'+Date.now()));
+    setJSON(newKey,d);
+    if(newKey!==key) localStorage.removeItem(key);
+    addAudit(newKey,'Draft difinalkan','Status Draft diubah menjadi Aktif.');
+    renderDraftManager(); safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard()); toast('Draft sudah menjadi Aktif.');
+  };
+
+  // Alias untuk tombol lama yang masih memanggil nama berbeda.
+  window.refreshDraftPenawaran = function(){ return safe(()=>window.refreshDraftPenawaranList&&window.refreshDraftPenawaranList()); };
+  window.renderInvoiceList = function(){ return safe(()=>window.refreshDataInvoiceList&&window.refreshDataInvoiceList()); };
+
+  // Invoice renderer dengan filter V20 yang benar-benar menampilkan hasil.
+  function invoiceStatusClass(status){
+    status=String(status||'').toUpperCase();
+    if(status.indexOf('LUNAS')>-1 && status.indexOf('BELUM')===-1) return 'bg-emerald-100 text-emerald-800';
+    if(status.indexOf('DP')>-1) return 'bg-amber-100 text-amber-800';
+    if(status.indexOf('PRINTED')>-1) return 'bg-blue-100 text-blue-800';
+    if(status.indexOf('DRAFT')>-1) return 'bg-orange-100 text-orange-800';
+    return 'bg-rose-100 text-rose-800';
+  }
+  window.MuliaV201.renderInvoiceFiltered=function(){
+    const tbody=$('dataInvoiceBody'); if(!tbody) return false;
+    const status=($('v20InvoiceStatus')?.value || 'all').toLowerCase();
+    const search=(($('dataSearchInvoice')?.value||'')+' '+($('v20InvoiceSearch')?.value||'')).toLowerCase().trim();
+    let all=allStorageDocs().filter(x=>x.key.startsWith('INVOICE_'));
+    all=all.filter(x=>{
+      const d=x.data||{};
+      const calc=typeof window.hitungInvoiceData==='function' ? window.hitungInvoiceData(d) : {grand:calcTotal(d),dp:Number(d.dp)||0,sisa:0,autoStatus:d.status||'BELUM BAYAR'};
+      const st=String(d.status_dokumen||d.status||calc.autoStatus||'Aktif');
+      const pay=String(d.status||calc.autoStatus||'');
+      const hay=[d.nomor,d.tanggal,d.customer,d.po_ref,st,pay].join(' ').toLowerCase();
+      const okStatus=status==='all' || st.toLowerCase()===status || pay.toLowerCase().indexOf(status)>-1;
+      return okStatus && (!search || hay.indexOf(search)>-1);
+    });
+    const totalEl=$('dataInvoiceTotal'); if(totalEl) totalEl.innerText=String(allStorageDocs().filter(x=>x.key.startsWith('INVOICE_')).length);
+    const totalInvEl=$('dataTotalInvoice'); if(totalInvEl) totalInvEl.innerText=String(allStorageDocs().filter(x=>x.key.startsWith('INVOICE_')).length);
+    if(!all.length){ tbody.innerHTML='<tr><td colspan="8" class="p-4 text-center text-gray-400 italic">Belum ada invoice sesuai filter.</td></tr>'; return true; }
+    tbody.innerHTML='';
+    all.forEach(x=>{
+      const d=x.data||{};
+      const t=typeof window.hitungInvoiceData==='function' ? window.hitungInvoiceData(d) : {grand:calcTotal(d),dp:Number(d.dp)||0,sisa:0,autoStatus:d.status||'BELUM BAYAR'};
+      const statusText=d.status_dokumen && d.status_dokumen!=='Aktif' ? d.status_dokumen : (d.status || t.autoStatus || 'Aktif');
+      const tr=document.createElement('tr'); tr.className='border-b hover:bg-slate-50';
+      tr.innerHTML='<td class="p-2 font-mono font-bold">'+esc(d.nomor||'-')+'</td><td class="p-2">'+esc(d.tanggal||'-')+'</td><td class="p-2 whitespace-pre-line">'+esc(customer(d))+'</td><td class="p-2 text-right font-mono font-bold">'+formatRp(t.grand)+'</td><td class="p-2 text-right font-mono text-amber-700 font-bold">'+formatRp(t.dp)+'</td><td class="p-2 text-right font-mono text-emerald-700 font-bold">'+formatRp(t.sisa)+'</td><td class="p-2 text-center"><span class="badge '+invoiceStatusClass(statusText)+'">'+esc(statusText)+'</span></td><td class="p-2 text-center space-x-1 whitespace-nowrap"><button onclick="loadInvoiceKeForm(\''+esc(x.key)+'\')" class="bg-amber-500 text-white text-xs px-2 py-1 rounded">✏ Edit</button> <button onclick="cetakInvoiceTersimpan(\''+esc(x.key)+'\')" class="bg-emerald-600 text-white text-xs px-2 py-1 rounded">🖨 Cetak</button> <button onclick="hapusInvoiceTersimpan(\''+esc(x.key)+'\')" class="bg-rose-600 text-white text-xs px-2 py-1 rounded">🗑 Hapus</button></td>';
+      tbody.appendChild(tr);
+    });
+    return true;
+  };
+  const oldRefreshDataInvoiceList=window.refreshDataInvoiceList;
+  window.refreshDataInvoiceList=function(){
+    if(window.MuliaV201.renderInvoiceFiltered()) return;
+    return oldRefreshDataInvoiceList && oldRefreshDataInvoiceList();
+  };
+  if(window.MuliaV20) window.MuliaV20.renderInvoiceTable=window.MuliaV201.renderInvoiceFiltered;
+
+  // Simpan invoice dibuat lebih aman: edit tidak menaikkan nomor, draft invoice dihapus setelah final.
+  window.simpanInvoice=function(cetak=false){
+    safe(()=>window.renderInvoice&&window.renderInvoice());
+    const nomor=$('invNomor')?.value || (typeof window.generateNomorInvoice==='function'?window.generateNomorInvoice():('INV-'+Date.now()));
+    const sedangEdit=!!window.editingInvoiceKey;
+    const key=sedangEdit ? window.editingInvoiceKey : ('INVOICE_'+keyNomor(nomor));
+    const data={
+      nomor:nomor,
+      tanggal:$('invTanggal')?.value||'',
+      po_ref:$('invPoRef')?.value||'',
+      po_tanggal:$('invPoTanggal')?.value||'',
+      customer:$('invCustomer')?.value||'',
+      status:$('invStatusBayar')?.value||'BELUM BAYAR',
+      dp:Number($('invDpManual')?.value)||0,
+      ppn_mode:$('invPpnMode')?.value||'none',
+      ppn_persen:Number($('invPpnPersen')?.value)||0,
+      catatan:$('invCatatan')?.value||'',
+      items:typeof window.ambilInvoiceItems==='function'?window.ambilInvoiceItems():[],
+      status_dokumen:cetak?'Printed':'Aktif',
+      doc_type:'invoice',
+      updated_at:new Date().toISOString(),
+      saved_at:new Date().toISOString()
+    };
+    const old=getJSON(key,{});
+    setJSON(key,Object.assign({},old,data));
+    const dk=(window.MuliaV20&&window.MuliaV20.currentInvoiceDraftKey)||localStorage.getItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY');
+    if(dk && dk!==key){ localStorage.removeItem(dk); if(window.MuliaV20) window.MuliaV20.currentInvoiceDraftKey=''; localStorage.removeItem('MULIA_V20_CURRENT_INVOICE_DRAFT_KEY'); }
+    if(!sedangEdit){
+      let n=parseInt(localStorage.getItem('dwi_mulia_last_invoice_number')||'100025',10);
+      localStorage.setItem('dwi_mulia_last_invoice_number',String(n+1));
+    }
+    addAudit(key,cetak?'Print Invoice':'Simpan Invoice',(cetak?'Invoice disimpan dan dicetak: ':'Invoice disimpan: ')+nomor);
+    if(cetak){ document.body.classList.add('print-invoice'); setTimeout(()=>{ window.print(); setTimeout(()=>document.body.classList.remove('print-invoice'),500); },50); }
+    setTimeout(()=>{
+      if(!sedangEdit) safe(()=>window.resetInvoiceForm&&window.resetInvoiceForm(false));
+      window.editingInvoiceKey=null;
+      safe(()=>window.refreshDataInvoiceList&&window.refreshDataInvoiceList());
+      safe(()=>window.refreshDataPenawaranList&&window.refreshDataPenawaranList());
+      safe(()=>window.muliaV3RefreshDashboard&&window.muliaV3RefreshDashboard());
+      toast((cetak?'Invoice PDF siap: ':'Invoice tersimpan: ')+nomor);
+    }, cetak?700:120);
+  };
+
+  // Pasang panel admin mudah dan refresh tampilan.
+  setTimeout(function(){
+    injectAdminEasyPanel();
+    safe(()=>window.refreshDataInvoiceList&&window.refreshDataInvoiceList());
+  },900);
+  document.addEventListener('DOMContentLoaded',function(){ setTimeout(injectAdminEasyPanel,500); setTimeout(injectAdminEasyPanel,1800); });
+})();
+</script>
+
+
+
+<!-- === MULIA V20.2 ADMIN EASY: FIX LAYOUT TERPOTONG / OVERFLOW === -->
+<style id="mulia-v20-2-fixed-layout">
+/* Perbaikan utama: sidebar + workspace tidak boleh melebihi lebar layar */
+html, body{
+  max-width:100%!important;
+  overflow-x:hidden!important;
+}
+body.mulia-v11-erp,
+body.mulia-v11-erp *{
+  box-sizing:border-box!important;
+}
+body.mulia-v11-erp{
+  --v11-side:300px!important;
+}
+
+/* Sidebar tetap rapi, tidak menutup area kerja */
+body.mulia-v11-erp .v9-sidebar{
+  left:0!important;
+  top:0!important;
+  bottom:0!important;
+  width:var(--v11-side)!important;
+  max-width:var(--v11-side)!important;
+  height:100vh!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+body.mulia-v11-erp .v9-nav,
+body.mulia-v11-erp .v11-action-panel{
+  overflow-x:hidden!important;
+}
+body.mulia-v11-erp .v9-nav a,
+body.mulia-v11-erp .v9-nav button,
+body.mulia-v11-erp .v11-action-panel button,
+body.mulia-v11-erp .v11-action-panel label{
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Topbar sebelumnya memakai padding-left besar sehingga melebar ke kanan. Ini diperbaiki. */
+body.mulia-v11-erp .v9-topbar{
+  margin-left:var(--v11-side)!important;
+  margin-right:0!important;
+  padding:14px 16px 10px 16px!important;
+  width:calc(100vw - var(--v11-side))!important;
+  max-width:calc(100vw - var(--v11-side))!important;
+  left:0!important;
+  right:0!important;
+}
+body.mulia-v11-erp .v9-topbar-card{
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+
+/* Semua panel utama dibuat masuk sisa layar, tidak lebih dari viewport */
+body.mulia-v11-erp > .max-w-6xl,
+body.mulia-v11-erp > .mulia-v3-dashboard,
+body.mulia-v11-erp > #print-area,
+body.mulia-v11-erp > #invoice-print-area,
+body.mulia-v11-erp .v9-command-center,
+body.mulia-v11-erp .v11-customer-hub,
+body.mulia-v11-erp .v201-admin-panel{
+  margin-left:calc(var(--v11-side) + 16px)!important;
+  margin-right:16px!important;
+  width:calc(100vw - var(--v11-side) - 32px)!important;
+  max-width:calc(100vw - var(--v11-side) - 32px)!important;
+  min-width:0!important;
+}
+body.mulia-v11-erp .mulia-v3-dashboard{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+body.mulia-v11-erp .mulia-v3-card,
+body.mulia-v11-erp .v201-admin-card,
+body.mulia-v11-erp .v201-admin-panel,
+body.mulia-v11-erp #penawaranFormAnchor + .max-w-6xl,
+body.mulia-v11-erp #invoice-ui,
+body.mulia-v11-erp #data-penawaran-ui,
+body.mulia-v11-erp #data-invoice-ui{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+/* Tabel tetap bisa scroll di dalam panel, bukan membuat halaman ikut melebar */
+body.mulia-v11-erp .overflow-x-auto{
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  max-width:100%!important;
+}
+body.mulia-v11-erp table{
+  max-width:100%!important;
+}
+body.mulia-v11-erp input,
+body.mulia-v11-erp textarea,
+body.mulia-v11-erp select,
+body.mulia-v11-erp .input{
+  max-width:100%!important;
+}
+
+/* Panel admin dibuat 2 kolom aman, lalu otomatis 1 kolom di layar kecil */
+body.mulia-v11-erp .v201-admin-body{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+}
+body.mulia-v11-erp .v201-admin-card{
+  overflow:hidden!important;
+}
+body.mulia-v11-erp .v201-actions{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:10px!important;
+}
+body.mulia-v11-erp .v201-btn{
+  white-space:normal!important;
+}
+
+/* Supaya area preview surat tidak mendorong layar ke kanan */
+body.mulia-v11-erp #print-area,
+body.mulia-v11-erp #invoice-print-area{
+  overflow:hidden!important;
+}
+
+@media(max-width:1180px){
+  body.mulia-v11-erp{--v11-side:272px!important;}
+  body.mulia-v11-erp .mulia-v3-dashboard{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+}
+@media(max-width:980px){
+  body.mulia-v11-erp .v9-sidebar{
+    width:300px!important;
+    max-width:82vw!important;
+    transform:translateX(-105%)!important;
+    transition:.2s ease!important;
+  }
+  body.mulia-v11-erp.v9-menu-open .v9-sidebar,
+  body.v9-menu-open.mulia-v11-erp .v9-sidebar{
+    transform:translateX(0)!important;
+  }
+  body.mulia-v11-erp .v9-topbar,
+  body.mulia-v11-erp > .max-w-6xl,
+  body.mulia-v11-erp > .mulia-v3-dashboard,
+  body.mulia-v11-erp > #print-area,
+  body.mulia-v11-erp > #invoice-print-area,
+  body.mulia-v11-erp .v9-command-center,
+  body.mulia-v11-erp .v11-customer-hub,
+  body.mulia-v11-erp .v201-admin-panel{
+    margin-left:12px!important;
+    margin-right:12px!important;
+    padding-left:0!important;
+    width:calc(100vw - 24px)!important;
+    max-width:calc(100vw - 24px)!important;
+  }
+  body.mulia-v11-erp .v9-topbar{
+    padding:12px!important;
+  }
+  body.mulia-v11-erp .mulia-v3-dashboard,
+  body.mulia-v11-erp .v201-admin-body{
+    grid-template-columns:1fr!important;
+  }
+}
+@media(max-width:560px){
+  body.mulia-v11-erp .v9-page-title{font-size:20px!important;}
+  body.mulia-v11-erp .mulia-v3-dashboard{grid-template-columns:1fr!important;}
+  body.mulia-v11-erp .v201-actions .v201-btn{width:100%!important;}
+}
+@media print{
+  html,body{overflow:visible!important;}
+  body.mulia-v11-erp > #print-area,
+  body.mulia-v11-erp > #invoice-print-area{
+    margin:0 auto!important;
+    width:190mm!important;
+    max-width:190mm!important;
+    overflow:visible!important;
+  }
+}
+</style>
+<script id="mulia-v20-2-layout-script">
+(function(){
+  function fixLayoutNow(){
+    try{
+      document.documentElement.style.overflowX='hidden';
+      document.body.style.overflowX='hidden';
+      var side=document.querySelector('.v9-sidebar');
+      if(side){ side.style.overflowX='hidden'; }
+      var top=document.querySelector('.v9-topbar');
+      if(top){ top.style.boxSizing='border-box'; }
+      if(typeof window.muliaV3RefreshDashboard==='function') window.muliaV3RefreshDashboard();
+    }catch(e){}
+  }
+  window.MuliaV202FixLayout=fixLayoutNow;
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(fixLayoutNow,600);
+    setTimeout(fixLayoutNow,1600);
+    setTimeout(fixLayoutNow,3000);
+  });
+  window.addEventListener('resize',fixLayoutNow);
+})();
+</script>
+
+
+
+<!-- === MULIA V20.3: FINAL FIX SEMUA PANEL TIDAK TERPOTONG === -->
+<style id="mulia-v20-3-no-cut-final">
+/* Penyebab terpotong: panel V20 (.v20-panel) belum ikut margin sidebar. */
+html,body{max-width:100%!important;overflow-x:hidden!important;}
+body.mulia-v11-erp{--v11-side:300px!important;}
+body.mulia-v11-erp .v9-sidebar{position:fixed!important;left:0!important;top:0!important;width:var(--v11-side)!important;max-width:var(--v11-side)!important;z-index:10050!important;}
+
+/* Semua area kerja, termasuk panel V20, wajib mulai setelah sidebar */
+body.mulia-v11-erp .v9-topbar,
+body.mulia-v11-erp > .max-w-6xl,
+body.mulia-v11-erp > .mulia-v3-dashboard,
+body.mulia-v11-erp > #print-area,
+body.mulia-v11-erp > #invoice-print-area,
+body.mulia-v11-erp .v9-command-center,
+body.mulia-v11-erp .v11-customer-hub,
+body.mulia-v11-erp .v201-admin-panel,
+body.mulia-v11-erp .v20-panel,
+body.mulia-v11-erp .v20-filterbar,
+body.mulia-v11-erp #v20StatusPanel{
+  margin-left:calc(var(--v11-side) + 16px)!important;
+  margin-right:16px!important;
+  width:calc(100vw - var(--v11-side) - 32px)!important;
+  max-width:calc(100vw - var(--v11-side) - 32px)!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Topbar khusus jangan double padding kiri */
+body.mulia-v11-erp .v9-topbar{
+  padding:14px 16px 10px 16px!important;
+}
+
+/* Panel V20 body jangan memaksa 6 kartu melebar keluar layar */
+body.mulia-v11-erp .v20-body{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr))!important;
+  gap:12px!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.mulia-v11-erp .v20-card,
+body.mulia-v11-erp .v20-head,
+body.mulia-v11-erp .v20-body,
+body.mulia-v11-erp .v20-filterbar{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+body.mulia-v11-erp .v20-v,
+body.mulia-v11-erp .v20-title,
+body.mulia-v11-erp .v20-sub{
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+
+/* Dashboard lama juga dibuat auto-fit agar tidak terpotong di layar sedang */
+body.mulia-v11-erp .mulia-v3-dashboard{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr))!important;
+  gap:12px!important;
+}
+
+@media(max-width:1180px){
+  body.mulia-v11-erp{--v11-side:272px!important;}
+}
+@media(max-width:980px){
+  body.mulia-v11-erp .v9-sidebar{transform:translateX(-105%)!important;max-width:82vw!important;}
+  body.mulia-v11-erp.v9-menu-open .v9-sidebar{transform:translateX(0)!important;}
+  body.mulia-v11-erp .v9-topbar,
+  body.mulia-v11-erp > .max-w-6xl,
+  body.mulia-v11-erp > .mulia-v3-dashboard,
+  body.mulia-v11-erp > #print-area,
+  body.mulia-v11-erp > #invoice-print-area,
+  body.mulia-v11-erp .v9-command-center,
+  body.mulia-v11-erp .v11-customer-hub,
+  body.mulia-v11-erp .v201-admin-panel,
+  body.mulia-v11-erp .v20-panel,
+  body.mulia-v11-erp .v20-filterbar,
+  body.mulia-v11-erp #v20StatusPanel{
+    margin-left:12px!important;
+    margin-right:12px!important;
+    width:calc(100vw - 24px)!important;
+    max-width:calc(100vw - 24px)!important;
+  }
+}
+@media print{
+  body.mulia-v11-erp .v20-panel,body.mulia-v11-erp .v20-filterbar{display:none!important;}
+}
+</style>
+<script id="mulia-v20-3-no-cut-script">
+(function(){
+  function noCutFix(){
+    try{
+      document.documentElement.style.overflowX='hidden';
+      document.body.style.overflowX='hidden';
+      var panels=document.querySelectorAll('.v20-panel,.v20-filterbar,.v201-admin-panel,.mulia-v3-dashboard,body.mulia-v11-erp > .max-w-6xl');
+      panels.forEach(function(el){el.style.boxSizing='border-box'; el.style.minWidth='0';});
+    }catch(e){}
+  }
+  window.MuliaV203NoCutFix=noCutFix;
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(noCutFix,300);setTimeout(noCutFix,1200);setTimeout(noCutFix,2500);});
+  window.addEventListener('resize',noCutFix);
+})();
+</script>
+
+
+
+<!-- === V20.4 ADMIN FLOW FIX: tombol data aktif + teks pembayaran disesuaikan === -->
+<style id="mulia-v204-admin-flow-fix">
+  .v201-admin-panel{max-width:calc(100vw - 370px)!important;margin-left:340px!important;margin-right:20px!important;box-sizing:border-box!important;overflow:hidden!important;}
+  .v201-admin-body{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:18px!important;}
+  .v201-stepbox{min-width:0!important;overflow:hidden!important;}
+  .v201-btnrow{display:flex!important;flex-wrap:wrap!important;gap:10px!important;align-items:center!important;}
+  .v201-btn{white-space:normal!important;}
+  @media(max-width:1100px){
+    .v201-admin-panel{max-width:calc(100vw - 32px)!important;margin-left:16px!important;margin-right:16px!important;}
+    .v201-admin-body{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:760px){.v201-btn{width:100%!important;}}
+</style>
+<script id="mulia-v204-admin-flow-fix-js">
+(function(){
+  function $(id){return document.getElementById(id)}
+  function cleanPaymentText(){
+    var el=$('catatanPembayaran');
+    if(!el) return;
+    var txt=String(el.value||'');
+    txt=txt.replace(/\n?Pembayaran melalui rekening Bank BCA No\. 5781203301 a\/n PT\. Dwi Mulia Advertising\.?/gi,'');
+    if(txt.indexOf('Detail rekening pembayaran tercantum pada bagian rekening di bawah.')===-1){
+      txt=txt.trim()+"\nDetail rekening pembayaran tercantum pada bagian rekening di bawah.";
+    }
+    el.value=txt.trim();
+    if(typeof render==='function') try{render()}catch(e){}
+  }
+  function openData(kind){
+    try{
+      if(kind==='sph'){
+        if(typeof refreshDataPenawaranList==='function') refreshDataPenawaranList();
+        if(typeof refreshDraftPenawaranList==='function') refreshDraftPenawaranList();
+        var el=$('dataPenawaranAnchor') || $('data-penawaran-ui') || $('dataPenawaranBody');
+        if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); }
+        location.hash='dataPenawaranAnchor';
+      }else{
+        if(typeof renderInvoiceList==='function') renderInvoiceList();
+        if(typeof refreshInvoiceList==='function') refreshInvoiceList();
+        var el2=$('dataInvoiceAnchor') || $('data-invoice-ui') || $('dataInvoiceBody');
+        if(el2){ el2.scrollIntoView({behavior:'smooth',block:'start'}); }
+        location.hash='dataInvoiceAnchor';
+      }
+    }catch(e){
+      location.hash = kind==='sph' ? 'dataPenawaranAnchor' : 'dataInvoiceAnchor';
+    }
+  }
+  window.MuliaV201 = window.MuliaV201 || {};
+  window.MuliaV201.openData = openData;
+  window.MuliaV204CleanPaymentText = cleanPaymentText;
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(cleanPaymentText,500);});
+  setTimeout(cleanPaymentText,1200);
+})();
+</script>
+
+
+<!-- === MULIA FINAL USER REQUEST PATCH: PRINT HEADER + WHITE WATERMARK + STABLE DATA BUTTON + CUSTOMER DROPDOWN === -->
+<style id="mulia-final-print-watermark-dropdown-fix">
+/* Screen preview tetap nyaman, tetapi saat print/PDF kertas benar-benar putih */
+.mag-print-meta,.mag-paper-watermark{display:none!important;}
+
+@media print{
+  @page{size:A4 portrait;margin:7mm 7mm 8mm 7mm;}
+
+  html,body{
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  #print-area,#invoice-print-area{
+    background:#fff!important;
+    position:relative!important;
+    overflow:visible!important;
+    padding-top:9mm!important;
+    box-shadow:none!important;
+    border:0!important;
+    border-radius:0!important;
+  }
+
+  /* Header atas PDF: kiri jam, tengah nama, kanan tanggal */
+  #print-area .mag-print-meta,
+  #invoice-print-area .mag-print-meta{
+    display:grid!important;
+    grid-template-columns:1fr 1.2fr 1fr;
+    align-items:center;
+    gap:8px;
+    position:relative!important;
+    z-index:20!important;
+    width:100%!important;
+    margin:0 0 3.5mm 0!important;
+    padding:0 1mm 2mm 1mm!important;
+    border-bottom:1px solid rgba(15,23,42,.18)!important;
+    color:#0f172a!important;
+    font-size:9.5px!important;
+    line-height:1.1!important;
+    font-family:Arial, Helvetica, sans-serif!important;
+    background:#fff!important;
+  }
+  .mag-print-meta .mag-left{text-align:left!important;font-weight:700!important;}
+  .mag-print-meta .mag-center{text-align:center!important;font-weight:900!important;letter-spacing:.04em!important;text-transform:uppercase!important;}
+  .mag-print-meta .mag-right{text-align:right!important;font-weight:700!important;}
+
+  /* Watermark halus pada kertas putih */
+  #print-area .mag-paper-watermark,
+  #invoice-print-area .mag-paper-watermark{
+    display:block!important;
+    position:absolute!important;
+    left:50%!important;
+    top:48%!important;
+    transform:translate(-50%,-50%) rotate(-18deg)!important;
+    z-index:0!important;
+    pointer-events:none!important;
+    user-select:none!important;
+    white-space:nowrap!important;
+    font-size:34px!important;
+    font-weight:900!important;
+    letter-spacing:.10em!important;
+    color:rgba(15,23,42,.045)!important;
+    text-transform:uppercase!important;
+  }
+
+  #print-area > *:not(.mag-paper-watermark),
+  #invoice-print-area > *:not(.mag-paper-watermark){
+    position:relative!important;
+    z-index:2!important;
+  }
+
+  /* Dasaran box dibuat putih, bukan abu-abu */
+  #print-area .bg-slate-50,
+  #print-area .bg-gray-50,
+  #print-area .bg-blue-50,
+  #print-area .bg-emerald-50,
+  #print-area .bg-amber-50,
+  #invoice-print-area .bg-slate-50,
+  #invoice-print-area .bg-gray-50,
+  #invoice-print-area .bg-blue-50,
+  #invoice-print-area .bg-emerald-50,
+  #invoice-print-area .bg-amber-50{
+    background:#fff!important;
+  }
+
+  /* Tabel tetap profesional tapi tidak membuat kertas terlihat abu-abu */
+  #print-area thead tr,
+  #invoice-print-area thead tr{
+    background:#fff!important;
+  }
+
+  /* Hindari background aplikasi masuk ke hasil PDF */
+  body.print-invoice #invoice-print-area,
+  body:not(.print-invoice) #print-area{
+    background:#fff!important;
+  }
+}
+
+/* Dropdown customer dibuat lebih stabil dan tidak cepat dire-render saat sedang dipilih */
+#v12CustomerSelect,
+.v12-customer-select{
+  cursor:pointer!important;
+}
+body.mag-customer-selecting #v12CustomerSelect{
+  border-color:#2563eb!important;
+  box-shadow:0 0 0 4px rgba(37,99,235,.16)!important;
+}
+</style>
+
+<script id="mulia-final-print-watermark-dropdown-fix-js">
+(function(){
+  function el(id){return document.getElementById(id);}
+  function pad(n){return String(n).padStart(2,'0');}
+  function tanggalID(d){
+    var bulan=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return pad(d.getDate())+' '+bulan[d.getMonth()]+' '+d.getFullYear();
+  }
+  function jamID(d){return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());}
+
+  function ensurePrintMeta(target){
+    if(!target) return;
+    var meta=target.querySelector(':scope > .mag-print-meta');
+    if(!meta){
+      meta=document.createElement('div');
+      meta.className='mag-print-meta';
+      meta.innerHTML='<div class="mag-left"></div><div class="mag-center">Mulia Advertising Group</div><div class="mag-right"></div>';
+      target.insertBefore(meta,target.firstChild);
+    }
+    var wm=target.querySelector(':scope > .mag-paper-watermark');
+    if(!wm){
+      wm=document.createElement('div');
+      wm.className='mag-paper-watermark';
+      wm.textContent='Mulia Advertising Group';
+      target.insertBefore(wm,target.children[1] || target.firstChild);
+    }
+    var now=new Date();
+    var left=meta.querySelector('.mag-left');
+    var right=meta.querySelector('.mag-right');
+    var center=meta.querySelector('.mag-center');
+    if(left) left.textContent='Jam: '+jamID(now);
+    if(center) center.textContent='Mulia Advertising Group';
+    if(right) right.textContent='Tanggal: '+tanggalID(now);
+  }
+
+  function preparePrintHeader(){
+    ensurePrintMeta(el('print-area'));
+    ensurePrintMeta(el('invoice-print-area'));
+    document.title='Mulia Advertising Group';
+  }
+
+  function cleanPaymentText(){
+    var ids=['catatanPembayaran','p_catatanPembayaran'];
+    ids.forEach(function(id){
+      var x=el(id);
+      if(!x) return;
+      var v = ('value' in x) ? String(x.value||'') : String(x.innerText||'');
+      v=v.replace(/\n?Pembayaran melalui rekening Bank BCA No\.?\s*5781203301\s*a\/n\s*PT\.?\s*Dwi Mulia Advertising\.?/gi,'');
+      v=v.replace(/\n?Detail rekening pembayaran tercantum pada bagian rekening di bawah\.\s*Detail rekening pembayaran tercantum pada bagian rekening di bawah\./gi,'\nDetail rekening pembayaran tercantum pada bagian rekening di bawah.');
+      if(v.indexOf('Detail rekening pembayaran tercantum pada bagian rekening di bawah.')===-1){
+        v=v.trim()+'\nDetail rekening pembayaran tercantum pada bagian rekening di bawah.';
+      }
+      if('value' in x) x.value=v.trim(); else x.innerText=v.trim();
+    });
+    try{ if(typeof window.render==='function') window.render(); }catch(e){}
+  }
+
+  /* Stabilkan tombol Data SPH & Data Invoice */
+  function showSection(kind){
+    try{
+      if(kind==='sph'){
+        if(typeof window.refreshDataPenawaranList==='function') window.refreshDataPenawaranList();
+        if(typeof window.refreshDraftPenawaranList==='function') window.refreshDraftPenawaranList();
+        var target=el('dataPenawaranAnchor') || el('data-penawaran-ui') || el('dataPenawaranBody');
+        if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(function(){ location.hash='dataPenawaranAnchor'; },80);
+      }else{
+        if(typeof window.refreshDataInvoiceList==='function') window.refreshDataInvoiceList();
+        if(typeof window.renderInvoiceList==='function') window.renderInvoiceList();
+        var target2=el('dataInvoiceAnchor') || el('data-invoice-ui') || el('dataInvoiceBody');
+        if(target2) target2.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(function(){ location.hash='dataInvoiceAnchor'; },80);
+      }
+    }catch(err){
+      location.hash = kind==='sph' ? 'dataPenawaranAnchor' : 'dataInvoiceAnchor';
+    }
+  }
+  window.MuliaV201 = window.MuliaV201 || {};
+  window.MuliaV201.openData = showSection;
+
+  function patchAdminButtons(){
+    var buttons=[].slice.call(document.querySelectorAll('button'));
+    buttons.forEach(function(b){
+      var t=(b.textContent||'').trim().toLowerCase();
+      if(t.indexOf('data sph')>-1){
+        b.onclick=function(ev){ if(ev) ev.preventDefault(); showSection('sph'); return false; };
+      }
+      if(t.indexOf('data invoice')>-1){
+        b.onclick=function(ev){ if(ev) ev.preventDefault(); showSection('invoice'); return false; };
+      }
+    });
+  }
+
+  /* Perbaikan dropdown customer: jangan render ulang saat select sedang dibuka/focus */
+  var customerBusy=false, customerTimer=null;
+  function patchCustomerDropdown(){
+    var sel=el('v12CustomerSelect');
+    if(!sel || sel.__magStableDropdown) return;
+    sel.__magStableDropdown=true;
+
+    sel.addEventListener('focus',function(){
+      customerBusy=true;
+      document.body.classList.add('mag-customer-selecting');
+      if(customerTimer) clearTimeout(customerTimer);
+    },true);
+    sel.addEventListener('mousedown',function(){
+      customerBusy=true;
+      document.body.classList.add('mag-customer-selecting');
+      if(customerTimer) clearTimeout(customerTimer);
+    },true);
+    sel.addEventListener('blur',function(){
+      customerTimer=setTimeout(function(){
+        customerBusy=false;
+        document.body.classList.remove('mag-customer-selecting');
+      },450);
+    },true);
+
+    var oldChange=sel.onchange;
+    sel.onchange=function(ev){
+      customerBusy=true;
+      document.body.classList.add('mag-customer-selecting');
+      var value=this.value;
+      var list=el('v11CustomerList');
+      var buttons=list ? [].slice.call(list.querySelectorAll('.v11-customer-item')) : [];
+      var btn=buttons[Number(value)];
+      if(btn) btn.click();
+      setTimeout(function(){
+        customerBusy=false;
+        document.body.classList.remove('mag-customer-selecting');
+        patchCustomerDropdown();
+      },700);
+      return false;
+    };
+  }
+
+  /* Lindungi render hub agar tidak mematikan dropdown saat user sedang membuka pilihan */
+  function guardCustomerHubRender(){
+    if(typeof window.renderMuliaV11Hub==='function' && !window.renderMuliaV11Hub.__magGuarded){
+      var old=window.renderMuliaV11Hub;
+      var neu=function(){
+        if(customerBusy){
+          clearTimeout(customerTimer);
+          customerTimer=setTimeout(function(){ try{ old.apply(window,arguments); patchCustomerDropdown(); }catch(e){} },650);
+          return;
+        }
+        var r=old.apply(this,arguments);
+        setTimeout(patchCustomerDropdown,120);
+        return r;
+      };
+      neu.__magGuarded=true;
+      window.renderMuliaV11Hub=neu;
+    }
+  }
+
+  function boot(){
+    preparePrintHeader();
+    cleanPaymentText();
+    patchAdminButtons();
+    guardCustomerHubRender();
+    patchCustomerDropdown();
+  }
+
+  window.MuliaFinalPreparePrintHeader=preparePrintHeader;
+  window.MuliaFinalCleanPaymentText=cleanPaymentText;
+  window.MuliaFinalPatchCustomerDropdown=patchCustomerDropdown;
+
+  window.addEventListener('beforeprint',function(){ preparePrintHeader(); cleanPaymentText(); });
+  window.addEventListener('afterprint',function(){ preparePrintHeader(); });
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(boot,300);
+    setTimeout(boot,1200);
+    setTimeout(boot,2600);
+    setInterval(function(){
+      preparePrintHeader();
+      patchAdminButtons();
+      guardCustomerHubRender();
+      patchCustomerDropdown();
+    },2500);
+  });
+})();
+</script>
 
 </body>
 </html>
