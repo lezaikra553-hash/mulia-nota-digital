@@ -7566,5 +7566,385 @@ body.v21-simple #gdrive-sync-panel.v215-show-gdrive .p-4{display:block!important
 })();
 </script>
 
+
+<!-- =========================================================
+     V21.7 FINAL BUTTON & GOOGLE SYNC PATCH
+     Audit: tombol V21 disambungkan ulang ke panel asli, data invoice/SPH dipaksa render,
+     Google session disimpan di sessionStorage + localStorage selama token masih berlaku.
+     ========================================================= -->
+<style id="mulia-v21-7-final-sync-style">
+body.v21-simple .v217-hidden{display:none!important}
+.v217-status-pill{display:inline-flex!important;align-items:center;gap:8px;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:950;border:1px solid #dbe4ee;background:#fff;color:#0f172a;box-shadow:0 8px 18px rgba(15,23,42,.06)}
+.v217-status-pill .dot{width:12px;height:12px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.12)}
+.v217-status-pill.ok .dot{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.16)}
+.v217-status-pill.warn .dot{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.16)}
+.v217-audit-box{max-width:1180px;margin:0 auto 12px auto;background:#fff;border:1px solid #dbe4ee;border-radius:18px;padding:12px 14px;font-size:12px;color:#334155;display:none}
+.v217-audit-box.show{display:block}
+.v217-audit-box b{color:#0f172a}
+@media print{.v217-status-pill,.v217-audit-box{display:none!important}}
+</style>
+<script id="mulia-v21-7-final-sync-js">
+(function(){
+  'use strict';
+
+  var SESSION_KEY = 'MULIA_GDRIVE_SESSION_V21';
+  var PERSIST_KEY = 'MULIA_GDRIVE_SESSION_PERSIST_V21';
+
+  function $(id){ return document.getElementById(id); }
+  function qsa(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function txt(el){ return (el && el.textContent || '').trim(); }
+  function isVisible(el){ return !!(el && el.offsetParent !== null); }
+  function parentPanelFromAnchor(id){
+    var a=$(id);
+    if(!a) return null;
+    return a.closest('.max-w-6xl, #invoice-ui, .data-card, [id$="-ui"]') || (a.nextElementSibling && a.nextElementSibling.classList && a.nextElementSibling.classList.contains('max-w-6xl') ? a.nextElementSibling : null);
+  }
+  function penawaranPanel(){
+    var a=$('penawaranFormAnchor');
+    return a ? a.nextElementSibling : null;
+  }
+  function invoicePanel(){ return $('invoice-ui') || parentPanelFromAnchor('invoiceFormAnchor'); }
+  function dataSPHPanel(){ return parentPanelFromAnchor('dataPenawaranAnchor'); }
+  function dataInvoicePanel(){ return parentPanelFromAnchor('dataInvoiceAnchor'); }
+  function customerPanel(){ return document.querySelector('.v11-customer-hub'); }
+  function show(el){ if(el){ el.classList.remove('v217-hidden','v21-hidden-admin'); el.style.display=''; } }
+  function hide(el){ if(el){ el.classList.add('v217-hidden'); el.style.display='none'; } }
+  function scrollToPanel(el){
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
+  }
+  function refreshAll(){
+    try{ if(typeof render === 'function') render(); }catch(e){}
+    try{ if(typeof renderInvoice === 'function') renderInvoice(); }catch(e){}
+    try{ if(typeof refreshDataPenawaranList === 'function') refreshDataPenawaranList(); }catch(e){}
+    try{ if(typeof refreshDataInvoiceList === 'function') refreshDataInvoiceList(); }catch(e){}
+    try{ if(typeof refreshDraftPenawaranList === 'function') refreshDraftPenawaranList(); }catch(e){}
+    try{ if(typeof muliaV3RefreshDashboard === 'function') muliaV3RefreshDashboard(); }catch(e){}
+    try{ if(typeof window.MuliaFinalPreparePrintHeader === 'function') window.MuliaFinalPreparePrintHeader(); }catch(e){}
+  }
+  function hideWorkPanels(){
+    hide(penawaranPanel());
+    hide(invoicePanel());
+    hide(dataSPHPanel());
+    hide(dataInvoicePanel());
+    hide(customerPanel());
+    qsa('.v11-customer-hub').forEach(hide);
+    hide($('gdrive-sync-panel'));
+  }
+  function ensureSimpleMode(){
+    document.body.classList.add('v21-simple');
+    var home=$('v21Home'); if(home) show(home);
+  }
+  function setActive(name){
+    qsa('.v21-toolbar .v21-btn, .v21-header-actions .v21-btn').forEach(function(b){ b.classList.remove('v217-active'); });
+    qsa('button').forEach(function(b){
+      var t=txt(b).toLowerCase();
+      if((name==='sph' && (t==='penawaran' || t.indexOf('buat penawaran')>=0)) ||
+         (name==='invoice' && (t==='invoice' || t.indexOf('buat invoice')>=0)) ||
+         (name==='data-sph' && t.indexOf('data sph')>=0) ||
+         (name==='data-invoice' && t.indexOf('data invoice')>=0) ||
+         (name==='customer' && t.indexOf('customer')>=0) ||
+         (name==='admin' && (t==='admin' || t.indexOf('pengaturan')>=0))){
+        b.classList.add('v217-active');
+      }
+    });
+  }
+
+  window.v21GoHome = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); show(home); scrollToPanel(home); setActive('home'); refreshAll();
+  };
+
+  window.v21NewSPH = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); hide(home);
+    var p=penawaranPanel(); show(p);
+    refreshAll();
+    scrollToPanel(p || $('penawaranFormAnchor'));
+    setTimeout(function(){ var k=$('kepada'); if(k) k.focus(); }, 250);
+    setActive('sph');
+  };
+
+  window.v21NewInvoice = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); hide(home);
+    try{ if(typeof initInvoice === 'function') initInvoice(); }catch(e){}
+    try{ if(typeof refreshDraftPenawaranList === 'function') refreshDraftPenawaranList(); }catch(e){}
+    var p=invoicePanel(); show(p);
+    refreshAll();
+    scrollToPanel(p || $('invoiceFormAnchor'));
+    setActive('invoice');
+  };
+
+  window.v21DataSPH = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); hide(home);
+    var p=dataSPHPanel(); show(p);
+    try{ if(typeof refreshDataPenawaranList === 'function') refreshDataPenawaranList(); }catch(e){}
+    refreshAll();
+    scrollToPanel(p || $('dataPenawaranAnchor'));
+    setActive('data-sph');
+  };
+
+  window.v21DataInvoice = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); hide(home);
+    var p=dataInvoicePanel(); show(p);
+    try{ if(typeof refreshDataInvoiceList === 'function') refreshDataInvoiceList(); }catch(e){}
+    refreshAll();
+    scrollToPanel(p || $('dataInvoiceAnchor'));
+    setActive('data-invoice');
+  };
+
+  window.v21CustomerHub = function(){
+    ensureSimpleMode();
+    hideWorkPanels();
+    var home=$('v21Home'); hide(home);
+    try{ if(typeof renderMuliaV11Hub === 'function') renderMuliaV11Hub(); }catch(e){}
+    var p=customerPanel();
+    if(p){ show(p); scrollToPanel(p); }
+    else { v21DataSPH(); return; }
+    setActive('customer');
+  };
+
+  var oldOpenSettings = window.v21OpenSettings;
+  window.v21OpenSettings = function(){
+    ensureSimpleMode();
+    setActive('admin');
+    var m=$('v21AdminModal');
+    if(m) m.classList.add('show');
+    else if(typeof oldOpenSettings==='function') oldOpenSettings();
+  };
+  window.v21CloseSettings = function(){ var m=$('v21AdminModal'); if(m) m.classList.remove('show'); };
+
+  window.v21ShowLegacyPanel = function(id){
+    ensureSimpleMode();
+    var p=$(id);
+    if(!p) return;
+    hideWorkPanels();
+    hide($('v21Home'));
+    show(p);
+    window.v21CloseSettings();
+    scrollToPanel(p);
+  };
+
+  function patchAllVisibleButtons(){
+    qsa('button').forEach(function(b){
+      var t=txt(b).toLowerCase();
+      var attr=(b.getAttribute('onclick')||'').toLowerCase();
+      if(t==='🏠 dashboard' || t==='dashboard'){ b.onclick=function(e){e.preventDefault();v21GoHome();return false;}; }
+      if(t.indexOf('buat penawaran')>=0 || t==='penawaran' || attr.indexOf('v21newsph')>=0){ b.onclick=function(e){e.preventDefault();v21NewSPH();return false;}; }
+      if(t.indexOf('buat invoice')>=0 || t==='invoice' || attr.indexOf('v21newinvoice')>=0){ b.onclick=function(e){e.preventDefault();v21NewInvoice();return false;}; }
+      if(t.indexOf('data sph')>=0 || t.indexOf('lihat data penawaran')>=0 || attr.indexOf('v21datasph')>=0){ b.onclick=function(e){e.preventDefault();v21DataSPH();return false;}; }
+      if(t.indexOf('data invoice')>=0 || t.indexOf('lihat data invoice')>=0 || attr.indexOf('v21datainvoice')>=0){ b.onclick=function(e){e.preventDefault();v21DataInvoice();return false;}; }
+      if(t.indexOf('cari customer')>=0 || t==='customer' || attr.indexOf('v21customerhub')>=0){ b.onclick=function(e){e.preventDefault();v21CustomerHub();return false;}; }
+      if(t.indexOf('pengaturan')>=0 || t==='admin' || attr.indexOf('v21opensettings')>=0){ b.onclick=function(e){e.preventDefault();v21OpenSettings();return false;}; }
+    });
+  }
+
+  function countKeys(prefix){
+    var c=0;
+    try{ for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i)||''; if(k.indexOf(prefix)===0) c++; } }catch(e){}
+    return c;
+  }
+  function ensureAuditBox(){
+    var box=$('v217AuditBox');
+    if(box) return box;
+    box=document.createElement('div');
+    box.id='v217AuditBox';
+    box.className='v217-audit-box no-print';
+    var toolbar=document.querySelector('.v21-toolbar');
+    if(toolbar && toolbar.parentNode) toolbar.parentNode.insertBefore(box, toolbar.nextSibling);
+    else document.body.insertBefore(box, document.body.firstChild);
+    return box;
+  }
+  window.muliaAuditButtons = function(showAlert){
+    var status = {
+      penawaran: !!penawaranPanel(),
+      invoice: !!invoicePanel(),
+      dataSPH: !!dataSPHPanel(),
+      dataInvoice: !!dataInvoicePanel(),
+      customer: !!customerPanel() || typeof renderMuliaV11Hub === 'function',
+      googleLogin: typeof initGoogleDrive === 'function',
+      googleBackup: typeof backupToGoogleDrive === 'function',
+      googleRestore: typeof restoreFromGoogleDrive === 'function',
+      sphCount: countKeys('PENAWARAN_'),
+      invoiceCount: countKeys('INVOICE_')
+    };
+    var ok = status.penawaran && status.invoice && status.dataSPH && status.dataInvoice && status.googleLogin && status.googleBackup && status.googleRestore;
+    var box=ensureAuditBox();
+    box.className='v217-audit-box no-print show';
+    box.innerHTML='<b>Audit tombol:</b> '+
+      (ok?'✅ struktur tombol utama terhubung':'⚠️ ada struktur yang belum lengkap')+
+      ' &nbsp; | Penawaran: '+(status.penawaran?'✅':'❌')+
+      ' | Invoice: '+(status.invoice?'✅':'❌')+
+      ' | Data SPH: '+(status.dataSPH?'✅':'❌')+
+      ' | Data Invoice: '+(status.dataInvoice?'✅':'❌')+
+      ' | Customer: '+(status.customer?'✅':'⚠️')+
+      ' | Google: '+(status.googleLogin&&status.googleBackup&&status.googleRestore?'✅':'❌')+
+      ' | Data lokal SPH: '+status.sphCount+' | Invoice: '+status.invoiceCount;
+    if(showAlert) alert(box.textContent);
+    return status;
+  };
+
+  function ensureAuditButton(){
+    if($('v217AuditBtn')) return;
+    var inner=document.querySelector('.v21-toolbar-inner');
+    if(inner){
+      var btn=document.createElement('button');
+      btn.id='v217AuditBtn';
+      btn.className='v21-btn v21-btn-soft';
+      btn.textContent='✅ Cek Tombol';
+      btn.onclick=function(e){ e.preventDefault(); window.muliaAuditButtons(true); return false; };
+      inner.appendChild(btn);
+    }
+  }
+
+  /* Google session: sessionStorage + localStorage fallback selama access token belum expired */
+  var oldSave = window.saveGoogleSession;
+  window.saveGoogleSession = function(token, expiresIn){
+    try{ if(typeof oldSave==='function') oldSave(token, expiresIn); }catch(e){}
+    try{
+      var ttl=Number(expiresIn||3300);
+      var expiresAt=Date.now()+Math.max(60, ttl-60)*1000;
+      var obj={access_token: token || (typeof googleAccessToken!=='undefined' ? googleAccessToken : ''), expires_at: expiresAt, saved_at:Date.now()};
+      if(obj.access_token){
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(obj));
+        localStorage.setItem(PERSIST_KEY, JSON.stringify(obj));
+        try{ googleAccessToken=obj.access_token; googleTokenExpiresAt=obj.expires_at; }catch(e){}
+      }
+    }catch(e){}
+    v217UpdateGoogleIndicator(true);
+  };
+  var oldLoad = window.loadGoogleSession;
+  window.loadGoogleSession = function(){
+    try{ if(typeof oldLoad==='function' && oldLoad()) { v217UpdateGoogleIndicator(true); return true; } }catch(e){}
+    try{
+      var raw=sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(PERSIST_KEY);
+      if(!raw) return false;
+      var s=JSON.parse(raw);
+      if(!s || !s.access_token || !s.expires_at) return false;
+      if(Date.now() > Number(s.expires_at)){
+        sessionStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem(PERSIST_KEY);
+        v217UpdateGoogleIndicator(false, true);
+        return false;
+      }
+      try{ googleAccessToken=s.access_token; googleTokenExpiresAt=Number(s.expires_at); }catch(e){}
+      if(typeof setGDriveStatus==='function') setGDriveStatus('Terhubung dari sesi browser', true);
+      v217UpdateGoogleIndicator(true);
+      return true;
+    }catch(e){ return false; }
+  };
+  var oldClear = window.clearGoogleSession;
+  window.clearGoogleSession = function(){
+    try{ if(typeof oldClear==='function') oldClear(); }catch(e){}
+    try{ sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(PERSIST_KEY); }catch(e){}
+    v217UpdateGoogleIndicator(false, true);
+  };
+
+  function currentGoogleOk(){
+    try{
+      if(typeof googleAccessToken!=='undefined' && googleAccessToken && typeof googleTokenExpiresAt!=='undefined' && Date.now() < googleTokenExpiresAt) return true;
+    }catch(e){}
+    try{
+      var raw=sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(PERSIST_KEY);
+      if(!raw) return false;
+      var s=JSON.parse(raw);
+      return !!(s && s.access_token && Date.now()<Number(s.expires_at));
+    }catch(e){ return false; }
+  }
+  window.v217GoogleTest = async function(silent){
+    try{
+      if(typeof ensureGoogleAccess === 'function'){
+        var ok=await ensureGoogleAccess(false);
+        if(!ok){ v217UpdateGoogleIndicator(false,true); if(!silent) alert('Google Drive belum login / perlu login ulang.'); return false; }
+      }
+      if(typeof driveApiFetch === 'function'){
+        var res=await driveApiFetch('https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id,name)');
+        if(res && res.ok){ 
+          if(typeof setGDriveStatus==='function') setGDriveStatus('Terhubung dan terverifikasi', true);
+          v217UpdateGoogleIndicator(true);
+          if(!silent) alert('Google Drive terhubung dan bisa akses Drive.');
+          return true;
+        }
+      }
+      var ok2=currentGoogleOk();
+      v217UpdateGoogleIndicator(ok2, !ok2);
+      if(!silent) alert(ok2?'Google Drive punya sesi aktif.':'Google Drive belum login / perlu login ulang.');
+      return ok2;
+    }catch(e){
+      v217UpdateGoogleIndicator(false,true);
+      if(!silent) alert('Cek Google Drive gagal: '+(e&&e.message?e.message:e));
+      return false;
+    }
+  };
+
+  function v217UpdateGoogleIndicator(ok, warn){
+    var good = ok || currentGoogleOk();
+    var text = good ? 'Google Drive: Terhubung' : (warn ? 'Google Drive: Perlu Login' : 'Google Drive: Belum Login');
+    ['gdriveSessionBadge','v215GoogleTitle'].forEach(function(id){ var e=$(id); if(e) e.textContent=text; });
+    var g=$('gdriveStatus'); if(g && good && !/terhubung|berhasil|tersimpan|restore/i.test(g.textContent||'')) g.textContent='Status: Terhubung dari sesi browser';
+    qsa('.v217-status-pill').forEach(function(p){
+      p.classList.toggle('ok', !!good);
+      p.classList.toggle('warn', !good);
+      var label=p.querySelector('.label'); if(label) label.textContent=text;
+    });
+  }
+  window.v217UpdateGoogleIndicator = v217UpdateGoogleIndicator;
+
+  function ensureGooglePills(){
+    if(!$('v217TopGooglePill')){
+      var header=document.querySelector('.v21-header-actions');
+      if(header){
+        var pill=document.createElement('button');
+        pill.id='v217TopGooglePill';
+        pill.type='button';
+        pill.className='v217-status-pill';
+        pill.innerHTML='<span class="dot"></span><span class="label">Google Drive: Belum Login</span>';
+        pill.onclick=function(){ window.v217GoogleTest(false); };
+        header.insertBefore(pill, header.firstChild);
+      }
+    }
+    if(!$('v217ToolbarGooglePill')){
+      var inner=document.querySelector('.v21-toolbar-inner');
+      if(inner){
+        var pill2=document.createElement('button');
+        pill2.id='v217ToolbarGooglePill';
+        pill2.type='button';
+        pill2.className='v217-status-pill';
+        pill2.innerHTML='<span class="dot"></span><span class="label">Google Drive: Belum Login</span>';
+        pill2.onclick=function(){ window.v217GoogleTest(false); };
+        inner.appendChild(pill2);
+      }
+    }
+    v217UpdateGoogleIndicator(currentGoogleOk(), !currentGoogleOk());
+  }
+
+  function boot(){
+    ensureSimpleMode();
+    patchAllVisibleButtons();
+    ensureAuditButton();
+    ensureGooglePills();
+    try{ if(typeof loadGoogleSession==='function') loadGoogleSession(); }catch(e){}
+    refreshAll();
+    window.muliaAuditButtons(false);
+    var box=$('v217AuditBox'); if(box) box.classList.remove('show');
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(boot,200);
+    setTimeout(boot,900);
+    setTimeout(boot,2200);
+    setInterval(function(){ patchAllVisibleButtons(); ensureGooglePills(); v217UpdateGoogleIndicator(currentGoogleOk(), !currentGoogleOk()); }, 2500);
+  });
+  window.addEventListener('storage', function(){ v217UpdateGoogleIndicator(currentGoogleOk(), !currentGoogleOk()); });
+})();
+</script>
+
 </body>
 </html>
