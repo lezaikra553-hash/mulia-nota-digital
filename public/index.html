@@ -149,13 +149,16 @@ button:hover{transform:translateY(-1px)}
 /* === ADD-ON SURAT JALAN DARI DATA INVOICE === */
 #surat-jalan-print-area{display:none;}
 @media print{
+  body.print-surat-jalan{background:#fff!important;}
   body.print-surat-jalan .no-print,
   body.print-surat-jalan #print-area,
   body.print-surat-jalan #invoice-print-area{
     display:none!important;
+    visibility:hidden!important;
   }
   body.print-surat-jalan #surat-jalan-print-area{
     display:block!important;
+    visibility:visible!important;
     box-shadow:none!important;
     border:none!important;
     margin:0!important;
@@ -163,7 +166,9 @@ button:hover{transform:translateY(-1px)}
     width:100%!important;
     max-width:100%!important;
     background:#fff!important;
+    color:#111827!important;
   }
+  body.print-surat-jalan #surat-jalan-print-area *{visibility:visible!important;}
   body:not(.print-surat-jalan) #surat-jalan-print-area{display:none!important;}
 }
 </style>
@@ -2034,6 +2039,70 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
 })();
 </script>
 
+
+
+
+<!-- ================= PRINT AREA SURAT JALAN ================= -->
+<div id="surat-jalan-print-area" class="max-w-4xl mx-auto bg-white p-8 text-[12px]">
+  <div class="pb-2 mb-3">
+    <img id="sjKopSurat" class="letterhead-img" src="" alt="Kop Surat">
+  </div>
+
+  <div class="text-center mb-5">
+    <div class="text-xl font-black tracking-wide underline">SURAT JALAN</div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-6 mb-4 text-[12px]">
+    <table class="w-full">
+      <tr><td class="font-bold w-28">No. Surat Jalan</td><td>: <span id="sjNomor">-</span></td></tr>
+      <tr><td class="font-bold">Tanggal</td><td>: <span id="sjTanggal">-</span></td></tr>
+      <tr><td class="font-bold">No. Invoice</td><td>: <span id="sjInvoice">-</span></td></tr>
+      <tr><td class="font-bold">No. PO</td><td>: <span id="sjPo">-</span></td></tr>
+    </table>
+    <table class="w-full">
+      <tr><td class="font-bold w-28">Status</td><td>: <span id="sjStatus">-</span></td></tr>
+      <tr><td class="font-bold align-top">Kepada</td><td class="align-top">: <span id="sjCustomer" class="whitespace-pre-line">-</span></td></tr>
+    </table>
+  </div>
+
+  <div class="mb-3 text-[12px]">
+    Bersama ini kami kirimkan barang / pekerjaan sesuai data invoice berikut:
+  </div>
+
+  <table class="w-full border-collapse text-[12px] mb-5">
+    <thead>
+      <tr class="bg-slate-100">
+        <th class="border p-2 w-10">No</th>
+        <th class="border p-2 text-left">Nama Barang / Pekerjaan</th>
+        <th class="border p-2 w-20">Qty</th>
+        <th class="border p-2 w-20">Sat</th>
+        <th class="border p-2 w-44">Keterangan</th>
+      </tr>
+    </thead>
+    <tbody id="sjItems">
+      <tr><td colspan="5" class="border p-3 text-center text-slate-400 italic">Belum ada item invoice.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="text-[11px] mb-8">
+    Catatan: Barang / pekerjaan tersebut telah dikirim dan diterima dalam kondisi baik, kecuali ada catatan khusus pada saat penerimaan.
+  </div>
+
+  <div class="grid grid-cols-3 gap-6 text-center text-[12px] mt-8">
+    <div>
+      <div class="font-bold mb-16">Pengirim</div>
+      <div class="border-t border-slate-700 pt-1">Mulia Advertising Group</div>
+    </div>
+    <div>
+      <div class="font-bold mb-16">Kurir / Pembawa</div>
+      <div class="border-t border-slate-700 pt-1">Nama & Tanda Tangan</div>
+    </div>
+    <div>
+      <div class="font-bold mb-16">Penerima</div>
+      <div class="border-t border-slate-700 pt-1">Nama, Tanda Tangan & Stempel</div>
+    </div>
+  </div>
+</div>
 
 <script id="surat-jalan-addon-script">
 // ================= ADD-ON SURAT JALAN DARI DATA INVOICE =================
