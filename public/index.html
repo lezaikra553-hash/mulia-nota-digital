@@ -144,6 +144,30 @@ button:hover{transform:translateY(-1px)}
 @media print{.m22-topbar,.m22-wrap{display:none!important}}
 </style>
 
+
+<style id="surat-jalan-addon-style">
+/* === ADD-ON SURAT JALAN DARI DATA INVOICE === */
+#surat-jalan-print-area{display:none;}
+@media print{
+  body.print-surat-jalan .no-print,
+  body.print-surat-jalan #print-area,
+  body.print-surat-jalan #invoice-print-area{
+    display:none!important;
+  }
+  body.print-surat-jalan #surat-jalan-print-area{
+    display:block!important;
+    box-shadow:none!important;
+    border:none!important;
+    margin:0!important;
+    padding:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    background:#fff!important;
+  }
+  body:not(.print-surat-jalan) #surat-jalan-print-area{display:none!important;}
+}
+</style>
+
 </head>
 <body class="min-h-screen p-4 md:p-6">
 
@@ -1624,6 +1648,7 @@ function refreshDataInvoiceList(){
       <td class="p-2 text-center space-x-1 whitespace-nowrap">
         <button onclick="loadInvoiceKeForm('${x.key}')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-2 py-1 rounded">✏ Edit</button>
         <button onclick="cetakInvoiceTersimpan('${x.key}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-1 rounded">🖨 Cetak</button>
+        <button onclick="cetakSuratJalanDariInvoice('${x.key}')" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs px-2 py-1 rounded">🚚 Surat Jalan</button>
         <button onclick="hapusInvoiceTersimpan('${x.key}')" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-2 py-1 rounded">🗑 Hapus</button>
       </td>`;
     tbody.appendChild(tr);
@@ -2006,6 +2031,86 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
       setTimeout(()=>{ refreshDashboard(); scheduleAutoBackup(); }, 800);
     }
   });
+})();
+</script>
+
+
+<script id="surat-jalan-addon-script">
+// ================= ADD-ON SURAT JALAN DARI DATA INVOICE =================
+// Fitur ini hanya menambahkan cetak Surat Jalan dari invoice tersimpan.
+// Tidak mengubah alur Penawaran / Invoice yang sudah ada.
+(function(){
+  function el(id){ return document.getElementById(id); }
+  function esc(v){
+    return String(v ?? '-')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+  function nomorSuratJalan(invoiceNomor){
+    const inv = String(invoiceNomor || '').trim() || 'INV';
+    return 'SJ-' + inv.replace(/^INV-?/i,'').replace(/\s+/g,'');
+  }
+  function tanggalIndonesia(){
+    try{
+      return new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
+    }catch(e){
+      return new Date().toLocaleDateString('id-ID');
+    }
+  }
+  function isiSuratJalan(data){
+    if(!data) return;
+
+    const kopSrc = document.querySelector('#print-area .letterhead-img')?.getAttribute('src')
+      || document.querySelector('.letterhead-img')?.getAttribute('src')
+      || '';
+    if(el('sjKopSurat')) el('sjKopSurat').src = kopSrc;
+
+    if(el('sjNomor')) el('sjNomor').innerText = nomorSuratJalan(data.nomor);
+    if(el('sjTanggal')) el('sjTanggal').innerText = data.tanggal || tanggalIndonesia();
+    if(el('sjInvoice')) el('sjInvoice').innerText = data.nomor || '-';
+    if(el('sjPo')) el('sjPo').innerText = data.po_ref || '-';
+    if(el('sjStatus')) el('sjStatus').innerText = data.status || '-';
+    if(el('sjCustomer')) el('sjCustomer').innerText = data.customer || '-';
+
+    const tbody = el('sjItems');
+    if(!tbody) return;
+    const items = Array.isArray(data.items) ? data.items : [];
+    if(!items.length){
+      tbody.innerHTML = '<tr><td colspan="5" class="border p-3 text-center text-slate-400 italic">Belum ada item invoice.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = items.map(function(it, i){
+      const nama = it.desc || it.item || it.nama || '-';
+      const qty = it.qty || 0;
+      const sat = it.sat || '-';
+      return '<tr>' +
+        '<td class="border p-2 text-center">' + (i+1) + '</td>' +
+        '<td class="border p-2 whitespace-pre-line">' + esc(nama) + '</td>' +
+        '<td class="border p-2 text-center">' + esc(qty) + '</td>' +
+        '<td class="border p-2 text-center">' + esc(sat) + '</td>' +
+        '<td class="border p-2">Dikirim / diterima dengan baik</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  window.cetakSuratJalanDariInvoice = function(key){
+    const raw = localStorage.getItem(key);
+    if(!raw){ alert('Data invoice tidak ditemukan.'); return; }
+    let data = null;
+    try{ data = JSON.parse(raw); }catch(e){}
+    if(!data){ alert('Format data invoice tidak valid.'); return; }
+
+    isiSuratJalan(data);
+    setTimeout(function(){
+      document.body.classList.remove('print-invoice');
+      document.body.classList.add('print-surat-jalan');
+      window.print();
+      setTimeout(function(){ document.body.classList.remove('print-surat-jalan'); }, 500);
+    }, 150);
+  };
 })();
 </script>
 
