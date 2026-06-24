@@ -2172,13 +2172,115 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
     try{ data = JSON.parse(raw); }catch(e){}
     if(!data){ alert('Format data invoice tidak valid.'); return; }
 
+    // Render dulu ke area Surat Jalan sebagai backup tampilan di halaman.
     isiSuratJalan(data);
-    setTimeout(function(){
-      document.body.classList.remove('print-invoice');
-      document.body.classList.add('print-surat-jalan');
-      window.print();
-      setTimeout(function(){ document.body.classList.remove('print-surat-jalan'); }, 500);
-    }, 150);
+
+    // FIX PRINT KOSONG:
+    // Chrome kadang menghapus class print sebelum preview selesai,
+    // jadi Surat Jalan dicetak lewat window khusus yang isinya hanya Surat Jalan.
+    const kopSrc = document.querySelector('#print-area .letterhead-img')?.getAttribute('src')
+      || document.querySelector('.letterhead-img')?.getAttribute('src')
+      || '';
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    const rows = items.length ? items.map(function(it, i){
+      const nama = it.desc || it.item || it.nama || '-';
+      const qty = it.qty || 0;
+      const sat = it.sat || '-';
+      return '<tr>' +
+        '<td>' + (i+1) + '</td>' +
+        '<td class="left">' + esc(nama).replace(/\n/g,'<br>') + '</td>' +
+        '<td>' + esc(qty) + '</td>' +
+        '<td>' + esc(sat) + '</td>' +
+        '<td class="left">Dikirim / diterima dengan baik</td>' +
+      '</tr>';
+    }).join('') : '<tr><td colspan="5" class="empty">Belum ada item invoice.</td></tr>';
+
+    const html = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Surat Jalan ${esc(data.nomor || '')}</title>
+<style>
+  @page{size:A4;margin:10mm 12mm;}
+  *{box-sizing:border-box;}
+  body{font-family:Arial,Helvetica,sans-serif;color:#111827;margin:0;background:#fff;font-size:12px;}
+  .page{width:100%;max-width:780px;margin:0 auto;padding:0;}
+  .kop{width:100%;max-width:720px;display:block;margin:0 auto 10px auto;}
+  h1{text-align:center;font-size:20px;text-decoration:underline;margin:12px 0 18px 0;letter-spacing:.04em;}
+  .info{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:14px;}
+  .info table{width:100%;border-collapse:collapse;}
+  .info td{padding:3px 0;vertical-align:top;}
+  .label{font-weight:bold;width:110px;white-space:nowrap;}
+  .intro{margin:12px 0;}
+  table.items{width:100%;border-collapse:collapse;margin-top:8px;}
+  table.items th, table.items td{border:1px solid #334155;padding:7px 8px;text-align:center;vertical-align:top;}
+  table.items th{background:#f1f5f9;font-weight:bold;}
+  .left{text-align:left!important;}
+  .empty{padding:14px!important;color:#64748b;font-style:italic;}
+  .note{font-size:11px;margin-top:14px;}
+  .sign{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;text-align:center;margin-top:48px;}
+  .sign .title{font-weight:bold;margin-bottom:72px;}
+  .line{border-top:1px solid #111827;padding-top:5px;}
+</style>
+</head>
+<body>
+<div class="page">
+  ${kopSrc ? `<img class="kop" src="${kopSrc}">` : ''}
+  <h1>SURAT JALAN</h1>
+
+  <div class="info">
+    <table>
+      <tr><td class="label">No. Surat Jalan</td><td>: ${esc(nomorSuratJalan(data.nomor))}</td></tr>
+      <tr><td class="label">Tanggal</td><td>: ${esc(data.tanggal || tanggalIndonesia())}</td></tr>
+      <tr><td class="label">No. Invoice</td><td>: ${esc(data.nomor || '-')}</td></tr>
+      <tr><td class="label">No. PO</td><td>: ${esc(data.po_ref || '-')}</td></tr>
+    </table>
+    <table>
+      <tr><td class="label">Status</td><td>: ${esc(data.status || '-')}</td></tr>
+      <tr><td class="label">Kepada</td><td>: ${esc(data.customer || '-').replace(/\n/g,'<br>')}</td></tr>
+    </table>
+  </div>
+
+  <div class="intro">Bersama ini kami kirimkan barang / pekerjaan sesuai data invoice berikut:</div>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th style="width:42px;">No</th>
+        <th class="left">Nama Barang / Pekerjaan</th>
+        <th style="width:70px;">Qty</th>
+        <th style="width:70px;">Sat</th>
+        <th style="width:160px;">Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+
+  <div class="note">Catatan: Barang / pekerjaan tersebut telah dikirim dan diterima dalam kondisi baik, kecuali ada catatan khusus pada saat penerimaan.</div>
+
+  <div class="sign">
+    <div><div class="title">Pengirim</div><div class="line">Mulia Advertising Group</div></div>
+    <div><div class="title">Kurir / Pembawa</div><div class="line">Nama & Tanda Tangan</div></div>
+    <div><div class="title">Penerima</div><div class="line">Nama, Tanda Tangan & Stempel</div></div>
+  </div>
+</div>
+<script>
+  window.onload = function(){
+    setTimeout(function(){ window.focus(); window.print(); }, 250);
+  };
+<\/script>
+</body>
+</html>`;
+
+    const w = window.open('', '_blank', 'width=900,height=700');
+    if(!w){
+      alert('Popup print diblokir browser. Izinkan popup untuk halaman ini, lalu klik Surat Jalan lagi.');
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
   };
 })();
 </script>
