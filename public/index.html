@@ -2285,5 +2285,126 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
 })();
 </script>
 
+
+
+<!-- FIX DATABASE UNIQUE KEY - PENAWARAN & INVOICE TIDAK MENIMPA DATA LAMA -->
+<script id="mulia-fix-unique-database-v25">
+(function(){
+  function safeKeyText(v){
+    return String(v || 'TANPA_NOMOR')
+      .trim()
+      .replace(/[^a-zA-Z0-9_-]+/g,'_')
+      .replace(/^_+|_+$/g,'') || 'TANPA_NOMOR';
+  }
+  function uniqueKey(prefix, nomor){
+    return prefix + '_' + safeKeyText(nomor) + '_' + new Date().toISOString().replace(/[-:.TZ]/g,'') + '_' + Math.random().toString(36).slice(2,7);
+  }
+  function getVal(id, def=''){
+    const el=document.getElementById(id);
+    return el ? el.value : def;
+  }
+  function collectPenawaranSafe(nomorSaatIni){
+    if(typeof collectPenawaranData === 'function') return collectPenawaranData(nomorSaatIni);
+    return {
+      nomor: nomorSaatIni,
+      tanggal: getVal('tanggal'),
+      lampiran: getVal('lampiran'),
+      perihal: getVal('perihal'),
+      kepada: getVal('kepada'),
+      pembuka: getVal('pembuka'),
+      catatan: getVal('catatan'),
+      catatan_pembayaran: getVal('catatanPembayaran'),
+      dp_persen: Number(getVal('dpPersen',0)) || 0,
+      ppn_mode: getVal('ppnMode','none'),
+      ppn_persen: Number(getVal('ppnPersen',0)) || 0,
+      items: (typeof ambilItems === 'function') ? ambilItems() : [],
+      files: (typeof lampiranData !== 'undefined' && Array.isArray(lampiranData)) ? lampiranData : [],
+      saved_at: new Date().toISOString()
+    };
+  }
+
+  // PENAWARAN: data baru selalu tambah record baru. Edit lama tetap update record yang dipilih.
+  window.simpanPenawaran = function(cetak=false){
+    if(typeof setTanggalOtomatis === 'function') setTanggalOtomatis();
+    if(typeof render === 'function') render();
+
+    const nomorSaatIni = getVal('nomor') || 'TANPA NOMOR';
+    const sedangEdit = !!window.editingPenawaranKey;
+    const key = sedangEdit ? window.editingPenawaranKey : uniqueKey('PENAWARAN', nomorSaatIni);
+    const data = collectPenawaranSafe(nomorSaatIni);
+    data.id = data.id || key;
+    data.updated_at = new Date().toISOString();
+    if(!data.created_at) data.created_at = data.saved_at || data.updated_at;
+
+    localStorage.setItem(key, JSON.stringify(data));
+
+    if(!sedangEdit){
+      let n = parseInt(localStorage.getItem('dwi_mulia_last_sph_number') || '52', 10);
+      localStorage.setItem('dwi_mulia_last_sph_number', String(n + 1));
+    }
+
+    if(cetak) window.print();
+
+    setTimeout(()=>{
+      if(!sedangEdit){
+        if(typeof setNomorOtomatis === 'function') setNomorOtomatis();
+        if(typeof setTanggalOtomatis === 'function') setTanggalOtomatis();
+      }
+      window.editingPenawaranKey = null;
+      if(typeof render === 'function') render();
+      if(typeof refreshDataPenawaranList === 'function') refreshDataPenawaranList();
+      if(typeof refreshDraftPenawaranList === 'function') refreshDraftPenawaranList();
+      alert((sedangEdit ? 'Update penawaran ' : 'Penawaran baru ') + nomorSaatIni + ' berhasil disimpan. Data lama tidak ditimpa.');
+    }, cetak ? 800 : 100);
+  };
+
+  // INVOICE: logika dibuat sama seperti penawaran.
+  window.simpanInvoice = function(cetak=false){
+    if(typeof renderInvoice === 'function') renderInvoice();
+
+    const nomor = getVal('invNomor') || (typeof generateNomorInvoice === 'function' ? generateNomorInvoice() : 'TANPA NOMOR');
+    const sedangEdit = !!window.editingInvoiceKey;
+    const key = sedangEdit ? window.editingInvoiceKey : uniqueKey('INVOICE', nomor);
+    const data = {
+      id: key,
+      nomor,
+      tanggal: getVal('invTanggal'),
+      po_ref: getVal('invPoRef'),
+      po_tanggal: getVal('invPoTanggal'),
+      customer: getVal('invCustomer'),
+      status: getVal('invStatusBayar','BELUM BAYAR'),
+      dp: Number(getVal('invDpManual',0)) || 0,
+      ppn_mode: getVal('invPpnMode','none'),
+      ppn_persen: Number(getVal('invPpnPersen',0)) || 0,
+      catatan: getVal('invCatatan'),
+      items: (typeof ambilInvoiceItems === 'function') ? ambilInvoiceItems() : [],
+      saved_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    localStorage.setItem(key, JSON.stringify(data));
+
+    if(!sedangEdit){
+      let n = parseInt(localStorage.getItem('dwi_mulia_last_invoice_number') || '100025', 10);
+      localStorage.setItem('dwi_mulia_last_invoice_number', String(n + 1));
+    }
+
+    if(cetak){
+      document.body.classList.add('print-invoice');
+      window.print();
+      setTimeout(()=>document.body.classList.remove('print-invoice'), 500);
+    }
+
+    setTimeout(()=>{
+      window.editingInvoiceKey = null;
+      if(typeof resetInvoiceForm === 'function') resetInvoiceForm(false);
+      if(typeof refreshDataInvoiceList === 'function') refreshDataInvoiceList();
+      if(typeof refreshDataPenawaranList === 'function') refreshDataPenawaranList();
+      if(typeof refreshDraftPenawaranList === 'function') refreshDraftPenawaranList();
+      alert((sedangEdit ? 'Update invoice ' : 'Invoice baru ') + nomor + ' berhasil disimpan. Data lama tidak ditimpa.');
+    }, cetak ? 800 : 100);
+  };
+})();
+</script>
 </body>
 </html>
