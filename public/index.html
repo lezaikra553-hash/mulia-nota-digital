@@ -1,10 +1,9 @@
-tolong cek
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mulia Advertising Group - V25 Professional</title>
+<title>Mulia Advertising Group</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -2271,6 +2270,98 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
     setTimeout(function(){ window.focus(); window.print(); }, 250);
   };
 <\/script>
+
+
+<!-- ================= V26 PROFESSIONAL PRINT CLEAN ADDON ================= -->
+<style id="mulia-v26-professional-print-clean">
+/* Membersihkan tampilan cetak dan membuat dokumen lebih premium */
+@page{size:A4;margin:8mm 10mm!important;}
+html,body{margin:0;}
+#print-area,#invoice-print-area,#surat-jalan-print-area{
+  font-family:Arial, Helvetica, sans-serif!important;
+  color:#0f172a!important;
+  background:#fff!important;
+}
+#print-area{padding:28px 32px!important;}
+#invoice-print-area,#surat-jalan-print-area{padding:28px 32px!important;}
+#print-area .letterhead-img,#invoice-print-area .letterhead-img,#surat-jalan-print-area .letterhead-img{
+  max-width:690px!important;width:100%!important;margin:0 auto 12px auto!important;
+  display:block!important;padding-bottom:8px!important;border-bottom:2px solid #0f172a!important;
+}
+#print-area p,#invoice-print-area p,#surat-jalan-print-area p{line-height:1.48!important;}
+#print-area table,#invoice-print-area table,#surat-jalan-print-area table{border-collapse:collapse!important;}
+#print-area th,#invoice-print-area th,#surat-jalan-print-area th{
+  background:#0f172a!important;color:#fff!important;font-weight:800!important;
+  border:1px solid #0f172a!important;padding:8px 7px!important;
+}
+#print-area td,#invoice-print-area td,#surat-jalan-print-area td{
+  border:1px solid #334155!important;padding:8px 7px!important;
+}
+#print-area b,#invoice-print-area b,#surat-jalan-print-area b{font-weight:800!important;}
+#print-area .text-right,#invoice-print-area .text-right,#surat-jalan-print-area .text-right{text-align:right!important;}
+#print-area .font-bold,#invoice-print-area .font-bold,#surat-jalan-print-area .font-bold{font-weight:800!important;}
+#print-area h1,#invoice-print-area h1,#surat-jalan-print-area h1,
+#print-area h2,#invoice-print-area h2,#surat-jalan-print-area h2{
+  letter-spacing:.02em!important;color:#0f172a!important;
+}
+@media screen{
+  #print-area,#invoice-print-area,#surat-jalan-print-area{
+    box-shadow:0 18px 50px rgba(15,23,42,.12)!important;
+    border:1px solid #e2e8f0!important;
+  }
+}
+@media print{
+  html,body{width:210mm!important;min-height:297mm!important;background:#fff!important;}
+  body{padding:0!important;margin:0!important;}
+  .no-print,.m22-topbar,.m22-wrap,.v26-print-help{display:none!important;}
+  #print-area,#invoice-print-area,#surat-jalan-print-area{
+    width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+    box-shadow:none!important;border:none!important;border-radius:0!important;font-size:11.2px!important;line-height:1.35!important;
+  }
+  #print-area .letterhead-img,#invoice-print-area .letterhead-img,#surat-jalan-print-area .letterhead-img{
+    max-width:680px!important;margin-top:0!important;margin-bottom:10px!important;padding-bottom:7px!important;
+  }
+  #print-area table,#invoice-print-area table,#surat-jalan-print-area table{page-break-inside:auto!important;}
+  #print-area tr,#invoice-print-area tr,#surat-jalan-print-area tr{page-break-inside:avoid!important;page-break-after:auto!important;}
+  #print-area th,#invoice-print-area th,#surat-jalan-print-area th{padding:7px 6px!important;}
+  #print-area td,#invoice-print-area td,#surat-jalan-print-area td{padding:7px 6px!important;}
+}
+</style>
+
+<script id="mulia-v26-print-clean-script">
+(function(){
+  // Pastikan tidak ada teks nyasar di awal halaman dan judul browser tidak ikut mengotori header print.
+  const CLEAN_TITLE='Mulia Advertising Group';
+  if(document.title && document.title.toLowerCase().includes('v25')) document.title=CLEAN_TITLE;
+  let oldTitle=document.title || CLEAN_TITLE;
+  window.addEventListener('beforeprint', function(){ oldTitle=document.title || CLEAN_TITLE; document.title=''; });
+  window.addEventListener('afterprint', function(){ document.title=oldTitle || CLEAN_TITLE; });
+
+  function addPrintHelp(){
+    if(document.getElementById('v26PrintHelp')) return;
+    const host=document.querySelector('.max-w-6xl.mx-auto.bg-white.rounded-xl.shadow.no-print');
+    if(!host) return;
+    const box=document.createElement('div');
+    box.id='v26PrintHelp';
+    box.className='v26-print-help no-print';
+    box.style.cssText='margin:12px 20px 0;padding:12px 14px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:14px;color:#1e3a8a;font-size:12px;line-height:1.55;font-weight:700';
+    box.innerHTML='Tips print profesional: saat Save PDF/Print, buka <b>More settings</b> lalu matikan <b>Headers and footers</b> agar tanggal, URL, judul halaman, dan nomor halaman browser tidak ikut tercetak.';
+    host.insertBefore(box, host.children[1] || null);
+  }
+
+  function tidyPrintMeta(){
+    // Jika ada text node nyasar di body, bersihkan tanpa menyentuh aplikasi.
+    Array.from(document.body.childNodes).forEach(n=>{
+      if(n.nodeType===3 && n.textContent.trim().toLowerCase()==='tolong cek') n.textContent='';
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){addPrintHelp();tidyPrintMeta();});
+  else {addPrintHelp();tidyPrintMeta();}
+})();
+</script>
+<!-- ================= END V26 PROFESSIONAL PRINT CLEAN ADDON ================= -->
+
 </body>
 </html>`;
 
@@ -2522,6 +2613,98 @@ setTimeout(()=>{ refreshDataInvoiceList(); }, 900);
 })();
 </script>
 <!-- ================= END V25 PROFESSIONAL FINISHING ADDON ================= -->
+
+
+
+<!-- ================= V26 PROFESSIONAL PRINT CLEAN ADDON ================= -->
+<style id="mulia-v26-professional-print-clean">
+/* Membersihkan tampilan cetak dan membuat dokumen lebih premium */
+@page{size:A4;margin:8mm 10mm!important;}
+html,body{margin:0;}
+#print-area,#invoice-print-area,#surat-jalan-print-area{
+  font-family:Arial, Helvetica, sans-serif!important;
+  color:#0f172a!important;
+  background:#fff!important;
+}
+#print-area{padding:28px 32px!important;}
+#invoice-print-area,#surat-jalan-print-area{padding:28px 32px!important;}
+#print-area .letterhead-img,#invoice-print-area .letterhead-img,#surat-jalan-print-area .letterhead-img{
+  max-width:690px!important;width:100%!important;margin:0 auto 12px auto!important;
+  display:block!important;padding-bottom:8px!important;border-bottom:2px solid #0f172a!important;
+}
+#print-area p,#invoice-print-area p,#surat-jalan-print-area p{line-height:1.48!important;}
+#print-area table,#invoice-print-area table,#surat-jalan-print-area table{border-collapse:collapse!important;}
+#print-area th,#invoice-print-area th,#surat-jalan-print-area th{
+  background:#0f172a!important;color:#fff!important;font-weight:800!important;
+  border:1px solid #0f172a!important;padding:8px 7px!important;
+}
+#print-area td,#invoice-print-area td,#surat-jalan-print-area td{
+  border:1px solid #334155!important;padding:8px 7px!important;
+}
+#print-area b,#invoice-print-area b,#surat-jalan-print-area b{font-weight:800!important;}
+#print-area .text-right,#invoice-print-area .text-right,#surat-jalan-print-area .text-right{text-align:right!important;}
+#print-area .font-bold,#invoice-print-area .font-bold,#surat-jalan-print-area .font-bold{font-weight:800!important;}
+#print-area h1,#invoice-print-area h1,#surat-jalan-print-area h1,
+#print-area h2,#invoice-print-area h2,#surat-jalan-print-area h2{
+  letter-spacing:.02em!important;color:#0f172a!important;
+}
+@media screen{
+  #print-area,#invoice-print-area,#surat-jalan-print-area{
+    box-shadow:0 18px 50px rgba(15,23,42,.12)!important;
+    border:1px solid #e2e8f0!important;
+  }
+}
+@media print{
+  html,body{width:210mm!important;min-height:297mm!important;background:#fff!important;}
+  body{padding:0!important;margin:0!important;}
+  .no-print,.m22-topbar,.m22-wrap,.v26-print-help{display:none!important;}
+  #print-area,#invoice-print-area,#surat-jalan-print-area{
+    width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+    box-shadow:none!important;border:none!important;border-radius:0!important;font-size:11.2px!important;line-height:1.35!important;
+  }
+  #print-area .letterhead-img,#invoice-print-area .letterhead-img,#surat-jalan-print-area .letterhead-img{
+    max-width:680px!important;margin-top:0!important;margin-bottom:10px!important;padding-bottom:7px!important;
+  }
+  #print-area table,#invoice-print-area table,#surat-jalan-print-area table{page-break-inside:auto!important;}
+  #print-area tr,#invoice-print-area tr,#surat-jalan-print-area tr{page-break-inside:avoid!important;page-break-after:auto!important;}
+  #print-area th,#invoice-print-area th,#surat-jalan-print-area th{padding:7px 6px!important;}
+  #print-area td,#invoice-print-area td,#surat-jalan-print-area td{padding:7px 6px!important;}
+}
+</style>
+
+<script id="mulia-v26-print-clean-script">
+(function(){
+  // Pastikan tidak ada teks nyasar di awal halaman dan judul browser tidak ikut mengotori header print.
+  const CLEAN_TITLE='Mulia Advertising Group';
+  if(document.title && document.title.toLowerCase().includes('v25')) document.title=CLEAN_TITLE;
+  let oldTitle=document.title || CLEAN_TITLE;
+  window.addEventListener('beforeprint', function(){ oldTitle=document.title || CLEAN_TITLE; document.title=''; });
+  window.addEventListener('afterprint', function(){ document.title=oldTitle || CLEAN_TITLE; });
+
+  function addPrintHelp(){
+    if(document.getElementById('v26PrintHelp')) return;
+    const host=document.querySelector('.max-w-6xl.mx-auto.bg-white.rounded-xl.shadow.no-print');
+    if(!host) return;
+    const box=document.createElement('div');
+    box.id='v26PrintHelp';
+    box.className='v26-print-help no-print';
+    box.style.cssText='margin:12px 20px 0;padding:12px 14px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:14px;color:#1e3a8a;font-size:12px;line-height:1.55;font-weight:700';
+    box.innerHTML='Tips print profesional: saat Save PDF/Print, buka <b>More settings</b> lalu matikan <b>Headers and footers</b> agar tanggal, URL, judul halaman, dan nomor halaman browser tidak ikut tercetak.';
+    host.insertBefore(box, host.children[1] || null);
+  }
+
+  function tidyPrintMeta(){
+    // Jika ada text node nyasar di body, bersihkan tanpa menyentuh aplikasi.
+    Array.from(document.body.childNodes).forEach(n=>{
+      if(n.nodeType===3 && n.textContent.trim().toLowerCase()==='tolong cek') n.textContent='';
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){addPrintHelp();tidyPrintMeta();});
+  else {addPrintHelp();tidyPrintMeta();}
+})();
+</script>
+<!-- ================= END V26 PROFESSIONAL PRINT CLEAN ADDON ================= -->
 
 </body>
 </html>
