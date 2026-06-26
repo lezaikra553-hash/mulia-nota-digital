@@ -77,6 +77,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th{background:#f1f5f9;t
     <button class="btn green sidebtn" onclick="backupJSON()">Backup JSON</button>
     <input id="restoreFile" type="file" accept=".json" style="width:100%;font-size:11px;margin:6px 0;color:#cbd5e1">
     <button class="btn orange sidebtn" onclick="restoreJSON()">Restore JSON</button>
+    <button class="btn teal sidebtn" onclick="tarikDataLamaManual()">Tarik Data Lama</button>
   </div></details>
   <details class="group"><summary>☁ Google Drive</summary><div class="inside">
     <button class="btn blue sidebtn" onclick="loginGoogle()">Login Google</button>
@@ -265,5 +266,183 @@ async function findDriveFile(){let r=await fetch("https://www.googleapis.com/dri
 async function backupDrive(show=true){if(!accessToken)return alert("Login Google dulu");let existing=await findDriveFile(),form=new FormData();form.append("metadata",new Blob([JSON.stringify({name:DRIVE_FILE,mimeType:"application/json"})],{type:"application/json"}));form.append("file",new Blob([JSON.stringify(DB,null,2)],{type:"application/json"}));let url=existing?`https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=multipart`:"https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";let r=await fetch(url,{method:existing?"PATCH":"POST",headers:{Authorization:"Bearer "+accessToken},body:form});if(!r.ok)return alert("Backup Drive gagal");$("driveStatus").textContent="Backup Drive berhasil";if(show)alert("Backup Drive berhasil")}
 async function restoreDrive(){if(!accessToken)return alert("Login Google dulu");let f=await findDriveFile();if(!f)return alert("File backup tidak ditemukan");let r=await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,{headers:{Authorization:"Bearer "+accessToken}});DB=await r.json();saveDB();alert("Restore Drive berhasil")}
 </script>
+
+<script id="stable-100-migration-google-indicator">
+/* PATCH: Ambil data lama dari versi sebelumnya (PENAWARAN_ / INVOICE_) agar tidak hilang */
+function migrateOldLocalStorageOnce(){
+  if(localStorage.getItem("MULIA_MIGRATED_OLD_KEYS_V1")==="1") return;
+  let addedQ = 0, addedI = 0;
+
+  function existsQuote(no){
+    return DB.quotes.some(x => String(x.no||"") === String(no||""));
+  }
+  function existsInv(no){
+    return DB.invoices.some(x => String(x.no||"") === String(no||""));
+  }
+
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(!key) continue;
+
+    if(key.startsWith("PENAWARAN_")){
+      try{
+        const d = JSON.parse(localStorage.getItem(key));
+        if(!d || existsQuote(d.nomor || d.no)) continue;
+        DB.quotes.unshift({
+          id: "oldq_" + key + "_" + Date.now(),
+          no: d.nomor || d.no || key.replace("PENAWARAN_",""),
+          date: d.tanggal || d.date || "",
+          lampiran: d.lampiran || "-",
+          perihal: d.perihal || "Penawaran Harga Pekerjaan Signage",
+          customer: d.kepada || d.customer || "",
+          open: d.pembuka || d.open || "",
+          note: d.catatan_pembayaran || d.note || d.catatan || "",
+          ppnMode: d.ppn_mode || d.ppnMode || "none",
+          ppnPct: Number(d.ppn_persen ?? d.ppnPct ?? 11) || 0,
+          dpPct: Number(d.dp_persen ?? d.dpPct ?? 0) || 0,
+          items: (d.items || []).map(it => ({
+            item: it.item || it.desc || it.deskripsi || "",
+            spec: it.spec || it.spesifikasi || "",
+            qty: Number(it.qty || 1),
+            sat: it.sat || "Pcs",
+            price: Number(it.harga ?? it.price ?? 0)
+          })),
+          savedAt: d.saved_at || d.savedAt || new Date().toISOString(),
+          migratedFrom: key
+        });
+        addedQ++;
+      }catch(e){}
+    }
+
+    if(key.startsWith("INVOICE_")){
+      try{
+        const d = JSON.parse(localStorage.getItem(key));
+        if(!d || existsInv(d.nomor || d.no)) continue;
+        DB.invoices.unshift({
+          id: "oldi_" + key + "_" + Date.now(),
+          no: d.nomor || d.no || key.replace("INVOICE_",""),
+          date: d.tanggal || d.date || "",
+          po: d.po_ref || d.po || "",
+          customer: d.customer || "",
+          status: d.status || "BELUM BAYAR",
+          dp: Number(d.dp || 0),
+          ppnMode: d.ppn_mode || d.ppnMode || "none",
+          ppnPct: Number(d.ppn_persen ?? d.ppnPct ?? 11) || 0,
+          note: d.catatan || d.note || "",
+          items: (d.items || []).map(it => ({
+            desc: it.desc || it.item || it.deskripsi || "",
+            qty: Number(it.qty || 1),
+            sat: it.sat || "Pcs",
+            price: Number(it.harga ?? it.price ?? 0)
+          })),
+          savedAt: d.saved_at || d.savedAt || new Date().toISOString(),
+          migratedFrom: key
+        });
+        addedI++;
+      }catch(e){}
+    }
+  }
+
+  localStorage.setItem("MULIA_MIGRATED_OLD_KEYS_V1","1");
+  localStorage.setItem(DB_KEY, JSON.stringify(DB));
+  if(addedQ || addedI){
+    setTimeout(()=>alert("Data lama berhasil ditarik: " + addedQ + " penawaran dan " + addedI + " invoice."), 600);
+  }
+}
+
+/* Indikator Google Login yang jelas */
+function updateDriveStatus(text, ok=false){
+  const el = document.getElementById("driveStatus");
+  if(el){
+    el.textContent = text;
+    el.style.color = ok ? "#86efac" : "#cbd5e1";
+    el.style.fontWeight = "800";
+  }
+}
+
+/* Override loginGoogle dengan status jelas */
+loginGoogle = function(){
+  if(!window.google){
+    updateDriveStatus("Google belum siap / internet belum aktif", false);
+    alert("Google belum siap. Pastikan internet aktif dan buka dari Vercel.");
+    return;
+  }
+  updateDriveStatus("Membuka login Google...", false);
+  let client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPE,
+    callback: r => {
+      if(r && r.access_token){
+        accessToken = r.access_token;
+        updateDriveStatus("✅ Login Google berhasil", true);
+        alert("Login Google berhasil.");
+      }else{
+        updateDriveStatus("Login Google gagal / dibatalkan", false);
+      }
+    }
+  });
+  client.requestAccessToken({prompt:"consent"});
+};
+
+backupDrive = async function(show=true){
+  if(!accessToken){
+    updateDriveStatus("Belum login Google", false);
+    return alert("Login Google dulu.");
+  }
+  updateDriveStatus("Sedang backup ke Google Drive...", false);
+  let existing = await findDriveFile();
+  let form = new FormData();
+  form.append("metadata", new Blob([JSON.stringify({name:DRIVE_FILE,mimeType:"application/json"})], {type:"application/json"}));
+  form.append("file", new Blob([JSON.stringify(DB,null,2)], {type:"application/json"}));
+  let url = existing ? `https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=multipart` : "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
+  let r = await fetch(url, {method:existing?"PATCH":"POST", headers:{Authorization:"Bearer "+accessToken}, body:form});
+  if(!r.ok){
+    updateDriveStatus("❌ Backup Drive gagal", false);
+    return alert("Backup Drive gagal.");
+  }
+  updateDriveStatus("✅ Backup Drive berhasil", true);
+  if(show) alert("Backup Drive berhasil.");
+};
+
+restoreDrive = async function(){
+  if(!accessToken){
+    updateDriveStatus("Belum login Google", false);
+    return alert("Login Google dulu.");
+  }
+  updateDriveStatus("Sedang restore dari Google Drive...", false);
+  let f = await findDriveFile();
+  if(!f){
+    updateDriveStatus("File backup Drive tidak ditemukan", false);
+    return alert("File backup tidak ditemukan di Google Drive.");
+  }
+  let r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`, {headers:{Authorization:"Bearer "+accessToken}});
+  DB = await r.json();
+  localStorage.setItem(DB_KEY, JSON.stringify(DB));
+  updateDriveStatus("✅ Restore Drive berhasil", true);
+  saveDB();
+  alert("Restore Drive berhasil.");
+};
+
+/* Tambahkan tombol manual migrasi jika dibutuhkan */
+function tarikDataLamaManual(){
+  localStorage.removeItem("MULIA_MIGRATED_OLD_KEYS_V1");
+  migrateOldLocalStorageOnce();
+  renderAll();
+}
+
+/* Jalankan migrasi setelah init */
+document.addEventListener("DOMContentLoaded", function(){
+  setTimeout(function(){
+    try{
+      migrateOldLocalStorageOnce();
+      renderAll();
+      updateDriveStatus(accessToken ? "✅ Login Google berhasil" : "Belum login Google", !!accessToken);
+    }catch(e){
+      console.warn("Migrasi data lama gagal:", e);
+    }
+  }, 800);
+});
+</script>
+
 </body>
 </html>
