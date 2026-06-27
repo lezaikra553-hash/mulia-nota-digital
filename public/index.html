@@ -925,5 +925,63 @@ importItemsToInvoice = async function(){
 };
 </script>
 
+
+<!-- PATCH V26: Penawaran - hilangkan KETENTUAN & CATATAN, tambah SYARAT & KETENTUAN PEMBAYARAN kotak kosong manual -->
+<style id="v26-payment-terms-css">
+.payment-terms-v26{margin-top:18px;break-inside:avoid;page-break-inside:avoid;}
+.payment-terms-v26-title{font-weight:900;font-size:13px;letter-spacing:.02em;margin-bottom:8px;text-transform:uppercase;}
+.payment-terms-v26-box{height:118px;border:1.6px solid #0f172a;border-radius:10px;background:#fff;}
+.quote-summary-v26{margin-left:auto;width:310px;margin-top:14px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;break-inside:avoid;page-break-inside:avoid;}
+.quote-summary-v26 div{display:flex;justify-content:space-between;gap:14px;padding:7px 10px;border-bottom:1px solid #e2e8f0;}
+.quote-summary-v26 div:last-child{border-bottom:0;background:#f8fafc;font-weight:900;}
+.quote-summary-v26 b{white-space:nowrap;}
+.print-bank-v26{margin-top:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;break-inside:avoid;page-break-inside:avoid;}
+@media print{
+  .payment-terms-v26-box{height:112px!important;}
+  .quote-summary-v26{width:300px!important;}
+}
+</style>
+<script id="v26-payment-terms-js">
+(function(){
+  function ppnLabelV26(mode,pct){
+    return mode==='none' ? 'Tanpa PPN' : (mode==='exclusive' ? 'PPN '+(pct||0)+'% Terpisah' : 'Harga Termasuk PPN '+(pct||0)+'%');
+  }
+  function paymentTermsBoxV26(){
+    return '<div class="payment-terms-v26"><div class="payment-terms-v26-title">SYARAT &amp; KETENTUAN PEMBAYARAN</div><div class="payment-terms-v26-box"></div></div>';
+  }
+  function bankBoxV26(){
+    return '<div class="print-bank-v26"><b>Rekening Pembayaran:</b><br>BCA 5771044094 a/n Abdul Aziz Efendi<br>BCA 5781203301 a/n PT. Dwi Mulia Advertising</div>';
+  }
+  function rowsV26(items,isInvoice){
+    if(!items || !items.length) return '<tr><td colspan="6" style="text-align:center;color:#64748b">Belum ada rincian.</td></tr>';
+    return items.map(function(x,i){
+      var desc = isInvoice ? (x.desc||'') : [x.item,x.spec].filter(Boolean).join(' - ');
+      return '<tr><td>'+(i+1)+'</td><td>'+esc(desc)+'</td><td>'+num(x.qty)+'</td><td>'+esc(x.sat||'')+'</td><td>'+rupiah(x.price)+'</td><td>'+rupiah(num(x.qty)*num(x.price))+'</td></tr>';
+    }).join('');
+  }
+  window.stableDocLiveHtml = function(opt){
+    var title=opt.title,no=opt.no,date=opt.date,customer=opt.customer,items=opt.items,calcData=opt.calcData,dp=opt.dp||0,note=opt.note,isInvoice=opt.isInvoice,status=opt.status||'',po=opt.po||'',ppnMode=opt.ppnMode,ppnPct=opt.ppnPct;
+    var sisa = Math.max((calcData.grand||0)-dp,0);
+    var ppnLabel = ppnLabelV26(ppnMode,ppnPct);
+    var summary = '<div class="previewSummary"><div><span>Subtotal</span><b>'+rupiah(calcData.sub||0)+'</b></div><div><span>'+ppnLabel+'</span><b>'+rupiah(calcData.ppn||0)+'</b></div><div><span>Grand Total</span><b>'+rupiah(calcData.grand||0)+'</b></div>'+(isInvoice?'<div><span>DP / Terbayar</span><b>'+rupiah(dp||0)+'</b></div><div><span>Sisa</span><b>'+rupiah(sisa)+'</b></div>':'')+'</div>';
+    return '<div class="previewLetter"><div style="display:flex;justify-content:space-between;gap:14px"><div><h2>'+esc(title||'')+'</h2><div>No: <b>'+esc(no||'-')+'</b></div><div>Tanggal: '+esc(date||'-')+'</div>'+(po?'<div>Ref PO/SPK: '+esc(po)+'</div>':'')+'</div><div class="previewRight"><h3 style="margin:0;font-weight:900">MULIA ADVERTISING GROUP</h3><div>Advertising • Signage • Nameplate • Huruf Timbul • Etching</div></div></div></div>'+
+    '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:12px"><b>Kepada Yth:</b><br>'+esc(customer||'-').replace(/\n/g,'<br>')+(isInvoice?'<br><br><b>Status Pembayaran:</b> '+esc(status||'BELUM BAYAR'):'')+'</div>'+
+    '<table><thead><tr><th>No</th><th>Deskripsi</th><th>Qty</th><th>Sat</th><th>Harga Satuan</th><th>Total</th></tr></thead><tbody>'+rowsV26(items,isInvoice)+'</tbody></table>'+summary+
+    (isInvoice ? bankBoxV26()+'<div style="margin-top:12px"><b>Catatan:</b><br>'+esc(note||'-').replace(/\n/g,'<br>')+'</div>' : paymentTermsBoxV26()+bankBoxV26())+
+    muliaSignatureHtml(isInvoice);
+  };
+  window.docHTML = function(title,no,date,customer,items,c,dp,note,isInv,status='',po=''){
+    var ppnMode = isInv ? (document.getElementById('iPpnMode') ? document.getElementById('iPpnMode').value : 'none') : (document.getElementById('qPpnMode') ? document.getElementById('qPpnMode').value : 'none');
+    var ppnPct = isInv ? (document.getElementById('iPpnPct') ? document.getElementById('iPpnPct').value : 0) : (document.getElementById('qPpnPct') ? document.getElementById('qPpnPct').value : 0);
+    var ppnLabel = ppnLabelV26(ppnMode,ppnPct);
+    var summary = '<div class="quote-summary-v26"><div><span>Subtotal</span><b>'+rupiah(c.sub)+'</b></div><div><span>'+ppnLabel+'</span><b>'+rupiah(c.ppn)+'</b></div><div><span>Grand Total</span><b>'+rupiah(c.grand)+'</b></div>'+(isInv?'<div><span>DP / Terbayar</span><b>'+rupiah(dp)+'</b></div><div><span>Sisa</span><b>'+rupiah(Math.max(c.grand-dp,0))+'</b></div>':'')+'</div>';
+    return '<div class="cardBody"><div style="border-bottom:2px solid #0f172a;padding-bottom:10px;margin-bottom:14px"><h2 style="font-size:22px;font-weight:900;margin:0">'+esc(title)+'</h2><p>No: <b>'+esc(no)+'</b><br>Tanggal: '+esc(date)+(po?'<br>Ref: '+esc(po):'')+'</p><h3 style="text-align:right">MULIA ADVERTISING GROUP</h3></div><p><b>Kepada Yth:</b><br>'+esc(customer).replace(/\n/g,'<br>')+'</p>'+(isInv?'<p><b>Status:</b> '+esc(status)+'</p>':'')+
+    '<table><thead><tr><th>No</th><th>Deskripsi</th><th>Qty</th><th>Sat</th><th>Harga</th><th>Total</th></tr></thead><tbody>'+items.map(function(x,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(x.desc||((x.item||'')+' - '+(x.spec||'')))+'</td><td>'+x.qty+'</td><td>'+esc(x.sat)+'</td><td>'+rupiah(x.price)+'</td><td>'+rupiah(num(x.qty)*num(x.price))+'</td></tr>';}).join('')+'</tbody></table>'+summary+
+    (isInv ? bankBoxV26()+'<p>'+esc(note||'')+'</p>' : paymentTermsBoxV26()+bankBoxV26())+muliaSignatureHtml(isInv)+'</div>';
+  };
+  if(typeof renderLivePreviews === 'function') setTimeout(function(){try{renderLivePreviews();}catch(e){}},300);
+})();
+</script>
+
 </body>
 </html>
