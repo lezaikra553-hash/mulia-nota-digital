@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mulia Advertising Group - Stable 100%</title>
+<title>Mulia Advertising Group</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -162,7 +162,11 @@ Bersama ini kami sampaikan penawaran harga untuk pekerjaan sesuai kebutuhan Bapa
         <div><label class="label">DP % Manual</label><input id="qDpPct" class="input" type="number" placeholder="Contoh 30" oninput="renderQuote()"></div>
         <div><label class="label">Grand Total</label><div id="qGrandPreview" class="input" style="font-weight:900">Rp 0</div></div>
       </div>
-      <div style="margin-top:12px"><label class="label">Catatan Pembayaran</label><textarea id="qNote" class="input" style="height:80px">Sistem pembayaran mengikuti kesepakatan dengan pihak customer.</textarea></div>
+      <div style="margin-top:12px">
+        <label class="label">SYARAT &amp; KETENTUAN PEMBAYARAN</label>
+        <textarea id="qPaymentTerms" class="input" style="height:110px" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>
+        <input id="qNote" type="hidden" value="">
+      </div>
       <div style="overflow:auto;margin-top:12px;border:1px solid #e2e8f0;border-radius:12px">
         <table><thead><tr><th>No</th><th>Item</th><th>Spesifikasi</th><th>Qty</th><th>Sat</th><th>Harga</th><th>Aksi</th></tr></thead><tbody id="qItems"></tbody></table>
       </div>
@@ -1084,6 +1088,150 @@ importItemsToInvoice = async function(){
     return '<div class="cardBody">'+buildV27({title:title,no:no,date:date,customer:customer,items:items,calcData:c,dp:dp||0,note:note,isInvoice:!!isInv,status:status||'',po:po||'',ppnMode:ppnMode,ppnPct:ppnPct})+'</div>';
   };
   if(typeof renderLivePreviews==='function') setTimeout(function(){try{renderLivePreviews();}catch(e){console.warn(e);}},500);
+})();
+</script>
+
+
+
+<!-- PATCH V28 FINAL: Judul browser bersih + Syarat Pembayaran dari form tampil di preview/print -->
+<style id="v28-payment-terms-form-css">
+.payment-terms-box-v27.filled,
+.payment-terms-box-v28{
+  min-height:112px;
+  border:1.6px solid #0f172a;
+  border-radius:10px;
+  padding:10px 12px;
+  white-space:pre-wrap;
+  line-height:1.55;
+  background:#fff;
+}
+.payment-terms-empty-v28{color:transparent;}
+@media print{
+  .payment-terms-box-v28{min-height:105px!important;}
+}
+</style>
+<script id="v28-payment-terms-final-js">
+(function(){
+  document.title = 'Mulia Advertising Group';
+
+  function el(id){ return document.getElementById(id); }
+  function val(id, fallback){ var x=el(id); return x ? (x.value || fallback || '') : (fallback || ''); }
+  function setVal(id,v){ var x=el(id); if(x) x.value = v || ''; }
+  function safeEsc(s){
+    return String(s||'').replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
+  }
+  function nl(s){ return safeEsc(s||'').replace(/\n/g,'<br>'); }
+
+  function ensurePaymentTermsField(){
+    if(el('qPaymentTerms')) return;
+    var qNote = el('qNote');
+    if(qNote && qNote.parentNode){
+      var wrap = document.createElement('div');
+      wrap.style.marginTop = '12px';
+      wrap.innerHTML = '<label class="label">SYARAT &amp; KETENTUAN PEMBAYARAN</label><textarea id="qPaymentTerms" class="input" style="height:110px" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>';
+      qNote.parentNode.insertBefore(wrap, qNote);
+      qNote.type = 'hidden';
+      qNote.value = '';
+    }
+  }
+
+  ensurePaymentTermsField();
+  if(el('qPaymentTerms')) el('qPaymentTerms').oninput = function(){ try{ renderAll(); }catch(e){} };
+
+  function getPaymentTerms(opt){
+    return (opt && (opt.paymentTerms || opt.terms)) || val('qPaymentTerms','') || (opt && opt.note) || '';
+  }
+
+  /* Override format dokumen V27 agar SYARAT PEMBAYARAN berisi data dari form */
+  if(window.stableDocLiveHtml){
+    var oldStableDocLiveHtml = window.stableDocLiveHtml;
+    window.stableDocLiveHtml = function(opt){
+      opt = opt || {};
+      if(!opt.isInvoice){ opt.paymentTerms = getPaymentTerms(opt); opt.note = opt.paymentTerms; }
+      var html = oldStableDocLiveHtml(opt);
+      if(!opt.isInvoice){
+        var content = opt.paymentTerms ? nl(opt.paymentTerms) : '<span class="payment-terms-empty-v28">.</span>';
+        html = html.replace(/<div class="payment-terms-box-v27"><\/div>/g, '<div class="payment-terms-box-v27 filled">'+content+'</div>');
+      }
+      return html;
+    };
+  }
+
+  if(window.docHTML){
+    var oldDocHTML = window.docHTML;
+    window.docHTML = function(title,no,date,customer,items,c,dp,note,isInv,status,po){
+      if(!isInv){ note = val('qPaymentTerms', note || ''); }
+      var html = oldDocHTML(title,no,date,customer,items,c,dp,note,isInv,status,po);
+      if(!isInv){
+        var content = note ? nl(note) : '<span class="payment-terms-empty-v28">.</span>';
+        html = html.replace(/<div class="payment-terms-box-v27"><\/div>/g, '<div class="payment-terms-box-v27 filled">'+content+'</div>');
+      }
+      return html;
+    };
+  }
+
+  /* Override simpan/load/reset penawaran supaya syarat pembayaran ikut tersimpan */
+  window.saveQuote = function(print=false){
+    var data={
+      id:editingQuoteId||uid(),
+      no:val('qNo'),
+      date:val('qDate'),
+      lampiran:val('qLampiran','-'),
+      perihal:val('qPerihal'),
+      customer:val('qCustomer'),
+      open:val('qOpen'),
+      note:'',
+      paymentTerms:val('qPaymentTerms'),
+      ppnMode:val('qPpnMode','none'),
+      ppnPct:num(val('qPpnPct',11)),
+      dpPct:num(val('qDpPct',0)),
+      items:getQuoteItems(),
+      savedAt:new Date().toISOString()
+    };
+    var ix=DB.quotes.findIndex(function(x){return x.id===data.id;});
+    if(ix>=0) DB.quotes[ix]=data; else DB.quotes.unshift(data);
+    editingQuoteId=null;
+    if(el('quoteEditInfo')) el('quoteEditInfo').textContent='Mode Baru';
+    if(print) printQuote(data); else alert('Penawaran tersimpan: '+data.no);
+    resetQuote(false);
+    saveDB();
+  };
+
+  window.loadQuote = function(id){
+    var q=DB.quotes.find(function(x){return x.id===id;});
+    if(!q) return;
+    editingQuoteId=id;
+    if(el('quoteEditInfo')) el('quoteEditInfo').textContent='Edit: '+q.no;
+    setVal('qNo',q.no); setVal('qDate',q.date); setVal('qLampiran',q.lampiran||'-'); setVal('qPerihal',q.perihal||'');
+    setVal('qCustomer',q.customer||''); setVal('qOpen',q.open||''); setVal('qNote','');
+    setVal('qPaymentTerms',q.paymentTerms || q.terms || q.note || '');
+    setVal('qPpnMode',q.ppnMode||'none'); setVal('qPpnPct',q.ppnPct ?? 11); setVal('qDpPct',q.dpPct||'');
+    if(el('qItems')) el('qItems').innerHTML='';
+    (q.items||[]).forEach(function(x){addQuoteItem(x.item,x.spec,x.qty,x.sat,x.price);});
+    go('quoteCard'); renderAll();
+  };
+
+  window.resetQuote = function(full=true){
+    editingQuoteId=null;
+    if(el('quoteEditInfo')) el('quoteEditInfo').textContent='Mode Baru';
+    setVal('qNo',nextQuoteNo()); setVal('qDate',todayID()); setVal('qNote',''); setVal('qPaymentTerms','');
+    if(el('qItems')) el('qItems').innerHTML='';
+    addQuoteItem('', '', 1, 'Pcs', 0);
+    if(full) renderAll();
+  };
+
+  window.printCurrentQuotePreview = function(){
+    var qItems=getQuoteItems();
+    var d={
+      no:val('qNo'), date:val('qDate'), customer:val('qCustomer'), items:qItems,
+      note:val('qPaymentTerms'), paymentTerms:val('qPaymentTerms'),
+      ppnMode:val('qPpnMode','none'), ppnPct:num(val('qPpnPct',0)), dpPct:num(val('qDpPct',0))
+    };
+    printQuote(d);
+  };
+
+  /* Pastikan preview langsung update */
+  setTimeout(function(){ try{ renderAll(); }catch(e){ console.warn('V28 render:',e); } },300);
 })();
 </script>
 
