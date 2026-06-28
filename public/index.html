@@ -164,7 +164,7 @@ Bersama ini kami sampaikan penawaran harga untuk pekerjaan sesuai kebutuhan Bapa
       </div>
       <div style="margin-top:12px">
         <label class="label">SYARAT &amp; KETENTUAN PEMBAYARAN</label>
-        <textarea id="qPaymentTerms" class="input" style="height:110px" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>
+        <textarea id="qPaymentTerms" class="input" style="height:220px;min-height:220px;line-height:1.7;padding:14px 16px;resize:vertical" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>
         <input id="qNote" type="hidden" value="">
       </div>
       <div style="overflow:auto;margin-top:12px;border:1px solid #e2e8f0;border-radius:12px">
@@ -1097,17 +1097,19 @@ importItemsToInvoice = async function(){
 <style id="v28-payment-terms-form-css">
 .payment-terms-box-v27.filled,
 .payment-terms-box-v28{
-  min-height:112px;
-  border:1.6px solid #0f172a;
-  border-radius:10px;
-  padding:10px 12px;
+  min-height:260px;
+  border:1.8px solid #0f172a;
+  border-radius:12px;
+  padding:18px 20px;
   white-space:pre-wrap;
-  line-height:1.55;
+  line-height:1.7;
   background:#fff;
+  overflow:visible;
 }
 .payment-terms-empty-v28{color:transparent;}
 @media print{
-  .payment-terms-box-v28{min-height:105px!important;}
+  .payment-terms-box-v27.filled,
+  .payment-terms-box-v28{min-height:260px!important;padding:18px 20px!important;line-height:1.7!important;}
 }
 </style>
 <script id="v28-payment-terms-final-js">
@@ -1128,7 +1130,7 @@ importItemsToInvoice = async function(){
     if(qNote && qNote.parentNode){
       var wrap = document.createElement('div');
       wrap.style.marginTop = '12px';
-      wrap.innerHTML = '<label class="label">SYARAT &amp; KETENTUAN PEMBAYARAN</label><textarea id="qPaymentTerms" class="input" style="height:110px" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>';
+      wrap.innerHTML = '<label class="label">SYARAT &amp; KETENTUAN PEMBAYARAN</label><textarea id="qPaymentTerms" class="input" style="height:220px;min-height:220px;line-height:1.7;padding:14px 16px;resize:vertical" placeholder="Contoh: DP 50% saat PO/SPK, pelunasan 50% setelah pekerjaan selesai."></textarea>';
       qNote.parentNode.insertBefore(wrap, qNote);
       qNote.type = 'hidden';
       qNote.value = '';
@@ -1234,6 +1236,31 @@ importItemsToInvoice = async function(){
   setTimeout(function(){ try{ renderAll(); }catch(e){ console.warn('V28 render:',e); } },300);
 })();
 </script>
+
+
+
+<!-- PATCH FINAL: Perbesar kotak SYARAT & KETENTUAN PEMBAYARAN di Preview dan Print/PDF -->
+<style id="final-preview-payment-terms-bigger-css">
+.payment-terms-box-v27.filled,
+.payment-terms-box-v28{
+  min-height:260px!important;
+  height:auto!important;
+  padding:18px 20px!important;
+  line-height:1.7!important;
+  border:1.8px solid #0f172a!important;
+  border-radius:12px!important;
+  overflow:visible!important;
+}
+@media print{
+  .payment-terms-box-v27.filled,
+  .payment-terms-box-v28{
+    min-height:260px!important;
+    height:auto!important;
+    padding:18px 20px!important;
+    line-height:1.7!important;
+  }
+}
+</style>
 
 </body>
 </html>
